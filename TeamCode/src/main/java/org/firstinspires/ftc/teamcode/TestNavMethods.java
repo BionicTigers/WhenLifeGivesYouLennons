@@ -3,13 +3,24 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 @Autonomous(name="Test Nav Methods", group="Test")
-public class TestNavMethods extends LinearOpMode {
-    public void runOpMode() {
-        Navigation nav = new Navigation(this, telemetry, true);
+public class TestNavMethods extends OpMode {
+    private Navigation nav;
+    @Override
+    public void init() {
+        nav = new Navigation(this, telemetry, true, false);
 
-        waitForStart();
+
+    }
+
+    @Override
+    public void loop() {
+        nav.updatePos();
+        telemetry.addData("Position", nav.getPos());
+    }
+
 
 //        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
 //        nav.setCollectorExtension(Navigation.CollectorExtension.DUMP);
@@ -33,14 +44,7 @@ public class TestNavMethods extends LinearOpMode {
 //        nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
 //        nav.setCollectionSweeper(Navigation.CollectorSweeper.OUTTAKE);
 
-        nav.goDistance(20f);
-        nav.holdForDrive();
-        nav.pointTurnRelative(180f);
-        nav.holdForDrive();
-        nav.goDistance(20f);
-        nav.holdForDrive();
-        nav.pointTurnRelative(180f);
-        nav.holdForDrive();
+
     }
 
-}
+
