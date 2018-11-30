@@ -131,8 +131,6 @@ public class TeleOpMongoose extends OpMode {
             if (driveSpeed % 2 == 0) {
                 telemetry.addData("Mode: ", "ARCADE");
                 telemetry.addData("Speed: ", "NORMAL");
-                telemetry.addData("Stick: ", "X = " + round(rightStick) + ", Y = " + round(leftStick));
-                telemetry.addData("Power: ", "L = " + round(leftPower) + ", R = " + round(rightPower));
 
                 backLeft.setPower(leftPower * normalSpeed);
                 backRight.setPower(rightPower * normalSpeed);
@@ -141,8 +139,6 @@ public class TeleOpMongoose extends OpMode {
             } else {
                 telemetry.addData("Mode: ", "ARCADE");
                 telemetry.addData("Speed: ", "SLOW");
-                telemetry.addData("Stick: ", "X = " + round(rightStick) + ", Y = " + round(leftStick));
-                telemetry.addData("Power: ", "L = " + round(leftPower) + ", R = " + round(rightPower));
 
                 backLeft.setPower(leftPower * slowSpeed);
                 backRight.setPower(rightPower * slowSpeed);
@@ -163,8 +159,6 @@ public class TeleOpMongoose extends OpMode {
             if (driveSpeed % 2 == 0) {
                 telemetry.addData("Mode: ", "TANK");
                 telemetry.addData("Speed: ", "NORMAL");
-                telemetry.addData("Stick: ", "X = " + round(rightStick) + ", Y = " + round(leftStick));
-                telemetry.addData("Power: ", "L = " + round(leftPower) + ", R = " + round(rightPower));
 
                 backLeft.setPower(leftPower * normalSpeed);
                 backRight.setPower(rightPower * normalSpeed);
@@ -173,8 +167,6 @@ public class TeleOpMongoose extends OpMode {
             } else {
                 telemetry.addData("Mode: ", "TANK");
                 telemetry.addData("Speed: ", "SLOW");
-                telemetry.addData("Stick: ", "X = " + round(rightStick) + ", Y = " + round(leftStick));
-                telemetry.addData("Power: ", "L = " + round(leftPower) + ", R = " + round(rightPower));
 
                 backLeft.setPower(leftPower * slowSpeed);
                 backRight.setPower(rightPower * slowSpeed);
@@ -204,8 +196,6 @@ public class TeleOpMongoose extends OpMode {
             if (driveSpeed % 2 == 0) {
                 telemetry.addData("Mode: ", "ACKERMAN");
                 telemetry.addData("Speed: ", "NORMAL");
-                telemetry.addData("Stick: ", "X = " + round(leftStick) + ", G = " + round(gasPedal));
-                telemetry.addData("Power: ", "L = " + round(leftPower) + ", R = " + round(rightPower));
 
                 backLeft.setPower(leftPower * normalSpeed);
                 backRight.setPower(rightPower * normalSpeed);
@@ -214,8 +204,6 @@ public class TeleOpMongoose extends OpMode {
             } else {
                 telemetry.addData("Mode: ", "ACKERMAN");
                 telemetry.addData("Speed: ", "SLOW");
-                telemetry.addData("Stick: ", "X = " + round(leftStick) + ", G = " + round(gasPedal));
-                telemetry.addData("Power: ", "L = " + round(leftPower) + ", R = " + round(rightPower));
 
                 backLeft.setPower(leftPower * slowSpeed);
                 backRight.setPower(rightPower * slowSpeed);
@@ -226,7 +214,7 @@ public class TeleOpMongoose extends OpMode {
 
         //////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
         //Lift// - LeftStick= Hopper Lift Power | RightStick= Robot Lift Power
-        lifty.setPower(gamepad2.right_stick_y); //Phone mount side
+        lifty.setPower(-gamepad2.right_stick_y); //Phone mount side
         if (canMoveLiftyJr) { //Camera mount side
             if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
                 liftyJr.setPower(0);
@@ -234,8 +222,8 @@ public class TeleOpMongoose extends OpMode {
                 liftyJr.setPower(gamepad2.left_stick_y * liftyJrSpeed);
             }
         }
-        telemetry.addData("LiftJr: ", liftyJr.getCurrentPosition());
-        telemetry.addData("lift", lifty.getCurrentPosition());
+        telemetry.addData("LiftJr: ", round(liftyJr.getCurrentPosition()));
+        telemetry.addData("Lift", round(lifty.getCurrentPosition()));
         telemetry.addData("Limit: ", limitSwitch.isPressed());
         telemetry.update();
 

@@ -35,6 +35,8 @@ public class AutoGeneric{
      * Run this to run Autonomous.
      */
     public void runOpMode() {
+        nav.setLiftHeight(Navigation.LiftHeight.LOWER);
+        nav.holdForLift();
         //-----crater depot run-----//
         if(startZone == StartPos.CRATER) {
             nav.updateCubePos();

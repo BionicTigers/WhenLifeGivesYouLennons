@@ -60,7 +60,7 @@ public class Navigation{
     public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
     private CubePosition cubePos = CubePosition.UNKNOWN;
     public enum CollectorHeight {COLLECT, HOLD, DUMP}
-    public enum LiftHeight {LOWER, SCORE}
+    public enum LiftHeight {LOWER, BEGIN}
     public enum CollectorExtension {PARK, DUMP, OUT}
     public enum LiftLock {LOCK,UNLOCK}
     public enum CollectorSweeper {INTAKE,OUTTAKE, OFF}
@@ -366,10 +366,10 @@ public class Navigation{
     public void setLiftHeight(LiftHeight position) {
         switch(position) {
             case LOWER:
-                setLiftHeight(0);
+                setLiftHeight(8000);
                 break;
-            case SCORE:
-                setLiftHeight(6000);
+            case BEGIN:
+                setLiftHeight(0);
                 break;
         }
     }
@@ -488,6 +488,12 @@ public class Navigation{
         }
     }
 
+    public void holdForLift() {
+        hold(0.2f);
+        while(lifty.isBusy()) {
+            if(useTelemetry) telemetryMethod();
+        }
+    }
     /**
      * Hold program for given number of seconds.
      * @param seconds float. Number of seconds to wait.
