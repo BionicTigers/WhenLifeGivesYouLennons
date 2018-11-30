@@ -357,7 +357,6 @@ public class Navigation{
      */
     public void setLiftHeight(int position) {
         lifty.setTargetPosition(position);
-        liftyJr.setTargetPosition(position);
     }
 
     /**
@@ -370,7 +369,7 @@ public class Navigation{
                 setLiftHeight(0);
                 break;
             case SCORE:
-                setLiftHeight(8200);
+                setLiftHeight(6000);
                 break;
         }
     }
@@ -518,7 +517,7 @@ public class Navigation{
         updateVelocity();
         String motorString = "FL-" + frontLeft.getCurrentPosition() + " BL-" + backLeft.getCurrentPosition() + " FR-" + frontRight.getCurrentPosition() + " BR-" + backRight.getCurrentPosition();
         telemetry.addData("Drive", motorString);
-        telemetry.addData("Lift",lifty.getCurrentPosition()+" " +liftyJr.getCurrentPosition());
+        telemetry.addData("Lift",lifty.getCurrentPosition());
         telemetry.addData("Collector L/E/C",lifty.getCurrentPosition()+" "+extendy.getCurrentPosition()+" "+collecty.getPower());
         telemetry.addData("Pos",pos);
         telemetry.addData("CubePos",cubePos);

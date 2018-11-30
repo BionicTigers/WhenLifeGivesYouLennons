@@ -134,7 +134,7 @@ public class AutoGeneric{
                     nav.holdForDrive();
                     nav.pointTurnRelative(96f);
                     nav.holdForDrive();
-                    nav.goDistance(51.5f);
+                    nav.goDistance(52f);
                     nav.holdForDrive();
                     break;
             }
@@ -150,23 +150,23 @@ public class AutoGeneric{
                     nav.holdForDrive();
                     nav.goDistance(-32f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(82f);
+                    nav.pointTurnRelative(83f);
                     break;
                 case RIGHT:
                     nav.pointTurnRelative(-20f);
                     nav.holdForDrive();
                     nav.goDistance(30f);
                     nav.holdForDrive();
-                    nav.goDistance(-26f);
+                    nav.goDistance(-27f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(20f);
+                    nav.pointTurnRelative(21f);
                     break;
                 default: //middle
                     nav.pointTurnRelative(-50f);
                     nav.holdForDrive();
                     nav.goDistance(30f);
                     nav.holdForDrive();
-                    nav.goDistance(-30f);
+                    nav.goDistance(-31f);
                     nav.holdForDrive();
                     nav.pointTurnRelative(49f);
                     break;

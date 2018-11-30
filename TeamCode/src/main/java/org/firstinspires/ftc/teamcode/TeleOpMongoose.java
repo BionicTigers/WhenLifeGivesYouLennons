@@ -84,7 +84,7 @@ public class TeleOpMongoose extends OpMode {
         //Speed Offsets//
         normalSpeed = .7;
         slowSpeed = .35;
-        liftySpeed = 0.5;
+        liftySpeed = 1;
         liftyJrSpeed = 1;
     }
 
@@ -226,7 +226,7 @@ public class TeleOpMongoose extends OpMode {
 
         //////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
         //Lift// - LeftStick= Hopper Lift Power | RightStick= Robot Lift Power
-        lifty.setPower(gamepad2.right_stick_y * liftySpeed); //Phone mount side
+        lifty.setPower(gamepad2.right_stick_y); //Phone mount side
         if (canMoveLiftyJr) { //Camera mount side
             if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
                 liftyJr.setPower(0);
@@ -234,8 +234,10 @@ public class TeleOpMongoose extends OpMode {
                 liftyJr.setPower(gamepad2.left_stick_y * liftyJrSpeed);
             }
         }
-        telemetry.addData("Lift: ", liftyJr.getCurrentPosition() + "/" + lifty.getCurrentPosition());
+        telemetry.addData("LiftJr: ", liftyJr.getCurrentPosition());
+        telemetry.addData("lift", lifty.getCurrentPosition());
         telemetry.addData("Limit: ", limitSwitch.isPressed());
+        telemetry.update();
 
         //Team Marker Deployer// - DPadRight= Lift | DPadLeft= Lower
         if (gamepad2.dpad_right) {
