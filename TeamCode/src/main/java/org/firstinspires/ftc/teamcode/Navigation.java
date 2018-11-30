@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -54,7 +55,13 @@ public class Navigation{
     private float maximumMotorPower = 0.5f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
     private float encoderCountsPerRev = 537.6f;         //encoder ticks per one revolution
     private boolean useTelemetry;                       //whether to execute the telemetry method while holding
-    private float minVelocityCutoff = 0.05f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
+    private float minVelocityCutoff = 0.05f;
+    private Location[] vumarkLocations = new Location[4];//velocity with which to continue program execution during a hold (encoder ticks per millisecond)
+    private Location camLocation = new Location(0f,6f,6f,0f);
+    private boolean posHasBeenUpdated;
+    private float killDistance = 0;
+    private boolean targetVisible;
+    private OpenGLMatrix  lastLocation;
 
     //-----enums-----//
     public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
@@ -72,7 +79,6 @@ public class Navigation{
     private float wheelDiameter = 4;                //diameter of wheel (inches)
     private Location pos = new Location();           //location of robot as [x,y,z,rot] (inches / degrees)
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-
     //-----internal values-----//
     private ElapsedTime runtime = new ElapsedTime();
     private static final float mmPerInch        = 25.4f;
@@ -110,7 +116,7 @@ public class Navigation{
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      * @param useTelemetry - Whether or not to output information about stored variables and motors during hold periods.
      */
-    public Navigation(com.qualcomm.robotcore.eventloop.opmode.OpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry, boolean useTelemetry) {
+    public Navigation(com.qualcomm.robotcore.eventloop.opmode.OpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry,boolean testing, boolean useTelemetry) {
         this.hardwareGetter = hardwareGetter;
         this.telemetry = telemetry;
         this.useTelemetry = useTelemetry;
@@ -168,13 +174,13 @@ public class Navigation{
         //Setup trackables
         VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
         VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
-        blueRover.setName("Blue-Rover");
+        blueRover.setName("target-west");
         VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
-        redFootprint.setName("Red-Footprint");
+        redFootprint.setName("target-south");
         VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
-        frontCraters.setName("Front-Craters");
+        frontCraters.setName("target-east");
         VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("Back-Space");
+        backSpace.setName("target-north");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         allTrackables.addAll(targetsRoverRuckus);
@@ -213,6 +219,10 @@ public class Navigation{
         {
             ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
+        vumarkLocations[0] = new Location(0f,5.75f,71.5f,180f); //east
+        vumarkLocations[1] = new Location(-71.5f,5.75f,0f,270f); //north
+        vumarkLocations[2] = new Location(0f,5.75f,-71.5f,0f); //west
+        vumarkLocations[3] = new Location(71.5f,5.75f,0f,90f); //south
 
         detector = new GoldAlignDetector();
         detector.init(hardwareGetter.hardwareMap.appContext,CameraViewDisplay.getInstance(), 0, true);
@@ -510,6 +520,30 @@ public class Navigation{
         prevTime = System.currentTimeMillis();
         return velocity;
     }
+    public boolean updatePos() {
+        ArrayList<Location> validPositions = new ArrayList<>();
+        for (int i = 0; i < allTrackables.size(); i++) {
+            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
+            if (testLocation != null) {
+                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float)Math.toDegrees(testLocation.get(1,2)));
+                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
+                markLocation.translateLocal(camLocation.getLocation(0),camLocation.getLocation(1),camLocation.getLocation(2));
+                markLocation.setRotation(markLocation.getLocation(3) + 180f);
+                pos = markLocation;
+                posHasBeenUpdated = true;
+                if( killDistance!= 0 && (Math.abs(pos.getLocation(0)) >  killDistance || Math.abs(pos.getLocation(2)) >  killDistance)) throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Location getPos(){return pos;}
+    // Returns how much the robot should turn to correct for hang variation
+    public double getCorrectionDeg(int wanted){
+            return wanted- getPos().getLocation(4);
+    }
+
 
     /**
      * A simple method to output the status of all motors and other variables to telemetry.
