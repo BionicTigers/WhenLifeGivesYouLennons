@@ -506,6 +506,17 @@ public class Navigation{
     }
 
     /**
+     * Holds program execution until lift motor is done moving.
+     * Will output telemetry if class initialized with useTelemetry true.
+     */
+    public void holdForLift() {
+        hold(0.1f);
+        while(lifty.isBusy()) {
+            if(useTelemetry) telemetryMethod();
+        }
+    }
+
+    /**
      * Hold program for given number of seconds.
      * @param seconds float. Number of seconds to wait.
      */

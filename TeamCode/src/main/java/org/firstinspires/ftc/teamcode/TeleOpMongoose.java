@@ -59,6 +59,7 @@ public class TeleOpMongoose extends OpMode {
         extendy = hardwareMap.dcMotor.get("extendy");
         lifty = hardwareMap.dcMotor.get("lifty");
         liftyJr = hardwareMap.dcMotor.get("liftyJr");
+        lifty.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         liftyJr.setDirection(DcMotor.Direction.REVERSE);
 
