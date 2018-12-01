@@ -35,8 +35,8 @@ public class AutoGeneric{
      * Run this to run Autonomous.
      */
     public void runOpMode() {
-        nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-        nav.holdForLift();
+        //nav.setLiftHeight(Navigation.LiftHeight.LOWER);
+        //nav.holdForLift();
         //-----crater depot run-----//
         if(startZone == StartPos.CRATER) {
             nav.updateCubePos();
@@ -211,21 +211,21 @@ public class AutoGeneric{
                     nav.holdForDrive();
                     nav.goDistance(20f);
                     nav.holdForDrive();
-                    nav.goDistance(-18f);
+                    nav.goDistance(-16f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(132f);
+                    nav.pointTurnRelative(133f);
                     nav.holdForDrive();
-                    nav.goDistance(5f);
+                    nav.goDistance(50f);
                     nav.holdForDrive();
                     break;
                 default:
                     nav.goDistance(15f);
                     nav.holdForDrive();
-                    nav.goDistance(-15f);
+                    nav.goDistance(-12f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(90f);
+                    nav.pointTurnRelative(92f);
                     nav.holdForDrive();
-                    nav.goDistance(50f);
+                    nav.goDistance(53f);
                     nav.holdForDrive();
                     break;
             }

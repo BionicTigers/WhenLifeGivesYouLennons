@@ -225,7 +225,6 @@ public class TeleOpMongoose extends OpMode {
         telemetry.addData("LiftJr: ", round(liftyJr.getCurrentPosition()));
         telemetry.addData("Lift", round(lifty.getCurrentPosition()));
         telemetry.addData("Limit: ", limitSwitch.isPressed());
-        telemetry.update();
 
         //Team Marker Deployer// - DPadRight= Lift | DPadLeft= Lower
         if (gamepad2.dpad_right) {
@@ -264,12 +263,12 @@ public class TeleOpMongoose extends OpMode {
             droppyJr.setPosition(0.5);
             canMoveLiftyJr = true;
         } else if (gamepad2.a) { //bottom
-            droppy.setPosition(0.715);
-            droppyJr.setPosition(0.715);
+            droppy.setPosition(0.675);
+            droppyJr.setPosition(0.675);
             canMoveLiftyJr = true;
         }
 
-        telemetry.update();
+     //   telemetry.update();
     }
 
 

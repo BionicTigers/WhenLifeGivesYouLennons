@@ -499,11 +499,12 @@ public class Navigation{
     }
 
     public void holdForLift() {
-        hold(0.2f);
+        hold(0.1f);
         while(lifty.isBusy()) {
             if(useTelemetry) telemetryMethod();
         }
     }
+
     /**
      * Hold program for given number of seconds.
      * @param seconds float. Number of seconds to wait.
