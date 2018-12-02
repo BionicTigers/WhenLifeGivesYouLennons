@@ -31,7 +31,7 @@ public class AutoGeneric{
        // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
 
     }
-
+//fight me
     /**
      * Run this to run Autonomous.
      */
