@@ -13,6 +13,12 @@ public class AutoDepot extends LinearOpMode {
 
         waitForStart();
 
+        opModeIsActive();
+
         autoGeneric.runOpMode();
+    }
+
+    public boolean isStopping() {
+        return opModeIsActive();
     }
 }

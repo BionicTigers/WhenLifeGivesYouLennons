@@ -22,27 +22,30 @@ public class AutoGeneric{
      * @param opMode - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      */
-    public AutoGeneric(StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.OpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
+    public AutoGeneric(StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
         nav = new Navigation(opMode, telemetry,false,true);
         nav.hold(0.1f);
        // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+
     }
 
     /**
      * Run this to run Autonomous.
      */
     public void runOpMode() {
-        //nav.setLiftHeight(Navigation.LiftHeight.LOWER);
+        nav.updateCubePos();
+        //nav.setLiftHeight(Navigation.LiftHeight.HOOK)
         //nav.holdForLift();
         //-----crater depot run-----//
         if(startZone == StartPos.CRATER) {
-            nav.updateCubePos();
+
             //-----unhooking-----//
             nav.pointTurnRelative(-90f);
             nav.holdForDrive();
+          //  nav.setLiftHeight(Navigation.LiftHeight.LOWER);
             nav.goDistance(13f);
             nav.holdForDrive();
             switch(nav.getCubePos()) {
@@ -97,11 +100,11 @@ public class AutoGeneric{
 
         //-----crater doublesampling and depot run-----//
         else if(startZone == StartPos.DOUBLESAMPLING) {
-            nav.updateCubePos();
             //-----unhooking-----//
             nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
             nav.pointTurnRelative(-90f);
             nav.holdForDrive();
+            //nav.setLiftHeight(Navigation.LiftHeight.LOWER);
             nav.goDistance(13f);
             nav.holdForDrive();
             switch (nav.getCubePos()) {
@@ -110,9 +113,9 @@ public class AutoGeneric{
                     nav.holdForDrive();
                     nav.goDistance(20);
                     nav.holdForDrive();
-                    nav.goDistance(-17f);
+                    nav.goDistance(-16f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(38f);
+                    nav.pointTurnRelative(37f);
                     nav.holdForDrive();
                     nav.goDistance(52f);
                     nav.holdForDrive();
@@ -150,7 +153,7 @@ public class AutoGeneric{
                     nav.holdForDrive();
                     nav.goDistance(30f);
                     nav.holdForDrive();
-                    nav.goDistance(-32f);
+                    nav.goDistance(-30f);
                     nav.holdForDrive();
                     nav.pointTurnRelative(83f);
                     break;
@@ -186,11 +189,11 @@ public class AutoGeneric{
 
         //-----depot depot run-----//
         else if (startZone == StartPos.DEPOT) {
-            nav.updateCubePos();
             //-----unhooking-----//
             nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
             nav.pointTurnRelative(-90f);
             nav.holdForDrive();
+          //  nav.setLiftHeight(Navigation.LiftHeight.LOWER);
             nav.goDistance(13f);
             nav.holdForDrive();
             switch(nav.getCubePos()) {
@@ -248,14 +251,5 @@ public class AutoGeneric{
             nav.hold(2);
         }
 
-        //-----marker deploy and driving to crater-----//
-//        nav.setTeamMarker(0.8f);
-//        nav.hold(1);
-//        nav.goDistance(63f);
-//        nav.holdForDrive();
-//        //nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-//        nav.hold(5);
-//      //  nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT); //breaking crater plane
-//        nav.hold(2);
     }
 }

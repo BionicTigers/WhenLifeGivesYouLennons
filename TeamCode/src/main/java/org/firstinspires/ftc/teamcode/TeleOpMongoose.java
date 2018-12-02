@@ -62,6 +62,7 @@ public class TeleOpMongoose extends OpMode {
         lifty.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         liftyJr.setDirection(DcMotor.Direction.REVERSE);
+        lifty.setDirection(DcMotor.Direction.REVERSE);
 
         //Servos//
         teamMarker = hardwareMap.servo.get("teamMarker");
@@ -215,7 +216,7 @@ public class TeleOpMongoose extends OpMode {
 
         //////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
         //Lift// - LeftStick= Hopper Lift Power | RightStick= Robot Lift Power
-        lifty.setPower(-gamepad2.right_stick_y); //Phone mount side
+        lifty.setPower(gamepad2.right_stick_y); //Phone mount side
         if (canMoveLiftyJr) { //Camera mount side
             if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
                 liftyJr.setPower(0);

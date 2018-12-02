@@ -67,13 +67,13 @@ public class Navigation{
     public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
     private CubePosition cubePos = CubePosition.UNKNOWN;
     public enum CollectorHeight {COLLECT, HOLD, DUMP}
-    public enum LiftHeight {LOWER, BEGIN}
+    public enum LiftHeight {LOWER, HOOK}
     public enum CollectorExtension {PARK, DUMP, OUT}
     public enum LiftLock {LOCK,UNLOCK}
     public enum CollectorSweeper {INTAKE,OUTTAKE, OFF}
 
     //-----robot hardware, position, and dimensions-----//
-    private com.qualcomm.robotcore.eventloop.opmode.OpMode hardwareGetter;
+    private com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter;
     private org.firstinspires.ftc.robotcore.external.Telemetry telemetry;
     private float wheelDistance = 6.66f;                //distance from center of robot to center of wheel (inches)
     private float wheelDiameter = 4;                //diameter of wheel (inches)
@@ -116,7 +116,7 @@ public class Navigation{
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      * @param useTelemetry - Whether or not to output information about stored variables and motors during hold periods.
      */
-    public Navigation(com.qualcomm.robotcore.eventloop.opmode.OpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry,boolean testing, boolean useTelemetry) {
+    public Navigation(com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry,boolean testing, boolean useTelemetry) {
         this.hardwareGetter = hardwareGetter;
         this.telemetry = telemetry;
         this.useTelemetry = useTelemetry;
@@ -138,6 +138,7 @@ public class Navigation{
         lifty = hardwareGetter.hardwareMap.dcMotor.get("lifty");
         lifty.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lifty.setDirection(DcMotor.Direction.REVERSE);
         lifty.setPower(1);
 
         liftyJr = hardwareGetter.hardwareMap.dcMotor.get("liftyJr");
@@ -375,10 +376,10 @@ public class Navigation{
      */
     public void setLiftHeight(LiftHeight position) {
         switch(position) {
-            case LOWER:
+            case HOOK:
                 setLiftHeight(8000);
                 break;
-            case BEGIN:
+            case LOWER:
                 setLiftHeight(0);
                 break;
         }
@@ -493,7 +494,7 @@ public class Navigation{
      */
     public void holdForDrive() {
         hold(0.2f);
-        while(updateVelocity() > minVelocityCutoff) {
+        while(updateVelocity() > minVelocityCutoff && hardwareGetter.opModeIsActive()) {
             if(useTelemetry) telemetryMethod();
         }
     }
@@ -504,7 +505,7 @@ public class Navigation{
      */
     public void holdForLift() {
         hold(0.1f);
-        while(lifty.isBusy()) {
+        while(lifty.isBusy() && hardwareGetter.opModeIsActive()) {
             if(useTelemetry) telemetryMethod();
         }
     }
@@ -515,7 +516,7 @@ public class Navigation{
      */
     public void hold(float seconds) {
         long stopTime = System.currentTimeMillis() + (long) (seconds * 1000);
-        while (System.currentTimeMillis() < stopTime) {
+        while (System.currentTimeMillis() < stopTime && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
     }
@@ -530,29 +531,29 @@ public class Navigation{
         prevTime = System.currentTimeMillis();
         return velocity;
     }
-    public boolean updatePos() {
-        ArrayList<Location> validPositions = new ArrayList<>();
-        for (int i = 0; i < allTrackables.size(); i++) {
-            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
-            if (testLocation != null) {
-                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float)Math.toDegrees(testLocation.get(1,2)));
-                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
-                markLocation.translateLocal(camLocation.getLocation(0),camLocation.getLocation(1),camLocation.getLocation(2));
-                markLocation.setRotation(markLocation.getLocation(3) + 180f);
-                pos = markLocation;
-                posHasBeenUpdated = true;
-                if( killDistance!= 0 && (Math.abs(pos.getLocation(0)) >  killDistance || Math.abs(pos.getLocation(2)) >  killDistance)) throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean updatePos() {
+//        ArrayList<Location> validPositions = new ArrayList<>();
+//        for (int i = 0; i < allTrackables.size(); i++) {
+//            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
+//            if (testLocation != null) {
+//                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float)Math.toDegrees(testLocation.get(1,2)));
+//                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
+//                markLocation.translateLocal(camLocation.getLocation(0),camLocation.getLocation(1),camLocation.getLocation(2));
+//                markLocation.setRotation(markLocation.getLocation(3) + 180f);
+//                pos = markLocation;
+//                posHasBeenUpdated = true;
+//                if( killDistance!= 0 && (Math.abs(pos.getLocation(0)) >  killDistance || Math.abs(pos.getLocation(2)) >  killDistance)) throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
-    public Location getPos(){return pos;}
-    // Returns how much the robot should turn to correct for hang variation
-    public double getCorrectionDeg(int wanted){
-            return wanted- getPos().getLocation(4);
-    }
+//    public Location getPos(){return pos;}
+//    // Returns how much the robot should turn to correct for hang variation
+//    public double getCorrectionDeg(int wanted){
+//            return wanted- getPos().getLocation(3);
+//    }
 
 
     /**
@@ -567,7 +568,7 @@ public class Navigation{
         telemetry.addData("Pos",pos);
         telemetry.addData("CubePos",cubePos);
         telemetry.addData("Velocity",velocity);
-        telemetry.addData("CubeXPosition",detector.getXPosition());
+     //   telemetry.addData("CubeXPosition",detector.getXPosition());
         telemetry.update();
     }
 }
