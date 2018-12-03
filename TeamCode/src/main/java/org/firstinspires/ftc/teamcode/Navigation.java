@@ -159,6 +159,7 @@ public class Navigation{
         //----Vuforia Params---///
         webcamName = hardwareGetter.hardwareMap.get(WebcamName.class, "Webcam 1");
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters.useExtendedTracking = true;
 
         // Vuforia licence key
         parameters.vuforiaLicenseKey = " AYSaZfX/////AAABGZyGj0QLiEYhuyrGuO59xV2Jyg9I+WGlfjyEbBxExILR4A183M1WUKucNHp5CnSpDGX5nQ9OD3w5WCfsJuudFyJIJSKZghM+dOlhTWWcEEGk/YB0aOLEJXKK712HpyZqrvwpXOyKDUwIZc1mjWyLT3ZfCmNHQ+ouLKNzOp2U4hRqjbdWf1ZkSlTieiR76IbF6x7MX5ZtRjkWeLR5hWocakIaH/ZPDnqo2A2mIzAzCUa8GCjr80FJzgS9dD77lyoHkJZ/5rNe0k/3HfUZXA+BFSthRrtai1W2/3oRCFmTJekrueYBjM4wuuB5CRqCs4MG/64AzyKOdqmI05YhC1tVa2Vd6Bye1PaMBHmWNfD+5Leq ";
@@ -531,29 +532,32 @@ public class Navigation{
         prevTime = System.currentTimeMillis();
         return velocity;
     }
-//    public boolean updatePos() {
-//        ArrayList<Location> validPositions = new ArrayList<>();
-//        for (int i = 0; i < allTrackables.size(); i++) {
-//            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
-//            if (testLocation != null) {
-//                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float)Math.toDegrees(testLocation.get(1,2)));
-//                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
-//                markLocation.translateLocal(camLocation.getLocation(0),camLocation.getLocation(1),camLocation.getLocation(2));
-//                markLocation.setRotation(markLocation.getLocation(3) + 180f);
-//                pos = markLocation;
-//                posHasBeenUpdated = true;
-//                if( killDistance!= 0 && (Math.abs(pos.getLocation(0)) >  killDistance || Math.abs(pos.getLocation(2)) >  killDistance)) throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public boolean updatePos() {
+        ArrayList<Location> validPositions = new ArrayList<>();
+        for (int i = 0; i < allTrackables.size(); i++) {
+            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
+            if (testLocation != null) {
+                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float)Math.toDegrees(testLocation.get(1,2)));
+                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
+                markLocation.translateLocal(camLocation.getLocation(0),camLocation.getLocation(1),camLocation.getLocation(2));
+                markLocation.setRotation(markLocation.getLocation(3) + 180f);
+                pos = markLocation;
+                posHasBeenUpdated = true;
+                if( killDistance!= 0 && (Math.abs(pos.getLocation(0)) >  killDistance || Math.abs(pos.getLocation(2)) >  killDistance)) throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
+                return true;
+            }
+        }
+        return false;
+    }
 
-//    public Location getPos(){return pos;}
-//    // Returns how much the robot should turn to correct for hang variation
-//    public double getCorrectionDeg(int wanted){
-//            return wanted- getPos().getLocation(3);
-//    }
+    public Location getPos(){return pos;}
+    // Returns how much the robot should turn to correct for hang variation
+    public double getCorrectionDeg(int wanted){
+            return wanted- getPos().getLocation(3);
+    }
+    public double getCorrectionInchesHor(int wanted){
+        return wanted -getPos().getLocation(1);
+    }
 
 
     /**

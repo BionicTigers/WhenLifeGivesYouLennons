@@ -32,6 +32,7 @@ public class AutoGeneric{
 
     }
 //fight me
+// UM THATS NOT VERY GP!
     /**
      * Run this to run Autonomous.
      */
