@@ -7,17 +7,20 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name="Test Nav Methods", group="Test")
+@Autonomous(name="Test Nav Methods")
 public class TestNavMethods extends LinearOpMode {
     private Navigation nav;
     @Override
     public void runOpMode(){
-        while (opModeIsActive()){
+
         nav = new Navigation(this, telemetry, true, false);
+        waitForStart();
+        while (opModeIsActive()){
         nav.updatePos();
         telemetry.addData("Position", nav.getPos());
         telemetry.addData("How the robot should move", nav.getCorrectionDeg(270));
         if (gamepad1.a){nav.pointTurnRelative((int)nav.getCorrectionDeg(270));}
+        updateTelemetry(telemetry);
     }
     }
 
