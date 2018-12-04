@@ -138,7 +138,7 @@ public class Navigation{
         lifty = hardwareGetter.hardwareMap.dcMotor.get("lifty");
         lifty.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lifty.setDirection(DcMotor.Direction.REVERSE);
+        //lifty.setDirection(DcMotor.Direction.REVERSE);
         lifty.setPower(1);
 
         liftyJr = hardwareGetter.hardwareMap.dcMotor.get("liftyJr");
@@ -378,7 +378,7 @@ public class Navigation{
     public void setLiftHeight(LiftHeight position) {
         switch(position) {
             case HOOK:
-                setLiftHeight(8000);
+                setLiftHeight(-11740);
                 break;
             case LOWER:
                 setLiftHeight(0);
