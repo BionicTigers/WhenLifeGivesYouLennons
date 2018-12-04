@@ -511,6 +511,18 @@ public class Navigation {
         }
         return false;
     }
+    public String whatvumark(){
+        for (int i = 0; i < vumarks.size(); i++) {
+            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) vumarks.get(i).getListener()).getPose();
+            if (testLocation != null) {
+                if(i==0){return "east";}
+                if(i==1){ return "north";}
+                if(i==2){return "west";}
+                if(i==3){return "south";}
+            }
+        }
+            return "None";
+    }
 
     public Location getPos() {
         return pos;
@@ -540,6 +552,8 @@ public class Navigation {
         telemetry.addData("Pos", pos);
         telemetry.addData("CubePos", cubePos);
         telemetry.addData("CubeXPosition", detector.getXPosition());
+        telemetry.addData("Seen Vumark ",whatvumark());
+
         telemetry.update();
     }
 
