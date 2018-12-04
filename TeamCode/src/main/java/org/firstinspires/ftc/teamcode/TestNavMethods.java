@@ -6,19 +6,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 @Autonomous(name="Test Nav Methods", group="Test")
-public class TestNavMethods extends OpMode {
+public class TestNavMethods extends LinearOpMode {
     private Navigation nav;
+
     @Override
-    public void init() {
+    public void runOpMode() {
+
         nav = new Navigation(this, telemetry, true, false);
 
-
-    }
-
-    @Override
-    public void loop() {
-        nav.updatePos();
-        telemetry.addData("Position", nav.getPos());
+        while(opModeIsActive()) {
+            nav.updatePos();
+            telemetry.addData("Position", nav.getPos());
+        }
     }
 
 

@@ -138,7 +138,7 @@ public class Navigation{
         lifty = hardwareGetter.hardwareMap.dcMotor.get("lifty");
         lifty.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lifty.setDirection(DcMotor.Direction.REVERSE);
+        //lifty.setDirection(DcMotor.Direction.REVERSE);
         lifty.setPower(1);
 
         liftyJr = hardwareGetter.hardwareMap.dcMotor.get("liftyJr");
@@ -150,7 +150,6 @@ public class Navigation{
 
         //-----servos-----//
         teamMarker = hardwareGetter.hardwareMap.servo.get("teamMarker");
-        liftyLock = hardwareGetter.hardwareMap.servo.get("liftyLock");
         collecty = hardwareGetter.hardwareMap.crservo.get("collecty");
         droppy = hardwareGetter.hardwareMap.servo.get("droppy");
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
@@ -377,7 +376,7 @@ public class Navigation{
     public void setLiftHeight(LiftHeight position) {
         switch(position) {
             case HOOK:
-                setLiftHeight(8000);
+                setLiftHeight(-11740);
                 break;
             case LOWER:
                 setLiftHeight(0);
@@ -531,29 +530,29 @@ public class Navigation{
         prevTime = System.currentTimeMillis();
         return velocity;
     }
-//    public boolean updatePos() {
-//        ArrayList<Location> validPositions = new ArrayList<>();
-//        for (int i = 0; i < allTrackables.size(); i++) {
-//            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
-//            if (testLocation != null) {
-//                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float)Math.toDegrees(testLocation.get(1,2)));
-//                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
-//                markLocation.translateLocal(camLocation.getLocation(0),camLocation.getLocation(1),camLocation.getLocation(2));
-//                markLocation.setRotation(markLocation.getLocation(3) + 180f);
-//                pos = markLocation;
-//                posHasBeenUpdated = true;
-//                if( killDistance!= 0 && (Math.abs(pos.getLocation(0)) >  killDistance || Math.abs(pos.getLocation(2)) >  killDistance)) throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public boolean updatePos() {
+        ArrayList<Location> validPositions = new ArrayList<>();
+        for (int i = 0; i < allTrackables.size(); i++) {
+            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
+            if (testLocation != null) {
+                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float)Math.toDegrees(testLocation.get(1,2)));
+                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
+                markLocation.translateLocal(camLocation.getLocation(0),camLocation.getLocation(1),camLocation.getLocation(2));
+                markLocation.setRotation(markLocation.getLocation(3) + 180f);
+                pos = markLocation;
+                posHasBeenUpdated = true;
+                if( killDistance!= 0 && (Math.abs(pos.getLocation(0)) >  killDistance || Math.abs(pos.getLocation(2)) >  killDistance)) throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
+                return true;
+            }
+        }
+        return false;
+    }
 
-//    public Location getPos(){return pos;}
-//    // Returns how much the robot should turn to correct for hang variation
-//    public double getCorrectionDeg(int wanted){
-//            return wanted- getPos().getLocation(3);
-//    }
+    public Location getPos(){return pos;}
+    // Returns how much the robot should turn to correct for hang variation
+    public double getCorrectionDeg(int wanted){
+            return wanted- getPos().getLocation(3);
+    }
 
 
     /**
