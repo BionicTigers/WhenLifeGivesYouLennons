@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebHandlers;
-
 /**
  * A class to run Autonomous given a strategy.
  */
@@ -28,129 +25,147 @@ public class AutoGeneric{
         this.telemetry = telemetry;
         nav = new Navigation(opMode, telemetry,false,true);
         nav.hold(0.1f);
-       // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+
 
     }
-//fight me
-// UM THATS NOT VERY GP!
+
     /**
      * Run this to run Autonomous.
      */
     public void runOpMode() {
         nav.updateCubePos();
-//        nav.setLiftHeight(Navigation.LiftHeight.HOOK);
-//        nav.holdForLift();
-//        nav.goDistance(2f);
+        nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+        nav.setLiftHeight(Navigation.LiftHeight.HOOK);
+        nav.holdForLift();
+        nav.goDistance(3f);
+        nav.holdForLift();
+        nav.pointTurnRelative(-95f);
+        nav.holdForDrive();
+        nav.setLiftHeight(Navigation.LiftHeight.LOWER); //Lowering lift back to starting position
+        nav.goDistance(13f);
+        nav.holdForDrive();
         //-----crater depot run-----//
         if(startZone == StartPos.CRATER) {
-
             //-----unhooking-----//
-            nav.pointTurnRelative(-90f);
-            nav.holdForDrive();
-           // nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-            nav.goDistance(13f);
-            nav.holdForDrive();
             switch(nav.getCubePos()) {
-                case LEFT:
-                    nav.pointTurnRelative(55f);
+                case MIDDLE:
+                    nav.goDistance(15f);
                     nav.holdForDrive();
-                    nav.goDistance(20f);
+                    nav.goDistance(-8f);
                     nav.holdForDrive();
-                    nav.goDistance(-20f);
+                    nav.pointTurnRelative(97f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(38f);
+                    nav.goDistance(45.5f); //49
                     nav.holdForDrive();
-                    nav.goDistance(50f);
-                    nav.holdForDrive();
+                    nav.pointTurnRelative(-136f);
                     break;
                 case RIGHT:
-                    nav.pointTurnRelative(-50f);
+                    nav.pointTurnRelative(-55f);
                     nav.holdForDrive();
                     nav.goDistance(20f);
                     nav.holdForDrive();
-                    nav.goDistance(-20f);
+                    nav.goDistance(-17f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(135f);
+                    nav.pointTurnRelative(140f);
                     nav.holdForDrive();
-                    nav.goDistance(47f);
+                    nav.goDistance(48f); //47
                     nav.holdForDrive();
+                    nav.pointTurnRelative(-128f);
                     break;
-                default:
-                    nav.goDistance(15f);
+                default: //Left
+                    nav.pointTurnRelative(50f);
+                    nav.holdForDrive();
+                    nav.goDistance(18f);
                     nav.holdForDrive();
                     nav.goDistance(-15f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(90f);
+                    nav.pointTurnRelative(35f);
                     nav.holdForDrive();
-                    nav.goDistance(49f);
+                    nav.goDistance(42.5f); //50
                     nav.holdForDrive();
-                    break;
+                    nav.pointTurnRelative(-135f);
+                    break; }
+
+                nav.holdForDrive();
+                nav.goDistance(-40f);
+                nav.holdForDrive();
+                nav.setTeamMarker(0.8f);
+                nav.hold(1);
+                nav.goDistance(63f);
+                nav.holdForDrive();
+                nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+                nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+                nav.hold(2);
             }
-            nav.pointTurnRelative(-135f);
-            nav.holdForDrive();
-            nav.goDistance(-40f);
-            nav.holdForDrive();
-            nav.setTeamMarker(0.8f);
-            nav.hold(1);
-            nav.goDistance(63f);
-            nav.holdForDrive();
-            nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-            nav.hold(5);
-            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT); //breaking crater plane
-            nav.hold(2);
-        }
 
         //-----crater doublesampling and depot run-----//
         else if(startZone == StartPos.DOUBLESAMPLING) {
-            //-----unhooking-----//
-            nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
-            nav.pointTurnRelative(-90f);
-            nav.holdForDrive();
-           // nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-            nav.goDistance(13f);
-            nav.holdForDrive();
             switch (nav.getCubePos()) {
-                case LEFT:
-                    nav.pointTurnRelative(55f);
+                case MIDDLE:
+                    nav.goDistance(15f);
                     nav.holdForDrive();
-                    nav.goDistance(20);
+                    nav.goDistance(-9f);
                     nav.holdForDrive();
-                    nav.goDistance(-13f);
+                    nav.pointTurnRelative(85f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(38f);
+                    nav.goDistance(44f);
                     nav.holdForDrive();
-                    nav.goDistance(47f);
+                    nav.pointTurnRelative(-135);
                     nav.holdForDrive();
+                    nav.goDistance(-40f);
                     break;
                 case RIGHT:
-                    nav.pointTurnRelative(-45f);
+                    nav.pointTurnRelative(-55f);
                     nav.holdForDrive();
                     nav.goDistance(20f);
                     nav.holdForDrive();
-                    nav.goDistance(-15f);
+                    nav.goDistance(-16f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(137f);
+                    nav.pointTurnRelative(135f);
                     nav.holdForDrive();
-                    nav.goDistance(50.5f);
+                    nav.goDistance(44f); //50.5
                     nav.holdForDrive();
+                    nav.pointTurnRelative(-134f);
+                    nav.holdForDrive();
+                    nav.goDistance(-40f);
                     break;
-                default:
-                    nav.goDistance(15f);
+                default: //Left
+                    nav.pointTurnRelative(50f);
                     nav.holdForDrive();
-                    nav.goDistance(-10f);
+                    nav.goDistance(18f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(95f);
+                    nav.goDistance(-14f);
                     nav.holdForDrive();
-                    nav.goDistance(57f);
+                    nav.pointTurnRelative(35f);
                     nav.holdForDrive();
-                    break;
-            }
-            nav.pointTurnRelative(-135f);
-            nav.holdForDrive();
-            nav.goDistance(-40f);
-            nav.holdForDrive();
+                    nav.goDistance(42.5f); //47
+                    nav.holdForDrive();
+                    nav.pointTurnRelative(-130f); //128
+                    nav.holdForDrive();
+                    nav.goDistance(-45f);
+                    break; }
+
+                nav.holdForDrive();
             switch (nav.getCubePos()) {
-                case LEFT:
+                case MIDDLE:
+                    nav.pointTurnRelative(-57f);
+                    nav.holdForDrive();
+                    nav.goDistance(30f);
+                    nav.holdForDrive();
+                    nav.goDistance(-31f);
+                    nav.holdForDrive();
+                    nav.pointTurnRelative(59f);
+                    break;
+                case RIGHT:
+                    nav.pointTurnRelative(-20f);
+                    nav.holdForDrive();
+                    nav.goDistance(30f);
+                    nav.holdForDrive();
+                    nav.goDistance(-30f);
+                    nav.holdForDrive();
+                    nav.pointTurnRelative(28f);
+                    break;
+                default: //middle
                     nav.pointTurnRelative(-80f);
                     nav.holdForDrive();
                     nav.goDistance(30f);
@@ -158,58 +173,30 @@ public class AutoGeneric{
                     nav.goDistance(-30f);
                     nav.holdForDrive();
                     nav.pointTurnRelative(82f);
-                    break;
-                case RIGHT:
-                    nav.pointTurnRelative(-25f);
-                    nav.holdForDrive();
-                    nav.goDistance(30f);
-                    nav.holdForDrive();
-                    nav.goDistance(-28f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(22f);
-                    break;
-                default: //middle
-                    nav.pointTurnRelative(-50f);
-                    nav.holdForDrive();
-                    nav.goDistance(30f);
-                    nav.holdForDrive();
-                    nav.goDistance(-31f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(49f);
-                    break;
-            }
+                    break; }
             nav.holdForDrive();
             nav.setTeamMarker(0.8f);
             nav.hold(1);
             nav.goDistance(63f);
             nav.holdForDrive();
+            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
             nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-            nav.hold(5);
-            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT); //breaking crater plane
             nav.hold(2);
         }
 
         //-----depot depot run-----//
         else if (startZone == StartPos.DEPOT) {
-            //-----unhooking-----//
-            nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
-            nav.pointTurnRelative(-90f);
-            nav.holdForDrive();
-           // nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-            nav.goDistance(13f);
-            nav.holdForDrive();
             switch(nav.getCubePos()) {
-                case LEFT:
-                    nav.pointTurnRelative(55f);
+                case MIDDLE:
+                    nav.goDistance(15f);
                     nav.holdForDrive();
-                    nav.goDistance(20f);
+                    nav.goDistance(-12f);
                     nav.holdForDrive();
-                    nav.goDistance(-20f);
+                    nav.pointTurnRelative(80f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(39f);
+                    nav.goDistance(45f); //53
                     nav.holdForDrive();
-                    nav.goDistance(54f);
-                    nav.holdForDrive();
+                    nav.pointTurnRelative(50f);
                     break;
                 case RIGHT:
                     nav.pointTurnRelative(-45f);
@@ -218,24 +205,25 @@ public class AutoGeneric{
                     nav.holdForDrive();
                     nav.goDistance(-15f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(135f);
+                    nav.pointTurnRelative(130f);
                     nav.holdForDrive();
-                    nav.goDistance(50.5f);
+                    nav.goDistance(47f); //50.5
                     nav.holdForDrive();
+                    nav.pointTurnRelative(47f);
                     break;
                 default:
-                    nav.goDistance(15f);
+                    nav.pointTurnRelative(50f);
                     nav.holdForDrive();
-                    nav.goDistance(-12f);
+                    nav.goDistance(20f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(92f);
+                    nav.goDistance(-20f);
                     nav.holdForDrive();
-                    nav.goDistance(53f);
+                    nav.pointTurnRelative(30f);
                     nav.holdForDrive();
-                    break;
-            }
-
-            nav.pointTurnRelative(45f);
+                    nav.goDistance(51f); //54
+                    nav.holdForDrive();
+                    nav.pointTurnRelative(51f);
+                    break; }
             nav.holdForDrive();
             nav.goDistance(-58f);
             nav.holdForDrive();
@@ -243,13 +231,12 @@ public class AutoGeneric{
             nav.holdForDrive();
             nav.setTeamMarker(0.8f);
             nav.hold(1);
-            nav.pointTurnRelative(-90f);
+            nav.pointTurnRelative(-91f);
             nav.holdForDrive();
             nav.goDistance(63f);
             nav.holdForDrive();
+            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
             nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-            nav.hold(5);
-            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT); //breaking crater plane
             nav.hold(2);
         }
 

@@ -18,10 +18,11 @@ public class TestNavMethods extends LinearOpMode {
         while (opModeIsActive()){
         nav.updatePos();
         telemetry.addData("Position", nav.getPos());
-        telemetry.addData("How the robot should move", nav.getCorrectionDeg(270));
-        if (gamepad1.a){nav.pointTurnRelative((int)nav.getCorrectionDeg(270));}
-       nav.telemetryMethod();
-        updateTelemetry(telemetry);
+        //telemetry.addData("How the robot should move", nav.getCorrectionDeg(270));
+        //if (gamepad1.a){nav.pointTurnRelative((int)nav.getCorrectionDeg(270));}
+       //nav.telemetryMethod();
+        //
+            // updateTelemetry(telemetry);
     }
     }
 
