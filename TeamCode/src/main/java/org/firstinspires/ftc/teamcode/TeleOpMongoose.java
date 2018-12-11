@@ -216,10 +216,17 @@ public class TeleOpMongoose extends OpMode {
             }
         }
 
-        if (gamepad1.dpad_down && (runtime.seconds() > liftToggle)) {
-            liftToggle = runtime.seconds() + 0.5;
+//        if (gamepad1.dpad_down && (runtime.seconds() > liftToggle)) {
+//            liftToggle = runtime.seconds() + 0.5;
+//            lifty.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            ++liftMode;
+//        }
+
+        // hopper lift automation //
+        if (limitSwitch.isPressed()){
             liftyJr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            ++liftMode;
+        } if(gamepad2.right_stick_button){
+            liftyJr.setTargetPosition(1000);
         }
 
         //////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
