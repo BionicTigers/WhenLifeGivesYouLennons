@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TestingCrop extends LinearOpMode {
     @Override
     public void runOpMode() {
-        Navigation nav = new Navigation(this,telemetry,true,false);
+        Navigation nav = new Navigation(this,telemetry,false);
         waitForStart();
         while (opModeIsActive()){
             nav.telemetryMethod();        }

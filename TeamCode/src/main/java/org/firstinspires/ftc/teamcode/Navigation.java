@@ -55,13 +55,7 @@ public class Navigation {
     private float maximumMotorPower = 0.5f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
     private float encoderCountsPerRev = 537.6f;         //encoder ticks per one revolution
     private boolean useTelemetry;                       //whether to execute the telemetry method while holding
-    private float minVelocityCutoff = 0.05f;
-    private Location[] vumarkLocations = new Location[4];//velocity with which to continue program execution during a hold (encoder ticks per millisecond)
-    private Location camLocation = new Location(0f, 6f, 6f, 0f);
-    private boolean posHasBeenUpdated;
-    private float killDistance = 0;
-    private boolean targetVisible;
-    private OpenGLMatrix lastLocation;
+    private float minVelocityCutoff = 0.05f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
 
     //-----enums-----//
     public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
@@ -71,28 +65,22 @@ public class Navigation {
     public enum CollectorExtension {PARK, DUMP, OUT}
     public enum CollectorSweeper {INTAKE,OUTTAKE, OFF}
 
-    //-----robot hardware, position, and dimensions-----//
+    //-----misc internal values-----//
     private com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter;
     private org.firstinspires.ftc.robotcore.external.Telemetry telemetry;
-    private float wheelDistance = 6.66f;                //distance from center of robot to center of wheel (inches)
-    private float wheelDiameter = 4;                //diameter of wheel (inches)
-    private Location pos = new Location();           //location of robot as [x,y,z,rot] (inches / degrees)
-    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-    //-----internal values-----//
-    private ElapsedTime runtime = new ElapsedTime();
-    private static final float mmPerInch = 25.4f;
-    private static final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-    private static final float mmTargetHeight = (6) * mmPerInch;
     private Dogeforia vuforia;
     private GoldAlignDetector detector;
     private WebcamName webcamName;
     private VuforiaTrackables vumarks;
-    private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-
     private DcMotor velocityMotor;
     private long prevTime;
     private int prevEncoder;
     private float velocity = 0f;
+    private Location[] vumarkLocations = new Location[4];
+    private Location camLocation = new Location(0f, 6f, 6f, 0f);
+    private float wheelDistance = 6.66f;                //distance from center of robot to center of wheel (inches)
+    private float wheelDiameter = 4;                //diameter of wheel (inches)
+    private Location pos = new Location();           //location of robot as [x,y,z,rot] (inches / degrees)
 
     //-----motors-----//
     private DcMotor frontLeft;
@@ -116,7 +104,7 @@ public class Navigation {
      * @param telemetry      - Telemetry of the current OpMode, used to output data to the screen.
      * @param useTelemetry   - Whether or not to output information about stored variables and motors during hold periods.
      */
-    public Navigation(com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry, boolean testing, boolean useTelemetry) {
+    public Navigation(com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry, boolean useTelemetry) {
         this.hardwareGetter = hardwareGetter;
         this.telemetry = telemetry;
         this.useTelemetry = useTelemetry;
@@ -209,7 +197,6 @@ public class Navigation {
                 markLocation.translateLocal(camLocation.getLocation(0), camLocation.getLocation(1), camLocation.getLocation(2));
                 markLocation.setRotation(markLocation.getLocation(3) + 180f);
                 pos = markLocation;
-                posHasBeenUpdated = true;
                 return true;
             }
         }
