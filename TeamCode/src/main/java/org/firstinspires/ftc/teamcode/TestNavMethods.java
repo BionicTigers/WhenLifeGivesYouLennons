@@ -13,7 +13,7 @@ public class TestNavMethods extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        nav = new Navigation(this, telemetry, true, true);
+        nav = new Navigation(this, telemetry, false, true);
         waitForStart();
         while (opModeIsActive()){
         nav.updatePos();

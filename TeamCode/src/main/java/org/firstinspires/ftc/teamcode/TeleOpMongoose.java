@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
+//TODO JOJO PLEASE PLEASE TEST DURING CLASS SHOULD MAYBE PROBABLY WORK
 
 @TeleOp(name="Mongoose TeleOp", group="Competition")
 public class TeleOpMongoose extends OpMode {
@@ -24,7 +24,7 @@ public class TeleOpMongoose extends OpMode {
     //Other Motors//
     private DcMotor extendy;
     private DcMotor lifty;
-    private DcMotor liftyJr;
+   // private DcMotor liftyJr;
 
     //Servos//
     private Servo teamMarker;
@@ -43,9 +43,11 @@ public class TeleOpMongoose extends OpMode {
 
     //Objects//
     private ElapsedTime runtime = new ElapsedTime();
+    private TeleOpNav nav;
 
 
     public void init() {
+        nav = new TeleOpNav(this);
         //Drivetrain Motors//
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
@@ -58,10 +60,10 @@ public class TeleOpMongoose extends OpMode {
         //Other Motors//
         extendy = hardwareMap.dcMotor.get("extendy");
         lifty = hardwareMap.dcMotor.get("lifty");
-        liftyJr = hardwareMap.dcMotor.get("liftyJr");
+        //liftyJr = hardwareMap.dcMotor.get("liftyJr");
         lifty.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        liftyJr.setDirection(DcMotor.Direction.REVERSE);
+        //liftyJr.setDirection(DcMotor.Direction.REVERSE);
        // lifty.setDirection(DcMotor.Direction.REVERSE);
 
         //Servos//
@@ -156,7 +158,7 @@ public class TeleOpMongoose extends OpMode {
 
             //Left Side
             double leftPower = gamepad1.left_stick_y;
-            
+
             //Right Side
             double rightPower = gamepad1.right_stick_y;
 
@@ -216,45 +218,60 @@ public class TeleOpMongoose extends OpMode {
             }
         }
 
-        if (gamepad1.dpad_down && (runtime.seconds() > liftToggle)) {
-            liftToggle = runtime.seconds() + 0.5;
-            liftyJr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            ++liftMode;
-        }
+
 
         //////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
         //Lift// - LeftStick= Hopper Lift Power | RightStick= Robot Lift Power
         lifty.setPower(-gamepad2.right_stick_y); //Phone mount side
 
-        telemetry.addData("Lifts: " + round(liftyJr.getCurrentPosition()) + "/", round(lifty.getCurrentPosition()));
+        //telemetry.addData("Lifts: " + round(liftyJr.getCurrentPosition()) + "/", round(lifty.getCurrentPosition()));
         telemetry.addData("Limit: ", limitSwitch.isPressed());
+//
+//            if (canMoveLiftyJr) { //Camera mount side
+//                if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
+//                    liftyJr.setPower(0);
+//                } else if (gamepad2.left_stick_y < 0 && liftyJr.getCurrentPosition() < 2000){
+//                    liftyJr.setPower(0);
+//                } else {
+//                    liftyJr.setPower(gamepad2.left_stick_y * liftyJrSpeed);
+//                }
+//            }
+//         else {
+//            if (canMoveLiftyJr) { //Camera mount side
+//                if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
+//                    liftyJr.setPower(0);
+//                } else {
+//                    liftyJr.setPower(gamepad2.left_stick_y * liftyJrSpeed);
+//                }
+//            }
+//        }
+        if (limitSwitch.isPressed()/* && (runtime.seconds() > liftToggle)*/) {
+            nav.resetEncoders();
+        }
 
-        if (liftMode % 2 == 0) {
-            if (canMoveLiftyJr) { //Camera mount side
-                if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
-                    liftyJr.setPower(0);
-                } else if (gamepad2.left_stick_y < 0 && liftyJr.getCurrentPosition() < 2000){
-                    liftyJr.setPower(0);
-                } else {
-                    liftyJr.setPower(gamepad2.left_stick_y * liftyJrSpeed);
-                }
+        if(gamepad1.dpad_down){
+            while(canMoveLiftyJr){
+                nav.goDown();
             }
-        } else {
-            if (canMoveLiftyJr) { //Camera mount side
-                if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
-                    liftyJr.setPower(0);
-                } else {
-                    liftyJr.setPower(gamepad2.left_stick_y * liftyJrSpeed);
-                }
+        }
+        if(gamepad1.dpad_left){
+            while(canMoveLiftyJr){
+                nav.goUpBit();
+            }
+        }
+        if(gamepad1.dpad_up){
+            while(canMoveLiftyJr){
+               nav.goUpAll();
             }
         }
 
         //Team Marker Deployer// - DPadRight= Lift | DPadLeft= Lower
-        if (gamepad2.dpad_right) {
+        if (gamepad1.dpad_right) {
             teamMarker.setPosition(0.7);
-        } else if (gamepad2.dpad_left) {
+        } else if (gamepad1.dpad_left) {
             teamMarker.setPosition(0.2);
         }
+
 
         //Collector// - RightBumper= Intake | RightTrigger= Outtake //This is a VEX Motor, 0.5 is the maximum power
         if (gamepad2.right_bumper) { //
