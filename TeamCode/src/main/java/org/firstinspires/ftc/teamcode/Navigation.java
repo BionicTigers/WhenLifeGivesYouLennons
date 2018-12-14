@@ -340,6 +340,15 @@ public class Navigation {
     }
 
     /**
+     * Executes swing turn based on the given distances for both sides of the robot.
+     * @param distanceL distance for left side of the robot to move (in inches)
+     * @param distanceR distance for right side of the robot to move (in inches)
+     */
+    public void swingTurn(float distanceL, float distanceR) {
+        driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
+    }
+
+    /**
      * Sets lift motor to given encoder position
      *
      * @param position Encoder ticks for lift motor. ~0(bottom) to ~8200(top)
