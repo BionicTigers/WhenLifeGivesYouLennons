@@ -55,50 +55,32 @@ public class Navigation {
     private float maximumMotorPower = 0.5f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
     private float encoderCountsPerRev = 537.6f;         //encoder ticks per one revolution
     private boolean useTelemetry;                       //whether to execute the telemetry method while holding
-    private float minVelocityCutoff = 0.05f;
-    private Location[] vumarkLocations = new Location[4];//velocity with which to continue program execution during a hold (encoder ticks per millisecond)
-    private Location camLocation = new Location(0f, 6f, 6f, 0f);
-    private boolean posHasBeenUpdated;
-    private float killDistance = 0;
-    private boolean targetVisible;
-    private OpenGLMatrix lastLocation;
+    private float minVelocityCutoff = 0.05f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
 
     //-----enums-----//
-    public enum CubePosition {
-        UNKNOWN, LEFT, MIDDLE, RIGHT
-    }
-
+    public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
     private CubePosition cubePos = CubePosition.UNKNOWN;
-
     public enum CollectorHeight {COLLECT, HOLD, DUMP}
-
     public enum LiftHeight {LOWER, HOOK}
-
     public enum CollectorExtension {PARK, DUMP, OUT}
+    public enum CollectorSweeper {INTAKE,OUTTAKE, OFF}
 
-    public enum CollectorSweeper {INTAKE, OUTTAKE, OFF}
-
-    //-----robot hardware, position, and dimensions-----//
+    //-----misc internal values-----//
     private com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter;
     private org.firstinspires.ftc.robotcore.external.Telemetry telemetry;
-    private float wheelDistance = 6.66f;                //distance from center of robot to center of wheel (inches)
-    private float wheelDiameter = 4;                //diameter of wheel (inches)
-    private Location pos = new Location();           //location of robot as [x,y,z,rot] (inches / degrees)
-    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-    //-----internal values-----//
-    private ElapsedTime runtime = new ElapsedTime();
-    private static final float mmPerInch = 25.4f;
-    private static final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-    private static final float mmTargetHeight = (6) * mmPerInch;
     private Dogeforia vuforia;
     private GoldAlignDetector detector;
     private WebcamName webcamName;
-    private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-
+    private VuforiaTrackables vumarks;
     private DcMotor velocityMotor;
     private long prevTime;
     private int prevEncoder;
     private float velocity = 0f;
+    private Location[] vumarkLocations = new Location[4];
+    private Location camLocation = new Location(0f, 6f, 6f, 0f);
+    private float wheelDistance = 6.66f;                //distance from center of robot to center of wheel (inches)
+    private float wheelDiameter = 4;                //diameter of wheel (inches)
+    private Location pos = new Location();           //location of robot as [x,y,z,rot] (inches / degrees)
 
     //-----motors-----//
     private DcMotor frontLeft;
@@ -122,7 +104,7 @@ public class Navigation {
      * @param telemetry      - Telemetry of the current OpMode, used to output data to the screen.
      * @param useTelemetry   - Whether or not to output information about stored variables and motors during hold periods.
      */
-    public Navigation(com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry, boolean testing, boolean useTelemetry) {
+    public Navigation(com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter, org.firstinspires.ftc.robotcore.external.Telemetry telemetry, boolean useTelemetry) {
         this.hardwareGetter = hardwareGetter;
         this.telemetry = telemetry;
         this.useTelemetry = useTelemetry;
@@ -178,56 +160,12 @@ public class Navigation {
 
 
         //Setup trackables
-        VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
-        VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
-        blueRover.setName("target-west");
-        VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
-        redFootprint.setName("target-south");
-        VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
-        frontCraters.setName("target-east");
-        VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("target-north");
-
-        // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        allTrackables.addAll(targetsRoverRuckus);
-
-        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
-                .translation(0, mmFTCFieldWidth, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
-        blueRover.setLocation(blueRoverLocationOnField);
-
-        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
-                .translation(0, -mmFTCFieldWidth, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
-        redFootprint.setLocation(redFootprintLocationOnField);
-
-        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
-                .translation(-mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 90));
-        frontCraters.setLocation(frontCratersLocationOnField);
-
-        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
-                .translation(mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
-        backSpace.setLocation(backSpaceLocationOnField);
-
-
-        final int CAMERA_FORWARD_DISPLACEMENT = 110;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT = 0;     // eg: Camera is ON the robot's center line
-
-        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
-                        CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
-
-        for (VuforiaTrackable trackable : allTrackables) {
-            ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        }
+        vumarks = vuforia.loadTrackablesFromAsset("18-19_rover_ruckus");
         vumarkLocations[0] = new Location(0f, 5.75f, 71.5f, 180f); //east
         vumarkLocations[1] = new Location(-71.5f, 5.75f, 0f, 270f); //north
         vumarkLocations[2] = new Location(0f, 5.75f, -71.5f, 0f); //west
         vumarkLocations[3] = new Location(71.5f, 5.75f, 0f, 90f); //south
+        vumarks.activate();
 
         detector = new GoldAlignDetector();
         detector.init(hardwareGetter.hardwareMap.appContext, CameraViewDisplay.getInstance(), 0, true);
@@ -244,6 +182,31 @@ public class Navigation {
         prevTime = System.currentTimeMillis();
         prevEncoder = velocityMotor.getCurrentPosition();
     }
+
+    /**
+     * Updates the Robot's position using Vuforia. Value is in inches from center of map (see ccoordinate_diagram.png). Access using [nav].pos.
+     * @return boolean, true if updated, false otherwise
+     */
+    public boolean updatePos() {
+
+        for (int i = 0; i < vumarks.size(); i++) {
+            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) vumarks.get(i).getListener()).getPose();
+            if (testLocation != null) {
+                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float) Math.toDegrees(testLocation.get(1, 2)));
+                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
+                markLocation.translateLocal(camLocation.getLocation(0), camLocation.getLocation(1), camLocation.getLocation(2));
+                markLocation.setRotation(markLocation.getLocation(3) + 180f);
+                pos = markLocation;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return Location of the robot as Location object.
+     */
+    public Location getPos(){return pos;}
 
     /**
      * Updates the cube location enumerator using OpenCV. Access using [nav].cubePos.
@@ -355,7 +318,6 @@ public class Navigation {
         //driveMethodComplex(distance, slowdown, precision, frontLeft, 1f, -1f, true, 0.05f, 0.25f);
         driveMethodSimple(distance, distance, 0.3f, 0.3f);
 
-
         pos.setRotation(rot);
     }
 
@@ -375,6 +337,15 @@ public class Navigation {
      */
     public void pointTurnRelative(float rot) {
         pointTurn(pos.getLocation(3) + rot);
+    }
+
+    /**
+     * Executes swing turn based on the given distances for both sides of the robot.
+     * @param distanceL distance for left side of the robot to move (in inches)
+     * @param distanceR distance for right side of the robot to move (in inches)
+     */
+    public void swingTurn(float distanceL, float distanceR) {
+        driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
     }
 
     /**
@@ -559,33 +530,6 @@ public class Navigation {
         return velocity;
     }
 
-    public boolean updatePos() {
-        ArrayList<Location> validPositions = new ArrayList<>();
-        for (int i = 0; i < allTrackables.size(); i++) {
-            OpenGLMatrix testLocation = ((VuforiaTrackableDefaultListener) allTrackables.get(i).getListener()).getPose();
-            if (testLocation != null) {
-                Location markLocation = new Location(vumarkLocations[i].getLocation(0), vumarkLocations[i].getLocation(1), vumarkLocations[i].getLocation(2), vumarkLocations[i].getLocation(3) - (float) Math.toDegrees(testLocation.get(1, 2)));
-                markLocation.translateLocal(testLocation.getTranslation().get(1), -testLocation.getTranslation().get(0), testLocation.getTranslation().get(2));
-                markLocation.translateLocal(camLocation.getLocation(0), camLocation.getLocation(1), camLocation.getLocation(2));
-                markLocation.setRotation(markLocation.getLocation(3) + 180f);
-                pos = markLocation;
-                posHasBeenUpdated = true;
-                if (killDistance != 0 && (Math.abs(pos.getLocation(0)) > killDistance || Math.abs(pos.getLocation(2)) > killDistance))
-                    throw new IllegalStateException("Robot outside of killDistance at pos: " + pos);
-                return true;
-            }
-        }
-        return false;
-    }
-        public Location getPos () {
-            return pos;
-        }
-        // Returns how much the robot should turn to correct for hang variation
-        public double getCorrectionDeg ( int wanted){
-            return wanted - getPos().getLocation(3);
-        }
-        public void rotateWithIMU () {
-        }
 
         /**
          * A simple method to output the status of all motors and other variables to telemetry.

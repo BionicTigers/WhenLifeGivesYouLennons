@@ -39,6 +39,8 @@ public class TeleOpMongoose extends OpMode {
     private double calibToggle, driveToggle, liftToggle;
     private int driveSpeed, driveMode, liftMode;
     private boolean canMoveLiftyJr;
+    private float trim = 0;
+    private boolean dPadDown = false;
 
 
     //Objects//
@@ -294,17 +296,31 @@ public class TeleOpMongoose extends OpMode {
         telemetry.addData("Extension: ", extendy.getCurrentPosition());
 
         //Collector Dropper// - Y= Top | B= Middle | A= Bottom
+        if(!dPadDown) {
+            if(gamepad2.dpad_up) {
+                trim -= 0.05;
+                dPadDown = true;
+            }
+            else if(gamepad2.dpad_down) {
+                trim += 0.05;
+                dPadDown = true;
+            }
+        }
+        else if(!gamepad2.dpad_up && !gamepad2.dpad_down) {
+            dPadDown = false;
+        }
+
         if (gamepad2.y) { //top
-            droppy.setPosition(0.2);
-            droppyJr.setPosition(0.2);
+            droppy.setPosition(0.2 + trim);
+            droppyJr.setPosition(0.2 + trim);
             canMoveLiftyJr = false;
         } else if (gamepad2.b) { //middle
-            droppy.setPosition(0.5);
-            droppyJr.setPosition(0.5);
+            droppy.setPosition(0.5 + trim);
+            droppyJr.setPosition(0.5 + trim);
             canMoveLiftyJr = true;
         } else if (gamepad2.a) { //bottom
-            droppy.setPosition(9.75);
-            droppyJr.setPosition(0.675);
+            droppy.setPosition(0.675 + trim);
+            droppyJr.setPosition(0.675 + trim);
             canMoveLiftyJr = true;
         }
 

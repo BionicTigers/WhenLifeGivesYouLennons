@@ -23,7 +23,7 @@ public class AutoGeneric{
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
-        nav = new Navigation(opMode, telemetry,false,true);
+        nav = new Navigation(opMode, telemetry,true);
         nav.hold(0.1f);
 
 
