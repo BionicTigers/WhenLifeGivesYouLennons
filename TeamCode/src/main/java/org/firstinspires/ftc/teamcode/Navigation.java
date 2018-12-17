@@ -585,7 +585,7 @@ public class Navigation {
      * that you're checking a heading for
      * May take a hot second
      */
-    public void calibHeading() {
+    public void calibrateHeading() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
