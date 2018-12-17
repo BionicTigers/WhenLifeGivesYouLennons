@@ -581,7 +581,7 @@ public class Navigation {
     }
 
     /**
-     * Calibrates the imu, probably best to do right before a turn
+     * Calibrates the imu, probably best to do in init
      * that you're checking a heading for
      * May take a hot second
      */
@@ -600,7 +600,7 @@ public class Navigation {
         String filename = "BNO055IMUCalibration.json";
         File file = AppUtil.getInstance().getSettingsFile(filename);
         ReadWriteFile.writeFile(file, calibrationData.serialize());
-        telemetry.log().add("imu calibrated", filename);
+        telemetry.log().add("IMU: CALIBRATED", filename);
     }
 
     /**
