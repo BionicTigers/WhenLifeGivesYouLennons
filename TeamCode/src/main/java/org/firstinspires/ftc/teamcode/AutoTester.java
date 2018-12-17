@@ -26,7 +26,7 @@ public class AutoTester {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
-        nav = new Navigation(opMode, telemetry, false, true);
+        nav = new Navigation(opMode, telemetry, false);
         nav.hold(0.1f);
 
 
@@ -40,7 +40,7 @@ public class AutoTester {
         nav.holdForLift();
         nav.goDistance(3f);
         nav.holdForLift();
-        nav.pointTurnRelative(-95f); //turning farther than before, (we were off)
+        nav.pointTurnRelative(-100f); //turning farther than before, (we were off)
         nav.holdForDrive();
         nav.setLiftHeight(Navigation.LiftHeight.LOWER); //Lowering lift back to starting position
         nav.goDistance(15f); //going farther by 2 inches
@@ -48,23 +48,23 @@ public class AutoTester {
         //-----unhooking-----//
         switch (nav.getCubePos()) { //all of them for sampling
             case MIDDLE:
-                nav.goDistance(7f); //less forward (same total distance as before)
+                nav.goDistance(12f); //less forward (same total distance as before)
                 nav.holdForDrive();
-                nav.goDistance(-7f);  //same distance back
+                nav.goDistance(-12f);  //same distance back
                 nav.holdForDrive();
-                nav.pointTurnRelative(90f); //90 degrees to left
+                nav.pointTurnRelative(85f); //90 degrees to left
                 break;
             case RIGHT:
-                nav.pointTurnRelative(-60f); //turning 5 degrees more
+                nav.pointTurnRelative(-55f); //turning 5 degrees more
                 nav.holdForDrive();
-                nav.goDistance(15f); //going same distance forward and back
+                nav.goDistance(20f); //going same distance forward and back
                 nav.holdForDrive();
-                nav.goDistance(-15f);
+                nav.goDistance(-25f);
                 nav.holdForDrive();
-                nav.pointTurnRelative(130f); //turning total 90
+                nav.pointTurnRelative(135f); //turning total 90
                 break;
             default:
-                nav.pointTurnRelative(60f);
+                nav.pointTurnRelative(55f);
                 nav.holdForDrive();
                 nav.goDistance(15f);
                 nav.holdForDrive();
@@ -78,11 +78,11 @@ public class AutoTester {
         //-----crater depot run-----//
         if (startZone == StartPos.CRATERAUTO) {
             nav.holdForDrive();
-            nav.goDistance(45f);
+            nav.goDistance(44f);
             nav.holdForDrive();
-            nav.pointTurnRelative(-135f);
-            nav.holdForDrive();
-//            nav.goDistance(-35f);
+            nav.pointTurnRelative(-130f);
+//            nav.holdForDrive();
+//            nav.goDistance(-38f);
 //            nav.holdForDrive();
         }
 
@@ -90,60 +90,60 @@ public class AutoTester {
             nav.holdForDrive();
             nav.goDistance(45f);
             nav.holdForDrive();
-            nav.pointTurnRelative(45f); //want a little bit more for gliding on the wall
+            nav.pointTurnRelative(43f); //want a little bit more for gliding on the wall
             nav.holdForDrive();
-//            nav.goDistance(-35f);
-//            nav.holdForDrive();
+            nav.goDistance(-35f);
+            nav.holdForDrive();
         }
 
-//        //-----crater doublesampling and depot run-----//
-//        else if (startZone == StartPos.DOUBLESAMPLINGAUTO) {
+        //-----crater doublesampling and depot run-----//
+        else if (startZone == StartPos.DOUBLESAMPLINGAUTO) {
 //            nav.holdForDrive();
 //            nav.goDistance(44f);
-//            nav.holdForDrive();
-//            nav.pointTurnRelative(-135f);
-//            nav.holdForDrive();
-//            nav.goDistance(-35f);
-//            nav.holdForDrive();
-//            switch (nav.getCubePos()) {
-//                case MIDDLE:
-//                    nav.pointTurnRelative(-57f);
-//                    nav.holdForDrive();
-//                    nav.goDistance(30f);
-//                    nav.holdForDrive();
-//                    nav.goDistance(-31f);
-//                    nav.holdForDrive();
-//                    nav.pointTurnRelative(59f);
-//                    break;
-//                case RIGHT:
-//                    nav.pointTurnRelative(-20f);
-//                    nav.holdForDrive();
-//                    nav.goDistance(30f);
-//                    nav.holdForDrive();
-//                    nav.goDistance(-30f);
-//                    nav.holdForDrive();
-//                    nav.pointTurnRelative(22f);
-//                    break;
-//                default: //middle
-//                    nav.pointTurnRelative(-80f);
-//                    nav.holdForDrive();
-//                    nav.goDistance(30f);
-//                    nav.holdForDrive();
-//                    nav.goDistance(-30f);
-//                    nav.holdForDrive();
-//                    nav.pointTurnRelative(82f);
-//            }
+            nav.holdForDrive();
+            nav.pointTurnRelative(-135f);
+            nav.holdForDrive();
+            nav.goDistance(-35f);
+            nav.holdForDrive();
+            switch (nav.getCubePos()) {
+                case MIDDLE:
+                    nav.pointTurnRelative(-57f);
+                    nav.holdForDrive();
+                    nav.goDistance(30f);
+                    nav.holdForDrive();
+                    nav.goDistance(-31f);
+                    nav.holdForDrive();
+                    nav.pointTurnRelative(59f);
+                    break;
+                case RIGHT:
+                    nav.pointTurnRelative(-20f);
+                    nav.holdForDrive();
+                    nav.goDistance(30f);
+                    nav.holdForDrive();
+                    nav.goDistance(-30f);
+                    nav.holdForDrive();
+                    nav.pointTurnRelative(22f);
+                    break;
+                default: //middle
+                    nav.pointTurnRelative(-80f);
+                    nav.holdForDrive();
+                    nav.goDistance(30f);
+                    nav.holdForDrive();
+                    nav.goDistance(-30f);
+                    nav.holdForDrive();
+                    nav.pointTurnRelative(82f);
+            }
 
-        //     }
+             }
 
         //-----marker deploy and driving to crater-----//
 //        nav.holdForDrive();
 //        nav.setTeamMarker(0.8f);
 //        nav.hold(1);
-        //nav.goDistance(60f);
-        // nav.holdForDrive();
-        //nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-        // nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-        // nav.hold(2);
+//        nav.goDistance(60f);
+//         nav.holdForDrive();
+    //    nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+     //    nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+     //    nav.hold(2);
     }
 }
