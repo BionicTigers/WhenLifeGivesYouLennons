@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -33,6 +35,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
+import com.qualcomm.robotcore.util.ReadWriteFile;
+
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+
+import java.io.File;
+import java.util.Locale;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +94,11 @@ public class Navigation {
     private Location camLocation = new Location(0f, 6f, 6f, 0f);
     private float wheelDistance = 6.66f;                //distance from center of robot to center of wheel (inches)
     private float wheelDiameter = 4;                //diameter of wheel (inches)
-    private Location pos = new Location();           //location of robot as [x,y,z,rot] (inches / degrees)
+    private Location pos = new Location();
+    BNO055IMU imu;
+    public Orientation angles;
+    public Acceleration gravity;
+    //location of robot as [x,y,z,rot] (inches / degrees)
 
     //-----motors-----//
     private DcMotor frontLeft;
@@ -559,19 +577,53 @@ public class Navigation {
     }
 
 
-        /**
-         * A simple method to output the status of all motors and other variables to telemetry.
-         */
-        public void telemetryMethod () {
-            updateVelocity();
-            String motorString = "FL-" + frontLeft.getCurrentPosition() + " BL-" + backLeft.getCurrentPosition() + " FR-" + frontRight.getCurrentPosition() + " BR-" + backRight.getCurrentPosition();
-            telemetry.addData("Drive", motorString);
-            telemetry.addData("Lift", lifty.getCurrentPosition());
-            telemetry.addData("Collector L/E/C", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
-            telemetry.addData("Pos", pos);
-            telemetry.addData("CubePos", cubePos);
-            telemetry.addData("Velocity", velocity);
-            //   telemetry.addData("CubeXPosition",detector.getXPosition());
-            telemetry.update();
-        }
+    /**
+     * A simple method to output the status of all motors and other variables to telemetry.
+     */
+    public void telemetryMethod () {
+        updateVelocity();
+        String motorString = "FL-" + frontLeft.getCurrentPosition() + " BL-" + backLeft.getCurrentPosition() + " FR-" + frontRight.getCurrentPosition() + " BR-" + backRight.getCurrentPosition();
+        telemetry.addData("Drive", motorString);
+        telemetry.addData("Lift", lifty.getCurrentPosition());
+        telemetry.addData("Collector L/E/C", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
+        telemetry.addData("Pos", pos);
+        telemetry.addData("CubePos", cubePos);
+        telemetry.addData("Velocity", velocity);
+        //   telemetry.addData("CubeXPosition",detector.getXPosition());
+        telemetry.update();
     }
+
+    /**
+     * Calibrates the imu, probably best to do right before a turn
+     * that you're checking a heading for
+     * May take a hot second
+     */
+    public void calibHeading() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu.initialize(parameters);
+
+        BNO055IMU.CalibrationData calibrationData = imu.readCalibrationData();
+        String filename = "BNO055IMUCalibration.json";
+        File file = AppUtil.getInstance().getSettingsFile(filename);
+        ReadWriteFile.writeFile(file, calibrationData.serialize());
+        telemetry.log().add("imu calibrated", filename);
+    }
+
+    /**
+     * Checks heading based from calibHeading() and returns
+     * @param hed the heading to check for, heading in is degrees
+     * @param err the amount of error (in degrees) allowed to return true
+     * @return boolean.
+     */
+    public boolean checkHeading(float hed, float err) {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        return Math.abs(hed - angles.firstAngle) < err;
+    }
+}
