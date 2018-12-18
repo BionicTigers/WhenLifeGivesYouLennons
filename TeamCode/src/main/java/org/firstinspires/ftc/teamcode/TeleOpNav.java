@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class TeleOpNav {
+    private final DcMotor lifty;
     private DcMotor liftyJr;
     private com.qualcomm.robotcore.eventloop.opmode.OpMode hardwareGetter;
     private TouchSensor limitSwitch;
@@ -16,7 +17,8 @@ public class TeleOpNav {
 //        liftyJr.setDirection(DcMotor.Direction.REVERSE);
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         limitSwitch = hardWareGetter.hardwareMap.touchSensor.get("limitSwitch");
-
+        lifty = hardWareGetter.hardwareMap.dcMotor.get("lifty");
+        lifty.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
     public void resetEncoders(){
@@ -28,24 +30,33 @@ public class TeleOpNav {
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         liftyJr.setPower(.8);
-        liftyJr.setTargetPosition(-1600);
+        liftyJr.setTargetPosition(-1500);
     }
     public void goUpAll(){
 
         if(liftyJr.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        liftyJr.setPower(.4);
-        liftyJr.setTargetPosition(-2100);
+        liftyJr.setPower(.8);
+        liftyJr.setTargetPosition(-2050);
     }
-    public void goDown(){
+    public void goDown() {
 
-        if(liftyJr.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
+        if (liftyJr.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        while (!limitSwitch.isPressed())
-         liftyJr.setPower(.5);
+//        while (!limitSwitch.isPressed())
+        liftyJr.setPower(.8);
         liftyJr.setTargetPosition(0);
+//    }
+    }
+    public final void ITS_ENDGAME_NOW(){
+        if (lifty.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
+            lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        lifty.setPower(.5);
+        lifty.setTargetPosition(9800);
+
     }
 
 }

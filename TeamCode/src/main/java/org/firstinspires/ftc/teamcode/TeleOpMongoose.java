@@ -39,7 +39,7 @@ public class TeleOpMongoose extends OpMode {
     private double calibToggle, driveToggle, liftToggle;
     private int driveSpeed, driveMode, liftMode;
     private boolean canMoveLiftyJr;
-    private float trim = 0;
+    private double trim = 0;
     private boolean dPadDown = false;
 
 
@@ -63,7 +63,7 @@ public class TeleOpMongoose extends OpMode {
         extendy = hardwareMap.dcMotor.get("extendy");
         lifty = hardwareMap.dcMotor.get("lifty");
         //liftyJr = hardwareMap.dcMotor.get("liftyJr");
-        lifty.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         //liftyJr.setDirection(DcMotor.Direction.REVERSE);
        // lifty.setDirection(DcMotor.Direction.REVERSE);
@@ -247,32 +247,14 @@ public class TeleOpMongoose extends OpMode {
 //                }
 //            }
 //        }
-        if (limitSwitch.isPressed()/* && (runtime.seconds() > liftToggle)*/) {
-            nav.resetEncoders();
-        }
 
-        if(gamepad1.dpad_down){
-            while(canMoveLiftyJr){
-                nav.goDown();
-            }
-        }
-        if(gamepad1.dpad_left){
-            while(canMoveLiftyJr){
-                nav.goUpBit();
-            }
-        }
-        if(gamepad1.dpad_up){
-            while(canMoveLiftyJr){
-               nav.goUpAll();
-            }
-        }
 
-        //Team Marker Deployer// - DPadRight= Lift | DPadLeft= Lower
-        if (gamepad1.dpad_right) {
-            teamMarker.setPosition(0.7);
-        } else if (gamepad1.dpad_left) {
-            teamMarker.setPosition(0.2);
-        }
+//        //Team Marker Deployer// - DPadRight= Lift | DPadLeft= Lower
+//        if (gamepad1.dpad_right) {
+//            teamMarker.setPosition(0.7);
+//        } else if (gamepad1.dpad_left) {
+//            teamMarker.setPosition(0.2);
+//        }
 
 
         //Collector// - RightBumper= Intake | RightTrigger= Outtake //This is a VEX Motor, 0.5 is the maximum power
@@ -296,19 +278,38 @@ public class TeleOpMongoose extends OpMode {
         telemetry.addData("Extension: ", extendy.getCurrentPosition());
 
         //Collector Dropper// - Y= Top | B= Middle | A= Bottom
-        if(!dPadDown) {
-            if(gamepad2.dpad_up) {
-                trim -= 0.05;
-                dPadDown = true;
-            }
-            else if(gamepad2.dpad_down) {
-                trim += 0.05;
-                dPadDown = true;
+
+        if(gamepad2.dpad_down&&canMoveLiftyJr){
+            if(canMoveLiftyJr) {
+                nav.goDown();
             }
         }
-        else if(!gamepad2.dpad_up && !gamepad2.dpad_down) {
-            dPadDown = false;
+        if(gamepad2.dpad_left&&canMoveLiftyJr){
+            if(canMoveLiftyJr){
+                nav.goUpBit();
+            }
         }
+        if(gamepad2.dpad_right&&canMoveLiftyJr){
+            nav.ITS_ENDGAME_NOW();
+        }
+        if(gamepad2.dpad_up&&canMoveLiftyJr){
+            if(canMoveLiftyJr){
+                nav.goUpAll();
+            }
+        }
+//        if(!dPadDown) {
+//            if(gamepad2.dpad_up) {
+//                trim -= 0.05;
+//                dPadDown = true;
+//            }
+//            else if(gamepad2.dpad_down) {
+//                trim += 0.05;
+//                dPadDown = true;
+//            }
+//        }
+//        else if(!gamepad2.dpad_up && !gamepad2.dpad_down) {
+//            dPadDown = false;
+//        }
 
         if (gamepad2.y) { //top
             droppy.setPosition(0.2 + trim);
@@ -319,8 +320,8 @@ public class TeleOpMongoose extends OpMode {
             droppyJr.setPosition(0.5 + trim);
             canMoveLiftyJr = true;
         } else if (gamepad2.a) { //bottom
-            droppy.setPosition(0.675 + trim);
-            droppyJr.setPosition(0.675 + trim);
+            droppy.setPosition(0.875 + trim);
+            droppyJr.setPosition(0.875 + trim);
             canMoveLiftyJr = true;
         }
 
