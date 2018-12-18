@@ -91,7 +91,7 @@ public class TeleOpMongoose extends OpMode {
 
         //Speed Offsets//
         normalSpeed = .7;
-        slowSpeed = .35;
+        slowSpeed = normalSpeed / 2;
         liftySpeed = 1;
         liftyJrSpeed = 1;
     }
