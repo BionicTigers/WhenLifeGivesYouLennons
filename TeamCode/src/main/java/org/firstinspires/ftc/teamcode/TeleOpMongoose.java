@@ -66,7 +66,7 @@ public class TeleOpMongoose extends OpMode {
 
 
         //liftyJr.setDirection(DcMotor.Direction.REVERSE);
-       // lifty.setDirection(DcMotor.Direction.REVERSE);
+        //lifty.setDirection(DcMotor.Direction.REVERSE);
 
         //Servos//
         teamMarker = hardwareMap.servo.get("teamMarker");
