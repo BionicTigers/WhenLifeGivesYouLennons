@@ -326,33 +326,13 @@ public class Navigation {
         pos.setRotation(rot);
     }
 
-
-    public void curveTurn(float rot) {
-        float rota = (rot - pos.getLocation(3)) % 360f;
-        float rotb = -(360f - rota);
-        float optimalRotation = (Math.abs(rota) < Math.abs(rotb) ? rota : rotb); //selects shorter rotation
-        float distance = (float) (Math.toRadians(optimalRotation) * wheelDistance); //arc length of turn (radians * radius)
-
-        //driveMethodComplex(distance, slowdown, precision, frontLeft, 1f, -1f, true, 0.05f, 0.25f);
-        driveMethodSimpleC(distance, distance, 0.7f, 0.4f);
-
-
-        pos.setRotation(rot);
-    }
-    private void driveMethodSimpleC(float distanceL, float distanceR, float LPower, float RPower) {
-        driveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int l = (int) (distanceL / (wheelDiameter * Math.PI) * encoderCountsPerRev);
-        int r = (int) (distanceR / (wheelDiameter * Math.PI) * encoderCountsPerRev);
-        drivePosition(-l, r);
-        drivePower(LPower, RPower);
-        driveMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-
-    public void curveTurn(Location loc) {
-        curveTurn((float) Math.toDegrees(Math.atan2(loc.getLocation(2) - pos.getLocation(2), loc.getLocation(0) - pos.getLocation(0))));
-    }
-    public void curveTurnRelative(float rot) {
-        curveTurn(pos.getLocation(3) + rot);
+    public void curveTurn(float distance1,float distanceL, float distanceR, float distance2){
+        goDistance(distance1);
+        holdForDrive();
+        swingTurn(distanceL, distanceR);
+        holdForDrive();
+        goDistance(distance2);
+        holdForDrive();
     }
     /**
      * Executes a point turn to face the given Location.
@@ -380,6 +360,7 @@ public class Navigation {
     public void swingTurn(float distanceL, float distanceR) {
         driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
     }
+
 
     /**
      * Sets lift motor to given encoder position

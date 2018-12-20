@@ -21,8 +21,7 @@ public class TestNavMethods extends LinearOpMode {
         //telemetry.addData("How the robot should move", nav.getCorrectionDeg(270));
         //if (gamepad1.a){nav.pointTurnRelative((int)nav.getCorrectionDeg(270));}
        //nav.telemetryMethod();
-     nav.swingTurn(5f,10f);
-     nav.holdForDrive();
+        // nav.curveTurn();
     // nav.curveTurnRelative(200f);
             // updateTelemetry(telemetry)
     }

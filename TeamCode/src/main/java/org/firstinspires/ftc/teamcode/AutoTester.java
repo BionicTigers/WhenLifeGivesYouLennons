@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Navigation;
 /**
  * A class to run Autonomous given a strategy.
  */
@@ -98,41 +99,40 @@ public class AutoTester {
 
         //-----crater doublesampling and depot run-----//
         else if (startZone == StartPos.DOUBLESAMPLINGAUTO) {
-//            nav.holdForDrive();
-//            nav.goDistance(44f);
+            nav.holdForDrive();
+            nav.goDistance(44f);
             nav.holdForDrive();
             nav.pointTurnRelative(-135f);
-            nav.holdForDrive();
-            nav.goDistance(-35f);
-            nav.holdForDrive();
+            nav.curveTurn(-50f,12f,0f,10f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
-                    nav.pointTurnRelative(-57f);
+                    nav.pointTurnRelative(-90f);
                     nav.holdForDrive();
                     nav.goDistance(30f);
                     nav.holdForDrive();
-                    nav.goDistance(-31f);
+                    nav.goDistance(-30f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(59f);
+                    nav.pointTurnRelative(90f);
                     break;
                 case RIGHT:
-                    nav.pointTurnRelative(-20f);
+                    nav.pointTurnRelative(-45f);
                     nav.holdForDrive();
                     nav.goDistance(30f);
                     nav.holdForDrive();
                     nav.goDistance(-30f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(22f);
+                    nav.pointTurnRelative(45f);
                     break;
-                default: //middle
-                    nav.pointTurnRelative(-80f);
+                default: //Left
+                    nav.pointTurnRelative(-135f);
                     nav.holdForDrive();
                     nav.goDistance(30f);
                     nav.holdForDrive();
                     nav.goDistance(-30f);
                     nav.holdForDrive();
-                    nav.pointTurnRelative(82f);
+                    nav.pointTurnRelative(135f);
             }
+            nav.curveTurn(10f,-12f,0f,0f);
 
              }
 
