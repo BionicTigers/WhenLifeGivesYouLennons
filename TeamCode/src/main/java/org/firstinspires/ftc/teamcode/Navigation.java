@@ -563,7 +563,6 @@ public class Navigation {
 
     /**
      * Calibrates the imu, probably best to do in init
-     * that you're checking a heading for
      * May take a hot second
      */
     public void calibrateHeading() {
