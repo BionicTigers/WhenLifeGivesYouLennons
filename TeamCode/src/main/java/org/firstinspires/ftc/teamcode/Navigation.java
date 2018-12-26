@@ -47,6 +47,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * A class for all movement methods for Rover Ruckus.
@@ -593,7 +595,7 @@ public class Navigation {
         File file = AppUtil.getInstance().getSettingsFile(filename);
         ReadWriteFile.writeFile(file, calibrationData.serialize());
         telemetry.update();
-        telemetry.addData("IMU: CALIBRATED", filename);
+        telemetry.log().add("IMU: CALIBRATED", filename);
         telemetry.update();
     }
 
@@ -610,13 +612,16 @@ public class Navigation {
 
     public void turnToHeading(float hed) {
         telemetry.update();
-        telemetry.addData("IMU Heading: ", angles);
+        telemetry.addData("Turning to: ", round(hed));
         telemetry.update();
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         pointTurn(hed - angles.firstAngle);
         holdForDrive();
-        telemetry.update();
-        telemetry.addData("IMU Heading: ", angles);
-        telemetry.update();
+    }
+
+    private static double round(double value) { //Allows telemetry to display nicely
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(3, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
