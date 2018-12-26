@@ -37,6 +37,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import com.qualcomm.robotcore.util.ReadWriteFile;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ReadWriteFile;
+
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+
+import java.io.File;
+import java.util.Locale;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -85,6 +102,7 @@ public class Navigation {
     BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
+
     //location of robot as [x,y,z,rot] (inches / degrees)
 
     //-----motors-----//
@@ -186,6 +204,17 @@ public class Navigation {
         velocityMotor = frontLeft;
         prevTime = System.currentTimeMillis();
         prevEncoder = velocityMotor.getCurrentPosition();
+
+        //---imu initialization-----//
+        BNO055IMU.Parameters noots = new BNO055IMU.Parameters();
+        noots.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        noots.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        noots.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        noots.loggingEnabled = true;
+        noots.loggingTag = "IMU";
+        noots.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(noots);
     }
 
     /**
@@ -565,15 +594,15 @@ public class Navigation {
      * May take a hot second
      */
     public void calibrateHeading() {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        BNO055IMU.Parameters noots = new BNO055IMU.Parameters();
+        noots.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        noots.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        noots.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        noots.loggingEnabled = true;
+        noots.loggingTag = "IMU";
+        noots.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        imu.initialize(parameters);
+        imu.initialize(noots);
 
         BNO055IMU.CalibrationData calibrationData = imu.readCalibrationData();
         String filename = "BNO055IMUCalibration.json";
