@@ -589,7 +589,15 @@ public class Navigation {
      * @return boolean.
      */
     public boolean checkHeading(float hed, float err) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return Math.abs(hed - angles.firstAngle) < err;
+    }
+
+    public void turnToHeading(float hed, float err) {
+        while (!checkHeading(hed, err)) {
+            telemetry.addData("IMU Heading: ", angles);
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            pointTurn(hed - angles.firstAngle);
+        }
     }
 }
