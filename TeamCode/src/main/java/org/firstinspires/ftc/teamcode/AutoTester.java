@@ -30,7 +30,7 @@ public class AutoTester {
         nav = new Navigation(opMode, telemetry,true);
         nav.hold(0.1f);
     }
-
+//
     // Run this to run Autonomous. //
     public void runOpMode() {
         nav.updateCubePos();
