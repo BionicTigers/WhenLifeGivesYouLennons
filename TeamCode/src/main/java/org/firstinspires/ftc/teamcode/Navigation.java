@@ -592,7 +592,9 @@ public class Navigation {
         String filename = "BNO055IMUCalibration.json";
         File file = AppUtil.getInstance().getSettingsFile(filename);
         ReadWriteFile.writeFile(file, calibrationData.serialize());
-        telemetry.log().add("IMU: CALIBRATED", filename);
+        telemetry.update();
+        telemetry.addData("IMU: CALIBRATED", filename);
+        telemetry.update();
     }
 
     /**
@@ -607,9 +609,13 @@ public class Navigation {
     }
 
     public void turnToHeading(float hed) {
+        telemetry.update();
         telemetry.addData("IMU Heading: ", angles);
+        telemetry.update();
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         pointTurn(hed - angles.firstAngle);
         holdForDrive();
+        telemetry.addData("IMU Heading: ", angles);
+        telemetry.update();
     }
 }
