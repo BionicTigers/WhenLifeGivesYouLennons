@@ -615,6 +615,7 @@ public class Navigation {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         pointTurn(hed - angles.firstAngle);
         holdForDrive();
+        telemetry.update();
         telemetry.addData("IMU Heading: ", angles);
         telemetry.update();
     }
