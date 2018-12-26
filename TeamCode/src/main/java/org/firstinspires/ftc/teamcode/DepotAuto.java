@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 @Autonomous(name="Depot Auto", group="Auto")
 public class DepotAuto extends LinearOpMode {
     public void runOpMode() {
-        AutoTester autoTester = new AutoTester(AutoTester.StartPos.CRATERAUTO, this, telemetry);
+        AutoTester autoTester = new AutoTester(AutoTester.StartPos.DEPOTAUTO, this, telemetry);
 
         waitForStart();
 

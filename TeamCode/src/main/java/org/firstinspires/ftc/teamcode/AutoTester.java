@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Navigation;
+
 /**
  * A class to run Autonomous given a strategy.
  */
@@ -23,14 +23,12 @@ public class AutoTester {
      * @param opMode    - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      */
-    public AutoTester(StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
+    public AutoTester(AutoTester.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
-        nav = new Navigation(opMode, telemetry, false);
+        nav = new Navigation(opMode, telemetry,true);
         nav.hold(0.1f);
-
-
     }
 
     // Run this to run Autonomous. //
@@ -41,28 +39,29 @@ public class AutoTester {
         nav.holdForLift();
         nav.goDistance(3f);
         nav.holdForLift();
-        nav.pointTurnRelative(-100f); //turning farther than before, (we were off)
+        nav.pointTurnRelative(-100f);
         nav.holdForDrive();
         nav.setLiftHeight(Navigation.LiftHeight.LOWER); //Lowering lift back to starting position
-        nav.goDistance(15f); //going farther by 2 inches
+        nav.goDistance(15f);
         nav.holdForDrive();
-        //-----unhooking-----//
         switch (nav.getCubePos()) { //all of them for sampling
             case MIDDLE:
                 nav.goDistance(12f); //less forward (same total distance as before)
                 nav.holdForDrive();
                 nav.goDistance(-12f);  //same distance back
                 nav.holdForDrive();
-                nav.pointTurnRelative(85f); //90 degrees to left
+                nav.pointTurnRelative(90f); //90 degrees to left
+
                 break;
             case RIGHT:
-                nav.pointTurnRelative(-55f); //turning 5 degrees more
+                nav.pointTurnRelative(-60f); //turning 5 degrees more
                 nav.holdForDrive();
                 nav.goDistance(20f); //going same distance forward and back
                 nav.holdForDrive();
                 nav.goDistance(-25f);
                 nav.holdForDrive();
                 nav.pointTurnRelative(135f); //turning total 90
+
                 break;
             default:
                 nav.pointTurnRelative(55f);
@@ -71,39 +70,36 @@ public class AutoTester {
                 nav.holdForDrive();
                 nav.goDistance(-15f);
                 nav.holdForDrive();
-                nav.pointTurnRelative(30f); //turning total of 90
-                break;
-        }
-        nav.holdForDrive();
+                nav.pointTurnRelative(35f); //turning total of 90
+
+                break; }
 
         //-----crater depot run-----//
         if (startZone == StartPos.CRATERAUTO) {
             nav.holdForDrive();
             nav.goDistance(44f);
             nav.holdForDrive();
-            nav.pointTurnRelative(-130f);
-//            nav.holdForDrive();
+            nav.pointTurnRelative(-128f);
+            nav.holdForDrive();
 //            nav.goDistance(-38f);
-//            nav.holdForDrive();
-        }
-
+}
+        // depot side //
         else if (startZone == StartPos.DEPOTAUTO) {
             nav.holdForDrive();
             nav.goDistance(45f);
             nav.holdForDrive();
             nav.pointTurnRelative(43f); //want a little bit more for gliding on the wall
             nav.holdForDrive();
-            nav.goDistance(-35f);
-            nav.holdForDrive();
-        }
+            nav.goDistance(-35f); }
 
-        //-----crater doublesampling and depot run-----//
+        //-----crater doublesampling------//
         else if (startZone == StartPos.DOUBLESAMPLINGAUTO) {
             nav.holdForDrive();
             nav.goDistance(44f);
             nav.holdForDrive();
-            nav.pointTurnRelative(-135f);
-            nav.curveTurn(-50f,12f,0f,10f);
+            nav.pointTurnRelative(-128f);
+            nav.holdForDrive();
+            nav.curveTurn(-40f,10f,0f,15f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
                     nav.pointTurnRelative(-90f);
@@ -131,19 +127,18 @@ public class AutoTester {
                     nav.goDistance(-30f);
                     nav.holdForDrive();
                     nav.pointTurnRelative(135f);
-            }
-            nav.curveTurn(10f,-12f,0f,0f);
+                    nav.holdForDrive(); }
 
-             }
+                nav.curveTurn(10f,-11f,0f,0f); }
 
         //-----marker deploy and driving to crater-----//
-//        nav.holdForDrive();
+        nav.holdForDrive();
 //        nav.setTeamMarker(0.8f);
 //        nav.hold(1);
 //        nav.goDistance(60f);
-//         nav.holdForDrive();
-    //    nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-     //    nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-     //    nav.hold(2);
+//        nav.holdForDrive();
+//        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+//        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+//        nav.hold(2);
     }
 }

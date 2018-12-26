@@ -379,7 +379,7 @@ public class Navigation {
     public void setLiftHeight(LiftHeight position) {
         switch (position) {
             case HOOK:
-                setLiftHeight(-9800);
+                setLiftHeight(-9550);
                 break;
             case LOWER:
                 setLiftHeight(0);
@@ -483,18 +483,17 @@ public class Navigation {
 
     /**
      * Drive method that independantly controls the position and power of the left and right drive motors.
-     *
      * @param distanceL float. Distance in inches for left motors to traverse.
      * @param distanceR float. Distance in inches for right motors to traverse.
-     * @param LPower    float. Power percentage for left motors (0.0-1.0).
-     * @param RPower    float. Power percentage for right motors (0.0-1.0).
+     * @param LPower float. Power percentage for left motors (0.0-1.0).
+     * @param RPower float. Power percentage for right motors (0.0-1.0).
      */
     private void driveMethodSimple(float distanceL, float distanceR, float LPower, float RPower) {
         driveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int l = (int) (distanceL / (wheelDiameter * Math.PI) * encoderCountsPerRev);
-        int r = (int) (distanceR / (wheelDiameter * Math.PI) * encoderCountsPerRev);
-        drivePosition(-l, -r);
-        drivePower(LPower, RPower);
+        int l = (int)(distanceL / (wheelDiameter * Math.PI) * encoderCountsPerRev);
+        int r = (int)(distanceR / (wheelDiameter * Math.PI) * encoderCountsPerRev);
+        drivePosition(-l,-r);
+        drivePower(LPower,RPower);
         driveMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 

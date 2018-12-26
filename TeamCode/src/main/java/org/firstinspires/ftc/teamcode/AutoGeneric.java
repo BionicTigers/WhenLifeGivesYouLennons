@@ -28,7 +28,6 @@ public class AutoGeneric{
 
 
     }
-
     /**
      * Run this to run Autonomous.
      */
