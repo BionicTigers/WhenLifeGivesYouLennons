@@ -1,243 +1,86 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 /**
  * A class to run Autonomous given a strategy.
  */
-public class AutoGeneric{
-
-    public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING};
+public class AutoGeneric {
+    public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
     private StartPos startZone;
     private OpMode opMode;
     private Telemetry telemetry;
     private Navigation nav;
-
     /**
      * The constructor method that contains everything to run in initialization.
-     * @param startZone - StartPos enumerator. Tells which strategy to run. Options are DEPOT, CRATER, or DOUBLESAMPLING.
-     * @param opMode - The OpMode required to access motors. Often, 'this' will suffice.
+     *
+     * @param startZone - StartPos enumerator. Tells which strategy to run. Options are dEPOT, CRATER, or dOUBLESAMPLING.
+     * @param opMode    - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      */
-    public AutoGeneric(StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
+    public AutoGeneric(AutoGeneric.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
         nav = new Navigation(opMode, telemetry,true);
-        nav.hold(0.1f);
-
-
-    }
-    /**
-     * Run this to run Autonomous.
-     */
+        nav.hold(0.1f); }
+    // Run this to run Autonomous. // //SQUARES UP TO WALL
     public void runOpMode() {
         nav.updateCubePos();
-        nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+       // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
         nav.holdForLift();
-        nav.goDistance(3f);
-        nav.holdForLift();
-        nav.pointTurnRelative(-95f);
-        nav.holdForDrive();
-        nav.setLiftHeight(Navigation.LiftHeight.LOWER); //Lowering lift back to starting position
-        nav.goDistance(13f);
-        nav.holdForDrive();
+        nav.distance(3f);
+        nav.turnToHeading(-45f);
+        nav.setLiftHeight(Navigation.LiftHeight.LOWER);
+        nav.distance(15f);
+        switch (nav.getCubePos()) { //all of them for sampling
+            case MIDDLE:
+                nav.distance(12f); //less forward (same total distance as before)
+                nav.distance(-12f);  //same distance back
+                break;
+            case RIGHT:
+                nav.turnToHeading(-90f); //turning 5 degrees more
+                nav.distance(20f); //ing same distance forward and back
+                nav.distance(-20f);//turning total 90
+                break;
+            default: //left
+                nav.turnToHeading(-0f);
+                nav.distance(15f);
+                nav.distance(-15f);
+                break; }
+        nav.turnToHeading(40f);
+        nav.distance(44f);
         //-----crater depot run-----//
-        if(startZone == StartPos.CRATER) {
-            //-----unhooking-----//
-            switch(nav.getCubePos()) {
-                case MIDDLE:
-                    nav.goDistance(15f);
-                    nav.holdForDrive();
-                    nav.goDistance(-8f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(97f);
-                    nav.holdForDrive();
-                    nav.goDistance(45.5f); //49
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(-136f);
-                    break;
-                case RIGHT:
-                    nav.pointTurnRelative(-55f);
-                    nav.holdForDrive();
-                    nav.goDistance(20f);
-                    nav.holdForDrive();
-                    nav.goDistance(-17f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(140f);
-                    nav.holdForDrive();
-                    nav.goDistance(48f); //47
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(-128f);
-                    break;
-                default: //Left
-                    nav.pointTurnRelative(50f);
-                    nav.holdForDrive();
-                    nav.goDistance(18f);
-                    nav.holdForDrive();
-                    nav.goDistance(-15f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(35f);
-                    nav.holdForDrive();
-                    nav.goDistance(42.5f); //50
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(-135f);
-                    break; }
-
-                nav.holdForDrive();
-                nav.goDistance(-40f);
-                nav.holdForDrive();
-                nav.setTeamMarker(0.8f);
-                nav.hold(1);
-                nav.goDistance(63f);
-                nav.holdForDrive();
-                nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-                nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-                nav.hold(2);
-            }
-
-        //-----crater doublesampling and depot run-----//
-        else if(startZone == StartPos.DOUBLESAMPLING) {
-            switch (nav.getCubePos()) {
-                case MIDDLE:
-                    nav.goDistance(15f);
-                    nav.holdForDrive();
-                    nav.goDistance(-9f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(85f);
-                    nav.holdForDrive();
-                    nav.goDistance(44f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(-135);
-                    nav.holdForDrive();
-                    nav.goDistance(-40f);
-                    break;
-                case RIGHT:
-                    nav.pointTurnRelative(-55f);
-                    nav.holdForDrive();
-                    nav.goDistance(20f);
-                    nav.holdForDrive();
-                    nav.goDistance(-16f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(135f);
-                    nav.holdForDrive();
-                    nav.goDistance(44f); //50.5
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(-134f);
-                    nav.holdForDrive();
-                    nav.goDistance(-40f);
-                    break;
-                default: //Left
-                    nav.pointTurnRelative(50f);
-                    nav.holdForDrive();
-                    nav.goDistance(18f);
-                    nav.holdForDrive();
-                    nav.goDistance(-14f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(35f);
-                    nav.holdForDrive();
-                    nav.goDistance(42.5f); //47
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(-130f); //128
-                    nav.holdForDrive();
-                    nav.goDistance(-45f);
-                    break; }
-
-                nav.holdForDrive();
-            switch (nav.getCubePos()) {
-                case MIDDLE:
-                    nav.pointTurnRelative(-57f);
-                    nav.holdForDrive();
-                    nav.goDistance(30f);
-                    nav.holdForDrive();
-                    nav.goDistance(-31f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(59f);
-                    break;
-                case RIGHT:
-                    nav.pointTurnRelative(-20f);
-                    nav.holdForDrive();
-                    nav.goDistance(30f);
-                    nav.holdForDrive();
-                    nav.goDistance(-30f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(28f);
-                    break;
-                default: //middle
-                    nav.pointTurnRelative(-80f);
-                    nav.holdForDrive();
-                    nav.goDistance(30f);
-                    nav.holdForDrive();
-                    nav.goDistance(-30f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(82f);
-                    break; }
-            nav.holdForDrive();
-            nav.setTeamMarker(0.8f);
-            nav.hold(1);
-            nav.goDistance(63f);
-            nav.holdForDrive();
-            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-            nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-            nav.hold(2);
-        }
-
-        //-----depot depot run-----//
+        if (startZone == StartPos.CRATER) {
+           nav.turnToHeading(-90f);
+           nav.distance(-38f); }
+        // depot side //
         else if (startZone == StartPos.DEPOT) {
-            switch(nav.getCubePos()) {
+            nav.turnToHeading(90f); //want a little bit more for gliding on the wall
+            nav.distance(-35f); }
+        //-----crater doublesampling------//
+        else if (startZone == StartPos.DOUBLESAMPLING) {
+            nav.turnToHeading(-90f);
+            nav.curveTurn(-40f,10f,0f,15f);
+            switch (nav.getCubePos()) {
                 case MIDDLE:
-                    nav.goDistance(15f);
-                    nav.holdForDrive();
-                    nav.goDistance(-12f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(80f);
-                    nav.holdForDrive();
-                    nav.goDistance(45f); //53
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(50f);
+                    nav.turnToHeading(-135f);
                     break;
                 case RIGHT:
-                    nav.pointTurnRelative(-45f);
-                    nav.holdForDrive();
-                    nav.goDistance(20f);
-                    nav.holdForDrive();
-                    nav.goDistance(-15f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(130f);
-                    nav.holdForDrive();
-                    nav.goDistance(47f); //50.5
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(47f);
+                    nav.turnToHeading(-90f);
                     break;
-                default:
-                    nav.pointTurnRelative(50f);
-                    nav.holdForDrive();
-                    nav.goDistance(20f);
-                    nav.holdForDrive();
-                    nav.goDistance(-20f);
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(30f);
-                    nav.holdForDrive();
-                    nav.goDistance(51f); //54
-                    nav.holdForDrive();
-                    nav.pointTurnRelative(51f);
-                    break; }
-            nav.holdForDrive();
-            nav.goDistance(-58f);
-            nav.holdForDrive();
-            nav.pointTurnRelative(90f);
-            nav.holdForDrive();
-            nav.setTeamMarker(0.8f);
-            nav.hold(1);
-            nav.pointTurnRelative(-91f);
-            nav.holdForDrive();
-            nav.goDistance(63f);
-            nav.holdForDrive();
-            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-            nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-            nav.hold(2);
-        }
-
+                default: //Left
+                    nav.turnToHeading(-180f); }
+                nav.distance(30f);
+                nav.distance(-30f);
+                nav.turnToHeading(-40f);
+                nav.curveTurn(10f,-10f,0f,0f); }
+//        //-----marker deploy and driving to crater-----//
+//        nav.setTeamMarker(0.8f);
+//        nav.hold(1);
+//        nav.distance(60f);
+//        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+//        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+//        nav.hold(2);
     }
 }

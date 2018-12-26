@@ -88,6 +88,7 @@ public class Navigation {
     BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
+    private int calibCount = 0;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -201,6 +202,8 @@ public class Navigation {
         noots.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(noots);
+
+        calibrateHeading();
     }
 
     /**
@@ -523,6 +526,10 @@ public class Navigation {
         }
     }
 
+    public void distance(float dist){
+        goDistance(dist);
+        holdForDrive();
+    }
     /**
      * Holds program execution until lift motor is done moving.
      * Will output telemetry if class initialized with useTelemetry true.
@@ -580,6 +587,7 @@ public class Navigation {
      * May take a hot second
      */
     public void calibrateHeading() {
+        calibCount++;
         BNO055IMU.Parameters noots = new BNO055IMU.Parameters();
         noots.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         noots.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -596,6 +604,7 @@ public class Navigation {
         ReadWriteFile.writeFile(file, calibrationData.serialize());
         telemetry.update();
         telemetry.log().add("IMU: CALIBRATED", filename);
+        telemetry.addData("CalibCount: ", calibCount);
         telemetry.update();
     }
 
