@@ -632,6 +632,30 @@ public class Navigation {
         holdForDrive();
     }
 
+    public void turnForHeading(float hed, float sped) {
+        telemetry.update();
+        telemetry.addData("Turning to: ", round(hed));
+        telemetry.update();
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        if (hed > angles.firstAngle) {
+            frontLeft.setPower(-sped);
+            frontRight.setPower(sped);
+            backRight.setPower(sped);
+            backLeft.setPower(-sped);
+            while (hed > angles.firstAngle);
+        } else if (hed < angles.firstAngle){
+            frontLeft.setPower(sped);
+            frontRight.setPower(-sped);
+            backRight.setPower(-sped);
+            backLeft.setPower(sped);
+            while (hed < angles.firstAngle);
+        }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        backLeft.setPower(0);
+    }
+
     private static double round(double value) { //Allows telemetry to display nicely
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(3, RoundingMode.HALF_UP);
