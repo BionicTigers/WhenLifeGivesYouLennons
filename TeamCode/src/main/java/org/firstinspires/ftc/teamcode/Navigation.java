@@ -88,7 +88,7 @@ public class Navigation {
     BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
-    private int calibCount = 0;
+    public int gameState = 0;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -153,6 +153,8 @@ public class Navigation {
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
 
+
+
         //----Vuforia Params---///
         webcamName = hardwareGetter.hardwareMap.get(WebcamName.class, "Webcam 1");
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -203,7 +205,7 @@ public class Navigation {
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(noots);
 
-        calibrateHeading();
+
     }
 
     /**
@@ -521,6 +523,7 @@ public class Navigation {
      */
     public void holdForDrive() {
         hold(0.2f);
+        gameState++;
         while (updateVelocity() > minVelocityCutoff && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
@@ -536,6 +539,7 @@ public class Navigation {
      */
     public void holdForLift() {
         hold(0.1f);
+        gameState++;
         while (lifty.isBusy() && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
@@ -548,6 +552,7 @@ public class Navigation {
      */
     public void hold(float seconds) {
         long stopTime = System.currentTimeMillis() + (long) (seconds * 1000);
+        gameState++;
         while (System.currentTimeMillis() < stopTime && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
@@ -571,13 +576,14 @@ public class Navigation {
      */
     public void telemetryMethod () {
         updateVelocity();
-        String motorString = "FL-" + frontLeft.getCurrentPosition() + " BL-" + backLeft.getCurrentPosition() + " FR-" + frontRight.getCurrentPosition() + " BR-" + backRight.getCurrentPosition();
-        telemetry.addData("Drive", motorString);
-        telemetry.addData("Lift", lifty.getCurrentPosition());
-        telemetry.addData("Collector L/E/C", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
-        telemetry.addData("Pos", pos);
-        telemetry.addData("CubePos", cubePos);
-        telemetry.addData("Velocity", velocity);
+        telemetry.addData("Game State = ", gameState);
+        String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
+        telemetry.addData("Drive = ", motorString);
+        telemetry.addData("Lift = ", lifty.getCurrentPosition());
+        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
+        telemetry.addData("Pos = ", pos);
+        telemetry.addData("CubePos = ", cubePos);
+        telemetry.addData("Velocity = ", velocity);
         //   telemetry.addData("CubeXPosition",detector.getXPosition());
         telemetry.update();
     }
@@ -587,7 +593,6 @@ public class Navigation {
      * May take a hot second
      */
     public void calibrateHeading() {
-        calibCount++;
         BNO055IMU.Parameters noots = new BNO055IMU.Parameters();
         noots.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         noots.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -604,7 +609,6 @@ public class Navigation {
         ReadWriteFile.writeFile(file, calibrationData.serialize());
         telemetry.update();
         telemetry.log().add("IMU: CALIBRATED", filename);
-        telemetry.addData("CalibCount: ", calibCount);
         telemetry.update();
     }
 

@@ -19,12 +19,9 @@ public class TestNavMethods extends LinearOpMode {
         while (opModeIsActive()){
         nav.updatePos();
         telemetry.addData("Position", nav.getPos());
-        nav.calibrateHeading();
-        nav.turnToHeading(-130f);
-        nav.turnToHeading(0f);
-        nav.distance(-5f);
-        nav.turnToHeading(90f);
+        nav.turnToHeading(40f);
         }
+
     }
 //
 

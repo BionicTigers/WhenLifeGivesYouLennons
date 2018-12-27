@@ -22,11 +22,12 @@ public class AutoGeneric {
         this.opMode = opMode;
         this.telemetry = telemetry;
         nav = new Navigation(opMode, telemetry,true);
+        nav.calibrateHeading();
         nav.hold(0.1f); }
     // Run this to run Autonomous. // //SQUARES UP TO WALL
     public void runOpMode() {
         nav.updateCubePos();
-       // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+        // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
         nav.holdForLift();
         nav.distance(3f);
@@ -44,22 +45,24 @@ public class AutoGeneric {
                 nav.distance(-20f);//turning total 90
                 break;
             default: //left
-                nav.turnToHeading(-0f);
+                nav.turnToHeading(0f);
                 nav.distance(15f);
                 nav.distance(-15f);
-                break; }
-        nav.turnToHeading(40f);
-        nav.distance(44f);
+                break;
+        }
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
-           nav.turnToHeading(-90f);
-           nav.distance(-38f); }
+//            nav.turnToHeading(40f);
+//            nav.hold(2);
+//            nav.distance(44f);
+            //nav.turnToHeading(-90f);
+            //nav.distance(-38f);
         // depot side //
-        else if (startZone == StartPos.DEPOT) {
+        } else if (startZone == StartPos.DEPOT) {
             nav.turnToHeading(90f); //want a little bit more for gliding on the wall
-            nav.distance(-35f); }
-        //-----crater doublesampling------//
-        else if (startZone == StartPos.DOUBLESAMPLING) {
+            nav.distance(-35f);
+            //-----crater doublesampling------//
+        } else if (startZone == StartPos.DOUBLESAMPLING) {
             nav.turnToHeading(-90f);
             nav.curveTurn(-40f,10f,0f,15f);
             switch (nav.getCubePos()) {
@@ -70,11 +73,13 @@ public class AutoGeneric {
                     nav.turnToHeading(-90f);
                     break;
                 default: //Left
-                    nav.turnToHeading(-180f); }
-                nav.distance(30f);
-                nav.distance(-30f);
-                nav.turnToHeading(-40f);
-                nav.curveTurn(10f,-10f,0f,0f); }
+                    nav.turnToHeading(-180f);
+            }
+            nav.distance(30f);
+            nav.distance(-30f);
+            nav.turnToHeading(-40f);
+            nav.curveTurn(10f,-10f,0f,0f);
+        }
 //        //-----marker deploy and driving to crater-----//
 //        nav.setTeamMarker(0.8f);
 //        nav.hold(1);
