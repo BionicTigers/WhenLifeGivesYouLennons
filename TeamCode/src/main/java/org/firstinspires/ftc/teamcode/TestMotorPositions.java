@@ -13,6 +13,14 @@ public class TestMotorPositions extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
+            nav.turnForHeading(90f,0.5f);
+            nav.gameState++;
+            nav.telemetryMethod();
+            nav.turnForHeading(-90f,0.5f);
+            nav.gameState++;
+            nav.telemetryMethod();
+            nav.turnForHeading(45f,0.5f);
+            nav.gameState++;
             nav.telemetryMethod();
         }
     }

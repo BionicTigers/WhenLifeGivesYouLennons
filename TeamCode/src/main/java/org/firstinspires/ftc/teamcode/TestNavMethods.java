@@ -16,10 +16,15 @@ public class TestNavMethods extends LinearOpMode {
 
         nav = new Navigation(this, telemetry, true);
         waitForStart();
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
         nav.updatePos();
         telemetry.addData("Position", nav.getPos());
-        nav.turnToHeading(40f);
+        nav.turnToHeading(15f);
+        nav.turnToHeading(-15f);
+        nav.turnToHeading(25f);
+        nav.turnToHeading(-25f);
+        nav.turnToHeading(45f);
+        nav.turnToHeading(-45f);
         }
 
     }

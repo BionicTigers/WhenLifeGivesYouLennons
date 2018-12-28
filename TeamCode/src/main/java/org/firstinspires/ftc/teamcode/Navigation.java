@@ -89,6 +89,7 @@ public class Navigation {
     public Orientation angles;
     public Acceleration gravity;
     public int gameState = 0;
+    public float biggyState = 0;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -205,7 +206,7 @@ public class Navigation {
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(noots);
 
-
+        calibrateHeading();
     }
 
     /**
@@ -614,41 +615,41 @@ public class Navigation {
 
     /**
      * Checks heading based from calibHeading() and returns
-     * @param hed the heading to check for, heading in is degrees
+     * @param heading the heading to check for, heading in is degrees
      * @param err the amount of error (in degrees) allowed to return true
      * @return boolean.
      */
-    public boolean checkHeading(float hed, float err) {
+    public boolean checkHeading(float heading, float err) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return Math.abs(hed - angles.firstAngle) < err;
+        return Math.abs(heading - angles.firstAngle) < err;
     }
 
-    public void turnToHeading(float hed) {
+    public void turnToHeading(float heading) {
         telemetry.update();
-        telemetry.addData("Turning to: ", round(hed));
+        telemetry.addData("Turning to: ", round(heading));
         telemetry.update();
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        pointTurn(hed - angles.firstAngle);
+        pointTurnRelative(heading - angles.firstAngle);
         holdForDrive();
     }
 
-    public void turnForHeading(float hed, float sped) {
+    public void turnForHeading(float heading, float power) {
         telemetry.update();
-        telemetry.addData("Turning to: ", round(hed));
+        telemetry.addData("Turning to: ", round(heading));
         telemetry.update();
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        if (hed > angles.firstAngle) {
-            frontLeft.setPower(-sped);
-            frontRight.setPower(sped);
-            backRight.setPower(sped);
-            backLeft.setPower(-sped);
-            while (hed > angles.firstAngle);
-        } else if (hed < angles.firstAngle){
-            frontLeft.setPower(sped);
-            frontRight.setPower(-sped);
-            backRight.setPower(-sped);
-            backLeft.setPower(sped);
-            while (hed < angles.firstAngle);
+        if (heading > angles.firstAngle) {
+            frontLeft.setPower(-power);
+            frontRight.setPower(power);
+            backRight.setPower(power);
+            backLeft.setPower(-power);
+            while (heading > angles.firstAngle);
+        } else if (heading < angles.firstAngle){
+            frontLeft.setPower(power);
+            frontRight.setPower(-power);
+            backRight.setPower(-power);
+            backLeft.setPower(power);
+            while (heading < angles.firstAngle);
         }
         frontLeft.setPower(0);
         frontRight.setPower(0);
