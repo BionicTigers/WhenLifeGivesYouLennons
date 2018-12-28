@@ -296,13 +296,13 @@ public class Navigation {
     /**
      * Sets all drive motor run modes to given mode.
      *
-     * @param r DcMotor mode to given value.
+     * @param mode name DcMotor mode to given value.
      */
-    public void driveMode(DcMotor.RunMode r) {
-        frontLeft.setMode(r);
-        frontRight.setMode(r);
-        backRight.setMode(r);
-        backLeft.setMode(r);
+    public void driveMode(DcMotor.RunMode mode) {
+        frontLeft.setMode(mode);
+        frontRight.setMode(mode);
+        backRight.setMode(mode);
+        backLeft.setMode(mode);
     }
 
     /**
@@ -334,8 +334,7 @@ public class Navigation {
         float rotb = -(360f - rota);
         float optimalRotation = (Math.abs(rota) < Math.abs(rotb) ? rota : rotb); //selects shorter rotation
         float distance = (float) (Math.toRadians(optimalRotation) * wheelDistance); //arc length of turn (radians * radius)
-
-        //driveMethodComplex(distance, slowdown, precision, frontLeft, 1f, -1f, true, 0.05f, 0.25f);
+//driveMethodComplex(distance, slowdown, precision, frontLeft, 1f, -1f, true, 0.05f, 0.25f);
         driveMethodSimple(distance, distance, 0.3f, 0.3f);
 
         pos.setRotation(rot);
@@ -557,7 +556,32 @@ public class Navigation {
         prevTime = System.currentTimeMillis();
         return velocity;
     }
+    public float findMaxSpeed(){
+        return 0.0f;
+    }
+    //trapaazoid
+    private void tragectaryGeneration1D(){
+        //max cruising velocity
 
+
+
+
+    }
+    public void driveMethodComplex(float distance, float slowdown, float precision,  float lModifier, float rModifier, boolean doubleBack, float minPower, float maxPower) {
+        distance *= lModifier;
+        int initEncoder = frontLeft.getCurrentPosition();
+        int targetEncoder = (int)(distance / (wheelDiameter * Math.PI) * encoderCountsPerRev) + initEncoder;
+        int slowdownEncoder = (int)(slowdown / (wheelDiameter * Math.PI) * encoderCountsPerRev);
+        int premodifier = (targetEncoder > 0) ? 1 : -1;
+        driveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while ((!doubleBack && (targetEncoder - frontLeft.getCurrentPosition())*premodifier > precision) || (doubleBack && Math.abs(targetEncoder - frontLeft.getCurrentPosition()) > precision)) {
+            float uncappedPower = (targetEncoder - frontRight.getCurrentPosition()) / (float)slowdownEncoder;
+            float power = (uncappedPower < 0 ? -1:1) * Math.min(maxPower, Math.max(minPower, Math.abs(uncappedPower)));
+            drivePower(power*lModifier, power*rModifier);
+            if(useTelemetry) telemetryMethod();
+        }
+        driveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
     /**
      * A simple method to output the status of all motors and other variables to telemetry.
