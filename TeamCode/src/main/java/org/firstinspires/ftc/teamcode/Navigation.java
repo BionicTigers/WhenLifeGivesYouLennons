@@ -89,7 +89,7 @@ public class Navigation {
     public Orientation angles;
     public Acceleration gravity;
     private int gameState = 0;
-    private float bop = 0f;
+    private float beBopBow = 0f;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -196,15 +196,15 @@ public class Navigation {
         prevEncoder = velocityMotor.getCurrentPosition();
 
         //---imu initialization-----//
-        BNO055IMU.Parameters noots = new BNO055IMU.Parameters();
-        noots.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        noots.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        noots.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        noots.loggingEnabled = true;
-        noots.loggingTag = "IMU";
-        noots.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        BNO055IMU.Parameters parameters2 = new BNO055IMU.Parameters();
+        parameters2.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters2.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters2.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters2.loggingEnabled = true;
+        parameters2.loggingTag = "IMU";
+        parameters2.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(noots);
+        imu.initialize(parameters2);
 
 
     }
@@ -580,7 +580,7 @@ public class Navigation {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         telemetry.addData("Game State = ", gameState);
         telemetry.addData("Current Heading = ", angles.firstAngle);
-        telemetry.addData("Turning To = ", bop);
+        telemetry.addData("Turning To = ", beBopBow);
         String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
         telemetry.addData("Drive = ", motorString);
         telemetry.addData("Lift = ", lifty.getCurrentPosition());
@@ -597,15 +597,15 @@ public class Navigation {
      * May take a hot second
      */
     public void calibrateHeading() {
-        BNO055IMU.Parameters noots = new BNO055IMU.Parameters();
-        noots.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        noots.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        noots.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        noots.loggingEnabled = true;
-        noots.loggingTag = "IMU";
-        noots.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        BNO055IMU.Parameters parameters2 = new BNO055IMU.Parameters();
+        parameters2.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters2.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters2.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters2.loggingEnabled = true;
+        parameters2.loggingTag = "IMU";
+        parameters2.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        imu.initialize(noots);
+        imu.initialize(parameters2);
 
         BNO055IMU.CalibrationData calibrationData = imu.readCalibrationData();
         String filename = "BNO055IMUCalibration.json";
@@ -618,13 +618,13 @@ public class Navigation {
 
     /**
      * Turns to the heading originated from current heading after calibration
-     * @param hed the heading to check for, heading in is degrees
+     * @param heading the heading to check for, heading in is degrees
      */
-    public void turnToHeading(float hed) {
-        bop = hed;
+    public void turnToHeading(float heading) {
+        beBopBow = heading;
         telemetryMethod();
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        pointTurn(hed - angles.firstAngle);
+        pointTurn(heading - angles.firstAngle);
         holdForDrive();
     }
 
