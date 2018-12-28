@@ -205,8 +205,6 @@ public class Navigation {
         parameters2.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters2);
-
-
     }
 
     /**
