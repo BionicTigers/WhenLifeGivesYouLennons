@@ -88,8 +88,8 @@ public class Navigation {
     BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
-    public int gameState = 0;
-    public float biggyState = 0;
+    private int gameState = 0;
+    private float bop = 0f;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -206,7 +206,7 @@ public class Navigation {
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(noots);
 
-        calibrateHeading();
+
     }
 
     /**
@@ -577,7 +577,10 @@ public class Navigation {
      */
     public void telemetryMethod () {
         updateVelocity();
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         telemetry.addData("Game State = ", gameState);
+        telemetry.addData("Current Heading = ", angles.firstAngle);
+        telemetry.addData("Turning To = ", bop);
         String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
         telemetry.addData("Drive = ", motorString);
         telemetry.addData("Lift = ", lifty.getCurrentPosition());
@@ -614,49 +617,22 @@ public class Navigation {
     }
 
     /**
-     * Checks heading based from calibHeading() and returns
-     * @param heading the heading to check for, heading in is degrees
-     * @param err the amount of error (in degrees) allowed to return true
-     * @return boolean.
+     * Turns to the heading originated from current heading after calibration
+     * @param hed the heading to check for, heading in is degrees
      */
-    public boolean checkHeading(float heading, float err) {
+    public void turnToHeading(float hed) {
+        bop = hed;
+        telemetryMethod();
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return Math.abs(heading - angles.firstAngle) < err;
-    }
-
-    public void turnToHeading(float heading) {
-        telemetry.update();
-        telemetry.addData("Turning to: ", round(heading));
-        telemetry.update();
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        pointTurnRelative(heading - angles.firstAngle);
+        pointTurn(hed - angles.firstAngle);
         holdForDrive();
     }
 
-    public void turnForHeading(float heading, float power) {
-        telemetry.update();
-        telemetry.addData("Turning to: ", round(heading));
-        telemetry.update();
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        if (heading > angles.firstAngle) {
-            frontLeft.setPower(-power);
-            frontRight.setPower(power);
-            backRight.setPower(power);
-            backLeft.setPower(-power);
-            while (heading > angles.firstAngle);
-        } else if (heading < angles.firstAngle){
-            frontLeft.setPower(power);
-            frontRight.setPower(-power);
-            backRight.setPower(-power);
-            backLeft.setPower(power);
-            while (heading < angles.firstAngle);
-        }
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
-        backLeft.setPower(0);
-    }
-
+    /**
+     * Rounds a double for good telemetry printing
+     * @param value the double value being rounded
+     * @return the value solidly rounded to three decimal points
+     */
     private static double round(double value) { //Allows telemetry to display nicely
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(3, RoundingMode.HALF_UP);

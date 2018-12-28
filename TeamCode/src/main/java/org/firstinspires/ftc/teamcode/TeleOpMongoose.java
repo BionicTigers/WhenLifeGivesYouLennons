@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-//TODO JOJO PLEASE PLEASE TEST DURING CLASS SHOULD MAYBE PROBABLY WORK
 
 @TeleOp(name="Mongoose TeleOp", group="Competition")
 public class TeleOpMongoose extends OpMode {
