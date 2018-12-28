@@ -228,7 +228,7 @@ public class TeleOpMongoose extends OpMode {
 
         //telemetry.addData("Lifts: " + round(liftyJr.getCurrentPosition()) + "/", round(lifty.getCurrentPosition()));
         telemetry.addData("Limit: ", limitSwitch.isPressed());
-//
+
 //            if (canMoveLiftyJr) { //Camera mount side
 //                if (gamepad2.left_stick_y > 0 && limitSwitch.isPressed()) {
 //                    liftyJr.setPower(0);

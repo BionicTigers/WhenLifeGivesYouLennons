@@ -29,7 +29,7 @@ public class TeleOpNav {
         if(liftyJr.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        liftyJr.setPower(.8);
+        liftyJr.setPower(1);
         liftyJr.setTargetPosition(-1500);
     }
     public void goUpAll(){
@@ -37,7 +37,7 @@ public class TeleOpNav {
         if(liftyJr.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        liftyJr.setPower(.8);
+        liftyJr.setPower(1);
         liftyJr.setTargetPosition(-2050);
     }
     public void goDown() {
@@ -46,7 +46,7 @@ public class TeleOpNav {
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 //        while (!limitSwitch.isPressed())
-        liftyJr.setPower(.8);
+        liftyJr.setPower(1);
         liftyJr.setTargetPosition(0);
 //    }
     }
@@ -54,7 +54,7 @@ public class TeleOpNav {
         if (lifty.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
             lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        lifty.setPower(.5);
+        lifty.setPower(1);
         lifty.setTargetPosition(9800);
 
     }
