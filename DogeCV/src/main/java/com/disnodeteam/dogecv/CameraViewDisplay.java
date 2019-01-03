@@ -60,7 +60,7 @@ public class CameraViewDisplay implements ViewDisplay {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ViewGroup l = (ViewGroup) activity.findViewById(resID); //R.id.RelativeLayout);
+                ViewGroup l = activity.findViewById(resID); //R.id.RelativeLayout);
                 if (view != null) {
                     l.removeView(view);
                 }
@@ -78,7 +78,7 @@ public class CameraViewDisplay implements ViewDisplay {
             @Override
             public void run() {
                 //cameraMonitorViewId
-                ViewGroup l = (ViewGroup) activity.findViewById(resID); // .id.RelativeLayout);
+                ViewGroup l = activity.findViewById(resID); // .id.RelativeLayout);
                 if (view != null) {
                     l.removeView(view);
                 }

@@ -10,7 +10,6 @@ public class AutoTester {
 
     public enum StartPos {DEPOTAUTO, CRATERAUTO, DOUBLESAMPLINGAUTO}
 
-    ;
     private StartPos startZone;
     private OpMode opMode;
     private Telemetry telemetry;

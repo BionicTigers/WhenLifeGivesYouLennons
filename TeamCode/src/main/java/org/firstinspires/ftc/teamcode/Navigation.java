@@ -1,50 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-
-import org.firstinspires.ftc.robotcore.external.function.Consumer;
-import org.firstinspires.ftc.robotcore.external.function.Continuation;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.SerialNumber;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
 import com.qualcomm.robotcore.util.ReadWriteFile;
-
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -92,7 +69,6 @@ public class Navigation {
     private float beBopBow = 0f;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
-
     //-----motors-----//
     private DcMotor frontLeft;
     private DcMotor frontRight;
@@ -296,7 +272,6 @@ public class Navigation {
         backRight.setTargetPosition(right);
         backLeft.setTargetPosition(left);
     }
-
     /**
      * Sets all drive motor run modes to given mode.
      *
@@ -308,7 +283,6 @@ public class Navigation {
         backRight.setMode(r);
         backLeft.setMode(r);
     }
-
     /**
      * Stops all drive motors and resets encoders.
      */
@@ -379,8 +353,6 @@ public class Navigation {
     public void swingTurn(float distanceL, float distanceR) {
         driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
     }
-
-
     /**
      * Sets lift motor to given encoder position
      *
@@ -405,7 +377,6 @@ public class Navigation {
                 break;
         }
     }
-//
     /**
      * Sets the collection sweeper to a given power value.
      *
@@ -568,8 +539,6 @@ public class Navigation {
         prevTime = System.currentTimeMillis();
         return velocity;
     }
-
-
     /**
      * A simple method to output the status of all motors and other variables to telemetry.
      */
@@ -625,7 +594,6 @@ public class Navigation {
         pointTurn(heading - angles.firstAngle);
         holdForDrive();
     }
-
     /**
      * Rounds a double for good telemetry printing
      * @param value the double value being rounded
