@@ -5,23 +5,12 @@ public class TrajectoryGen {
     public static void main(String args[]) {
 
         float[][] tra = S_Curve(8,10, 14f,80f);
-        for (int i = 0; i < tra.length; i++) {
+        for (int i = 0; i < tra.length-174; i++) {
            System.out.println(i / 1000f + ", " + tra[i][0]+", "+tra[i][1]);
         }
     }
 
-//    public static float[] GenerateTrajectory(float maxVelocity, float MaxAcceleration, float distance) {
-//        float vn = (float) Math.sqrt((MaxAcceleration * distance));
-//        if (vn < maxVelocity) {
-//            return Triangle(distance, MaxAcceleration);
-//        } else {
-//            return Trapazoid(maxVelocity, distance, maxVelocity);
-//        }
-//    }
 private static float[][] S_Curve(float maxVelocity, float distance, float maxAcceleration,float jerk) {
-//    float sustainTime = sustainDistance / maxVelocity;
-//    int timeToCompleteMili = (int) ((rampTime * 2 + sustainTime) * 1000)+1;
-//    float[][] tragectory = new float[timeToCompleteMili][2];
     int t = 0;
     float velocity=0;
     float position = 0;
@@ -40,48 +29,27 @@ private static float[][] S_Curve(float maxVelocity, float distance, float maxAcc
     for (int i = 0; i<sRamptime*1000f;i++){
         acceleration=jerk*t1/1000f;
         tragectory[t1][0]=acceleration;
-        velocity = acceleration*(1f/1000f)+velocity;
+        velocity=acceleration*(1f/1000f)+velocity;
         tragectory[t1][1]=velocity;
         t1++;
+
     }
     for (int i = 0;i<curveSus*1000f;i++ ) {
         tragectory[t1][0]=maxAcceleration;
         velocity = tragectory[t1][0]*1/1000f+velocity;
-        tragectory[t1][1]= 2*velocity;
+        tragectory[t1][1]= velocity;
         t1++;
     }
-    System.out.println(velocity);
     for (int i = 0; i<sRamptime*1000f;i++){
         acceleration=acceleration-jerk*(1/1000f);
         tragectory[t1][0]=acceleration;
         velocity=acceleration*(1f/1000f)+velocity;
         tragectory[t1][1]=velocity;
         t1++;
+
     }
 
 
-//    for (int i = 0; i < rampTime*1000; i++) {
-//        velocity = (i*maxAcceleration) / 1000;
-//        position+=velocity/1000;
-//        tragectory[t][0] = velocity;
-//        tragectory[t][1] = position;
-//        t++;
-//    }
-//    for (int i = 0; i<sustainTime*1000;i++){
-//        velocity = 6;
-//        position+=velocity/1000;
-//        tragectory[t][0] = velocity;
-//        tragectory[t][1] = position;
-//        t++;
-//
-//    }
-//    for (int i = 0; i < rampTime*1000; i++) {
-//        velocity = velocity-(maxAcceleration / 1000);
-//        position+=velocity/1000;
-//        tragectory[t][0] = velocity;
-//        tragectory[t][1] = position;
-//        t++;
-//    }
     return tragectory;
 }
 
