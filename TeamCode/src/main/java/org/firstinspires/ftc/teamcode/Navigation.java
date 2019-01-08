@@ -36,7 +36,7 @@ import java.math.RoundingMode;
 public class Navigation {
 
     //-----tweak values-----//
-    private float maximumMotorPower = 0.5f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
+    private float maximumMotorPower = 0.6f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
     private float encoderCountsPerRev = 537.6f;         //encoder ticks per one revolution
     private boolean useTelemetry;                       //whether to execute the telemetry method while holding
     private float minVelocityCutoff = 0.05f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
@@ -53,7 +53,7 @@ public class Navigation {
     private com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter;
     private org.firstinspires.ftc.robotcore.external.Telemetry telemetry;
     private Dogeforia vuforia;
-    private GoldAlignDetector detector; `
+    private GoldAlignDetector detector;
     private WebcamName webcamName;
     private VuforiaTrackables vumarks;
     private DcMotor velocityMotor;

@@ -11,16 +11,14 @@ import java.math.RoundingMode;
 @TeleOp(name = "Moongoose TeleOp", group = "Competition")
 public class TeleOpMoongoose extends OpMode {
 
-
     //Objects//
     private ElapsedTime runtime = new ElapsedTime();
-    private TeleOpNav nav;
+    TeleOpNav nav = new TeleOpNav(); //base class for teleOp
 
     public void init() {
         nav.init(hardwareMap);
-        nav = new TeleOpNav();
-    }
 
+    }
 
     public void loop() {
         //////////////////////////////////////// GAMEPAD 1 /////////////////////////////////////////
@@ -185,9 +183,9 @@ public class TeleOpMoongoose extends OpMode {
 
         //Collector// - RightBumper= Intake | RightTrigger= Outtake //This is a VEX Motor, 0.5 is the maximum power
         if (gamepad2.right_bumper) { //
-            nav.collecty.setPower(-0.5);
+            nav.collecty.setPower(-1);
         } else if (gamepad2.right_trigger > 0.5) {
-            nav.collecty.setPower(0.5);
+            nav.collecty.setPower(1);
         } else {
             nav.collecty.setPower(0);
         }
@@ -205,19 +203,23 @@ public class TeleOpMoongoose extends OpMode {
 
         //Collector Dropper// - Y= Top | B= Middle | A= Bottom //
         // COLLECTION SERVOS - Droppy --> right, Droppy Jr --> left //
-//        if (gamepad2.y) { //top
-//            droppy.setPosition(0.2);
-//            droppyJr.setPosition(0.2);
-//            nav.setCanMove(false);
-//        } else if (gamepad2.b) { //middle
-//            droppy.setPosition(0.5);
-//            droppyJr.setPosition(0.5);
-//            nav.setCanMove(true);
-//        } else if (gamepad2.a) { //bottom
-//            droppy.setPosition(0.875);
-//            droppyJr.setPosition(0.875);
-//            nav.setCanMove(true);
-//        }
+        if (gamepad2.y) { // top
+            nav.droppy.setPosition(0.4);
+            nav.droppyJr.setPosition(0.4);
+            nav.setCanMove(false);
+        } else if (gamepad2.b) { // middle
+            nav.droppy.setPosition(0.6);
+            nav.droppyJr.setPosition(0.6);
+            nav.setCanMove(true);
+        } else if (gamepad2.a) { // bottom
+            nav.droppy.setPosition(0.85);
+            nav.droppyJr.setPosition(0.85);
+            nav.setCanMove(true);
+        }else if (gamepad2.x) { // bottom
+            nav.droppy.setPosition(0.875);
+            nav.droppyJr.setPosition(0.875);
+            nav.setCanMove(true);
+        }
 
         //Trim stuff for later //
 //        if(!dPadDown) {
@@ -232,6 +234,6 @@ public class TeleOpMoongoose extends OpMode {
 //        }
 //        else if(!gamepad2.dpad_up && !gamepad2.dpad_down) {
 //            dPadDown = false;
-//        }
+//        }t
     }
 }

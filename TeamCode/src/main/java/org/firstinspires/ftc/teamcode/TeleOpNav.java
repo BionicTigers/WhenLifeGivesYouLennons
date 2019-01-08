@@ -23,10 +23,10 @@ public class TeleOpNav {
     public DcMotor extendy;            // lead screw horizontal extension
     public DcMotor lifty;              // lift for hanging
     public DcMotor liftyJr;            // lift for hopper and deposit into
+    public DcMotor collecty;           // collection intake
 
     //Servos//
     public Servo teamMarker;           // team Marker servo (only used in teleOp in case of emergency
-    public CRServo collecty;           // collection wipers for intake
     public Servo droppy;               // intake position servo (right)
     public Servo droppyJr;             // intake position servo (left)
     public TouchSensor limitSwitch;    // touch sensor for liftyJr -- hopper lift, placed on bottom of lift
@@ -68,7 +68,7 @@ public class TeleOpNav {
         //Servos//
         teamMarker = hwMap.servo.get("teamMarker");
         teamMarker.setPosition(0.2);
-        collecty = hwMap.crservo.get("collecty");
+        collecty = hwMap.dcMotor.get("collecty");
         droppy = hwMap.servo.get("droppy");
         droppyJr = hwMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
@@ -99,25 +99,25 @@ public class TeleOpNav {
         liftyJr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void goUpBit() {
+    /////// AUTOMATION FOR TELEOP ////////
+
+    public void goUpBit() {                 // This method goes up using an encoder to where the hopper lift is under the bar only slighty in preparation for dropping
         liftyJr.setPower(1);
         liftyJr.setTargetPosition(-1500);
     }
 
-    public void goUpAll() {
-
-
+    public void goUpAll() {                 // This method goes up using an encoder for the hopper lift to fully dump into the lander
         liftyJr.setTargetPosition(-2050);
         liftyJr.setPower(1);
     }
 
-    public void goDown() {
+    public void goDown() {                  // This method brings the hopper lift back to the lowest position possible (usually on the limit switch)
         goinDown = 1;
         liftyJr.setTargetPosition(0);
         liftyJr.setPower(1);
     }
 
-    public final void ITS_ENDGAME_NOW() {
+    public final void ITS_ENDGAME_NOW() {   // This method raises the hanging lift to in between the handle
         lifty.setPower(1);
         lifty.setTargetPosition(9850);
     }
