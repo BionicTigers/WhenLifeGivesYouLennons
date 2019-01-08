@@ -1,15 +1,22 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
- * A class to run Autonomous given a strategy.
+ * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns.
+ * Distances forward and backward is fully PID encoder methods based on inches.
+ * Methods for this class is found in Navigation.
  */
 public class AutoGeneric {
     public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
+
     private StartPos startZone;
     private OpMode opMode;
     private Telemetry telemetry;
     private Navigation nav;
+
     /**
      * The constructor method that contains everything to run in initialization.
      *
@@ -21,10 +28,12 @@ public class AutoGeneric {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
-        nav = new Navigation(opMode, telemetry,true);
+        nav = new Navigation(opMode, telemetry, true);
         nav.calibrateHeading();
-        nav.hold(0.1f); }
-    // Run this to run Autonomous. // //SQUARES UP TO WALL
+        nav.hold(0.1f);
+    }
+
+    //----Run this to run Autonomous----//
     public void runOpMode() {
         nav.updateCubePos();
         // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
@@ -33,57 +42,56 @@ public class AutoGeneric {
         nav.distance(3f);
         nav.turnToHeading(-45f);
         nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-        nav.distance(15f);
-        switch (nav.getCubePos()) { //all of them for sampling
+        nav.distance(14f);
+        switch (nav.getCubePos()) {
             case MIDDLE:
-                nav.distance(12f); //less forward (same total distance as before)
-                nav.distance(-12f);  //same distance back
+                nav.distance(14f);
+                nav.distance(-14f);
                 break;
             case RIGHT:
-                nav.turnToHeading(-90f); //turning 5 degrees more
-                nav.distance(20f); //ing same distance forward and back
-                nav.distance(-20f);//turning total 90
+                nav.turnToHeading(-90f);
+                nav.distance(18f);
+                nav.distance(-18f);
                 break;
             default: //left
                 nav.turnToHeading(0f);
-                nav.distance(15f);
-                nav.distance(-15f);
+                nav.distance(20f);
+                nav.distance(-20f);
                 break;
         }
+        nav.turnToHeading(40f); //turn to face wall
+        nav.distance(46f);
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
-//            nav.turnToHeading(40f);
-//            nav.hold(2);
-//            nav.distance(44f);
-            //nav.turnToHeading(-90f);
-            //nav.distance(-38f);
-        // depot side //
+            nav.turnToHeading(-90f);
+            nav.distance(-38f);
+            // depot side //
         } else if (startZone == StartPos.DEPOT) {
-            nav.turnToHeading(90f); //want a little bit more for gliding on the wall
-            nav.distance(-35f);
+            nav.turnToHeading(90f);
+            nav.distance(-55f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
             nav.turnToHeading(-90f);
-            nav.curveTurn(-40f,10f,0f,15f);
+            nav.curveTurn(-35f, 10f, 0f, -7f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
                     nav.turnToHeading(-135f);
                     break;
                 case RIGHT:
-                    nav.turnToHeading(-90f);
+                    nav.turnToHeading(-100f);
                     break;
                 default: //Left
                     nav.turnToHeading(-180f);
             }
             nav.distance(30f);
-            nav.distance(-30f);
-            nav.turnToHeading(-40f);
-            nav.curveTurn(10f,-10f,0f,0f);
+            nav.distance(-35f);
+            nav.turnToHeading(273f);
         }
-//        //-----marker deploy and driving to crater-----//
-//        nav.setTeamMarker(0.8f);
-//        nav.hold(1);
-//        nav.distance(60f);
+        //-----marker deploy and driving to crater-----//
+        nav.setTeamMarker(0.8f);
+        nav.hold(1);
+        nav.turnToHeading(-88f);
+        nav.distance(62f);
 //        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
 //        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
 //        nav.hold(2);

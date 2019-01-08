@@ -1,14 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,35 +10,21 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 
-import org.firstinspires.ftc.robotcore.external.function.Consumer;
-import org.firstinspires.ftc.robotcore.external.function.Continuation;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.SerialNumber;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import com.qualcomm.robotcore.util.ReadWriteFile;
-
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -56,7 +36,7 @@ import java.math.RoundingMode;
 public class Navigation {
 
     //-----tweak values-----//
-    private float maximumMotorPower = 0.5f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
+    private float maximumMotorPower = 0.6f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
     private float encoderCountsPerRev = 537.6f;         //encoder ticks per one revolution
     private boolean useTelemetry;                       //whether to execute the telemetry method while holding
     private float minVelocityCutoff = 0.05f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
@@ -89,6 +69,7 @@ public class Navigation {
     public Orientation angles;
     public Acceleration gravity;
     public int gameState = 0;
+    public float biggyState = 0;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -205,7 +186,7 @@ public class Navigation {
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(noots);
 
-
+        calibrateHeading();
     }
 
     /**
@@ -608,7 +589,6 @@ public class Navigation {
         telemetry.addData("Pos = ", pos);
         telemetry.addData("CubePos = ", cubePos);
         telemetry.addData("Velocity = ", velocity);
-        //   telemetry.addData("CubeXPosition",detector.getXPosition());
         telemetry.update();
     }
 
@@ -638,46 +618,22 @@ public class Navigation {
 
     /**
      * Checks heading based from calibHeading() and returns
-     * @param hed the heading to check for, heading in is degrees
+     * @param heading the heading to check for, heading in is degrees
      * @param err the amount of error (in degrees) allowed to return true
      * @return boolean.
      */
-    public boolean checkHeading(float hed, float err) {
+    public boolean checkHeading(float heading, float err) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return Math.abs(hed - angles.firstAngle) < err;
+        return Math.abs(heading - angles.firstAngle) < err;
     }
 
-    public void turnToHeading(float hed) {
+    public void turnToHeading(float heading) {
         telemetry.update();
-        telemetry.addData("Turning to: ", round(hed));
+        telemetry.addData("Turning to: ", round(heading));
         telemetry.update();
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        pointTurn(hed - angles.firstAngle);
+        pointTurnRelative(heading - angles.firstAngle);
         holdForDrive();
-    }
-
-    public void turnForHeading(float hed, float sped) {
-        telemetry.update();
-        telemetry.addData("Turning to: ", round(hed));
-        telemetry.update();
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        if (hed > angles.firstAngle) {
-            frontLeft.setPower(-sped);
-            frontRight.setPower(sped);
-            backRight.setPower(sped);
-            backLeft.setPower(-sped);
-            while (hed > angles.firstAngle);
-        } else if (hed < angles.firstAngle){
-            frontLeft.setPower(sped);
-            frontRight.setPower(-sped);
-            backRight.setPower(-sped);
-            backLeft.setPower(sped);
-            while (hed < angles.firstAngle);
-        }
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
-        backLeft.setPower(0);
     }
 
     private static double round(double value) { //Allows telemetry to display nicely
