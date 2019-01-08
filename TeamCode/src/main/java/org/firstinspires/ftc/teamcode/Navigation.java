@@ -88,6 +88,7 @@ public class Navigation {
     BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
+    public int gameState = 0;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -152,6 +153,8 @@ public class Navigation {
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
 
+
+
         //----Vuforia Params---///
         webcamName = hardwareGetter.hardwareMap.get(WebcamName.class, "Webcam 1");
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -201,6 +204,8 @@ public class Navigation {
         noots.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(noots);
+
+
     }
 
     /**
@@ -517,17 +522,23 @@ public class Navigation {
      */
     public void holdForDrive() {
         hold(0.2f);
+        gameState++;
         while (updateVelocity() > minVelocityCutoff && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
     }
 
+    public void distance(float dist){
+        goDistance(dist);
+        holdForDrive();
+    }
     /**
      * Holds program execution until lift motor is done moving.
      * Will output telemetry if class initialized with useTelemetry true.
      */
     public void holdForLift() {
         hold(0.1f);
+        gameState++;
         while (lifty.isBusy() && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
@@ -540,6 +551,7 @@ public class Navigation {
      */
     public void hold(float seconds) {
         long stopTime = System.currentTimeMillis() + (long) (seconds * 1000);
+        gameState++;
         while (System.currentTimeMillis() < stopTime && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
@@ -588,13 +600,14 @@ public class Navigation {
      */
     public void telemetryMethod () {
         updateVelocity();
-        String motorString = "FL-" + frontLeft.getCurrentPosition() + " BL-" + backLeft.getCurrentPosition() + " FR-" + frontRight.getCurrentPosition() + " BR-" + backRight.getCurrentPosition();
-        telemetry.addData("Drive", motorString);
-        telemetry.addData("Lift", lifty.getCurrentPosition());
-        telemetry.addData("Collector L/E/C", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
-        telemetry.addData("Pos", pos);
-        telemetry.addData("CubePos", cubePos);
-        telemetry.addData("Velocity", velocity);
+        telemetry.addData("Game State = ", gameState);
+        String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
+        telemetry.addData("Drive = ", motorString);
+        telemetry.addData("Lift = ", lifty.getCurrentPosition());
+        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
+        telemetry.addData("Pos = ", pos);
+        telemetry.addData("CubePos = ", cubePos);
+        telemetry.addData("Velocity = ", velocity);
         //   telemetry.addData("CubeXPosition",detector.getXPosition());
         telemetry.update();
     }
@@ -641,6 +654,30 @@ public class Navigation {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         pointTurn(hed - angles.firstAngle);
         holdForDrive();
+    }
+
+    public void turnForHeading(float hed, float sped) {
+        telemetry.update();
+        telemetry.addData("Turning to: ", round(hed));
+        telemetry.update();
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        if (hed > angles.firstAngle) {
+            frontLeft.setPower(-sped);
+            frontRight.setPower(sped);
+            backRight.setPower(sped);
+            backLeft.setPower(-sped);
+            while (hed > angles.firstAngle);
+        } else if (hed < angles.firstAngle){
+            frontLeft.setPower(sped);
+            frontRight.setPower(-sped);
+            backRight.setPower(-sped);
+            backLeft.setPower(sped);
+            while (hed < angles.firstAngle);
+        }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        backLeft.setPower(0);
     }
 
     private static double round(double value) { //Allows telemetry to display nicely

@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class TestNavMethods extends LinearOpMode {
     private Navigation nav;
     @Override
+
     public void runOpMode(){
 
         nav = new Navigation(this, telemetry, true);
@@ -18,25 +19,13 @@ public class TestNavMethods extends LinearOpMode {
         while (opModeIsActive()){
         nav.updatePos();
         telemetry.addData("Position", nav.getPos());
-        //telemetry.addData("How the robot should move", nav.getCorrectionDeg(270));
-        //if (gamepad1.a){nav.pointTurnRelative((int)nav.getCorrectionDeg(270));}
-       //nav.telemetryMethod();
-            nav.curveTurn(-40f,10f,0f,15f);
-            nav.pointTurnRelative(-90f);
-            nav.holdForDrive();
-            nav.goDistance(30f);
-            nav.holdForDrive();
-            nav.goDistance(-30f);
-            nav.holdForDrive();
-            nav.pointTurnRelative(90f);
-            nav.holdForDrive();
-            nav.curveTurn(10f,-11f,0f,0f);
+        nav.turnToHeading(40f);
+        }
 
     }
-    }
-////
+//
 
-//        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+//      nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
 //        nav.setCollectorExtension(Navigation.CollectorExtension.DUMP);
 //        nav.setCollectorExtension(Navigation.CollectorExtension.PARK);
 //
