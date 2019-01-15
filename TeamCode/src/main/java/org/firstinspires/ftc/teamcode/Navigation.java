@@ -578,6 +578,9 @@ public class Navigation {
         String filename = "BNO055IMUCalibration.json";
         File file = AppUtil.getInstance().getSettingsFile(filename);
         ReadWriteFile.writeFile(file, calibrationData.serialize());
+
+        pos.setRotation((imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)).firstAngle);
+
         telemetry.update();
         telemetry.log().add("IMU: CALIBRATED", filename);
         telemetry.update();
