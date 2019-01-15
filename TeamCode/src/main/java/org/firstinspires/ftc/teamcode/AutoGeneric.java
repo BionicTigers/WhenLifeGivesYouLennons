@@ -36,7 +36,7 @@ public class AutoGeneric {
     //----Run this to run Autonomous----//
     public void runOpMode() {
         nav.updateCubePos();
-        // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+        nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
         nav.holdForLift();
         nav.goDistanceHold(3f);
@@ -49,22 +49,22 @@ public class AutoGeneric {
                 nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.pointTurnIMU(-90f);
+                nav.pointTurnIMU(-100f);
                 nav.goDistanceHold(18f);
                 nav.goDistanceHold(-18f);
                 break;
             default: //left
                 nav.pointTurnIMU(0f);
-                nav.goDistanceHold(20f);
-                nav.goDistanceHold(-20f);
+                nav.goDistanceHold(25f);
+                nav.goDistanceHold(-25f);
                 break;
         }
-        nav.pointTurnIMU(40f); //turn to face wall
-        nav.goDistanceHold(46f);
+        nav.pointTurnIMU(34f); //turn to face wall
+        nav.goDistanceHold(47f);
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(-90f);
-            nav.goDistanceHold(-38f);
+            nav.goDistanceHold(-43f);
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
             nav.pointTurnIMU(90f);
@@ -72,7 +72,7 @@ public class AutoGeneric {
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
             nav.pointTurnIMU(-90f);
-            nav.curveTurn(-35f, 10f, 0f, -7f);
+            nav.curveTurn(-40f, 10f, 0f, 2f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
                     nav.pointTurnIMU(-135f);
@@ -90,10 +90,10 @@ public class AutoGeneric {
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);
         nav.hold(1);
-        nav.pointTurnIMU(-88f);
-        nav.goDistanceHold(62f);
-//        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-//        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+        nav.pointTurnIMU(-79f);
+        nav.goDistance(67f,0.75f,0.75f);
+        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
 //        nav.hold(2);
     }
 }

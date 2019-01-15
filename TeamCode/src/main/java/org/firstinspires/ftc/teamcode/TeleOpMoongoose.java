@@ -145,37 +145,25 @@ public class TeleOpMoongoose extends OpMode {
         //////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
         telemetry.addData("Limit: ", nav.limitSwitch.isPressed());
 
-        if (gamepad1.dpad_right && (runtime.seconds() > nav.manualToggle)) {
-            nav.manualToggle = runtime.seconds() + 0.5;
-            ++nav.manualMode;
-            if (nav.manualMode % 2 == 0) {
-                nav.lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                nav.liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            } else {
-                nav.lifty.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (gamepad2.dpad_down && nav.canMoveLiftyJr && !nav.limitSwitch.isPressed()) { //
+                nav.goDown();
+        } else if (gamepad2.dpad_left && nav.canMoveLiftyJr) {
+                nav.goUpBit();
+        } else if (gamepad2.dpad_up && nav.canMoveLiftyJr) {
+                nav.goUpAll();
+        } else {
+            if (Math.abs(gamepad2.left_stick_y) > .5 && !nav.limitSwitch.isPressed()){
                 nav.liftyJr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                nav.liftyJr.setPower(-gamepad2.left_stick_y);
             }
         }
 
-        if (nav.manualMode % 2 == 0) {
-            if (gamepad2.dpad_down && nav.canMoveLiftyJr && !nav.limitSwitch.isPressed()) {
-                nav.goDown();
-            } else if (gamepad2.dpad_left && nav.canMoveLiftyJr) {
-                nav.goUpBit();
-            } else if (gamepad2.dpad_up && nav.canMoveLiftyJr) {
-                nav.goUpAll();
-            }
-            if (gamepad2.dpad_right) {
-                nav.ITS_ENDGAME_NOW();
-            }
-            if (nav.limitSwitch.isPressed()) {
-                nav.resetEncoders();
-            }
-        } else {
-            nav.liftyJr.setPower(gamepad2.left_stick_y);
+        if (gamepad2.dpad_right ) {
+            nav.ITS_ENDGAME_NOW();
+        } else if (!nav.lifty.isBusy()){
+            nav.lifty.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             nav.lifty.setPower(-gamepad2.right_stick_y);
         }
-        
 
         telemetry.addData("ManualMode: ", nav.manualMode);
         telemetry.addData("LiftyJr: ", nav.liftyJr.getCurrentPosition());
@@ -183,9 +171,9 @@ public class TeleOpMoongoose extends OpMode {
 
         //Collector// - RightBumper= Intake | RightTrigger= Outtake //This is a VEX Motor, 0.5 is the maximum power
         if (gamepad2.right_bumper) { //
-            nav.collecty.setPower(-1);
-        } else if (gamepad2.right_trigger > 0.5) {
             nav.collecty.setPower(1);
+        } else if (gamepad2.right_trigger > 0.5) {
+            nav.collecty.setPower(-1);
         } else {
             nav.collecty.setPower(0);
         }
@@ -204,20 +192,16 @@ public class TeleOpMoongoose extends OpMode {
         //Collector Dropper// - Y= Top | B= Middle | A= Bottom //
         // COLLECTION SERVOS - Droppy --> right, Droppy Jr --> left //
         if (gamepad2.y) { // top
-            nav.droppy.setPosition(0.4);
-            nav.droppyJr.setPosition(0.4);
+            nav.droppy.setPosition(0.215);
+            nav.droppyJr.setPosition(0.215);
             nav.setCanMove(false);
         } else if (gamepad2.b) { // middle
-            nav.droppy.setPosition(0.6);
-            nav.droppyJr.setPosition(0.6);
+            nav.droppy.setPosition(0.4);
+            nav.droppyJr.setPosition(0.4);
             nav.setCanMove(true);
         } else if (gamepad2.a) { // bottom
-            nav.droppy.setPosition(0.85);
-            nav.droppyJr.setPosition(0.85);
-            nav.setCanMove(true);
-        }else if (gamepad2.x) { // bottom
-            nav.droppy.setPosition(0.875);
-            nav.droppyJr.setPosition(0.875);
+            nav.droppy.setPosition(0.7525);
+            nav.droppyJr.setPosition(0.7525);
             nav.setCanMove(true);
         }
 

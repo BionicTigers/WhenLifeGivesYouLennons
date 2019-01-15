@@ -1,34 +1,50 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+        import android.content.Context;
+        import android.support.annotation.NonNull;
+        import android.support.annotation.Nullable;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+        import com.disnodeteam.dogecv.CameraViewDisplay;
+        import com.disnodeteam.dogecv.DogeCV;
+        import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+        import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
+        import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.DcMotorSimple;
+        import com.qualcomm.robotcore.hardware.Servo;
+        import com.qualcomm.robotcore.hardware.CRServo;
+        import com.qualcomm.hardware.bosch.BNO055IMU;
+        import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+        import org.firstinspires.ftc.robotcore.external.function.Consumer;
+        import org.firstinspires.ftc.robotcore.external.function.Continuation;
+        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
+        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+        import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+        import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+        import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.util.SerialNumber;
 
-import com.qualcomm.robotcore.util.ReadWriteFile;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+        import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+        import com.qualcomm.robotcore.util.ReadWriteFile;
+        import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
+
+        import java.io.File;
+        import java.math.BigDecimal;
+        import java.math.RoundingMode;
 
 /**
  * A class for all movement methods for Rover Ruckus.
@@ -36,7 +52,7 @@ import java.math.RoundingMode;
 public class Navigation {
 
     //-----tweak values-----//
-    private float maximumMotorPower = 0.6f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
+    //private float maximumMotorPower = 0.5f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
     private float encoderCountsPerRev = 537.6f;         //encoder ticks per one revolution
     private boolean useTelemetry;                       //whether to execute the telemetry method while holding
     private float minVelocityCutoff = 0.05f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
@@ -85,7 +101,7 @@ public class Navigation {
     //-----servos-----//
     private Servo droppy;  //collection lift a
     private Servo droppyJr; //collection lift b
-    private CRServo collecty;  //collection sweeper
+    //private CRServo collecty;  //collection sweeper
     private Servo teamMarker;
 
     /**
@@ -128,7 +144,7 @@ public class Navigation {
 
         //-----servos-----//
         teamMarker = hardwareGetter.hardwareMap.servo.get("teamMarker");
-        collecty = hardwareGetter.hardwareMap.crservo.get("collecty");
+        //collecty = hardwareGetter.hardwareMap.crservo.get("collecty");
         droppy = hardwareGetter.hardwareMap.servo.get("droppy");
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
@@ -252,6 +268,7 @@ public class Navigation {
 
     /**
      * Sets drive motor powers.
+     *
      * @param left  power of left two motors as percentage (0-1).
      * @param right power of right two motors as percentage (0-1).
      */
@@ -297,7 +314,7 @@ public class Navigation {
      * Pseudo PID to drive the given distance.
      * @param distance Distance to drive forward in inches.
      */
-    public void goDistance(float distance) {
+    public void goDistance(float distance, float maximumMotorPower, float maxiumMotorPower) {
         //driveMethodComplex(-distance, slowdown, 0f, frontLeft, 1f, 1f, false, minimumMotorPower, maximumMotorPower);
         driveMethodSimple(-distance, distance, maximumMotorPower, maximumMotorPower);
         pos.translateLocal(distance);
@@ -308,7 +325,7 @@ public class Navigation {
      * @param distance Distance to drive forward in inches.
      */
     public void goDistanceHold(float distance){
-        goDistance(distance);
+        goDistance(distance, 0.55f, 0.55f);
         holdForDrive();
     }
 
@@ -360,11 +377,11 @@ public class Navigation {
      * @param distance2 Distance to travel straight after the curve (inches)
      */
     public void curveTurn(float distance1,float distanceL, float distanceR, float distance2){
-        goDistance(distance1);
+        goDistance(distance1, 0.55f, 0.55f);
         holdForDrive();
         driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
         holdForDrive();
-        goDistance(distance2);
+        goDistance(distance2, 0.55f, 0.55f);
         holdForDrive();
 
         //need to update internal pos values
@@ -397,27 +414,27 @@ public class Navigation {
      * Sets the collection sweeper to a given power value.
      * @param power float. Percentage power at which to run collector. 1.0f (intake) - -1.0f(outtake) inclusive.
      */
-    public void setCollectionSweeper(float power) {
-        collecty.setPower(power);
-    }
+//    public void setCollectionSweeper(float power) {
+//        collecty.setPower(power);
+//    }
 
     /**
      * Sets the collection sweeper power using pre-programmed values.
      * @param power CollectorSweeper emumerator. Options are INTAKE, OUTTAKE, or OFF.
      */
-    public void setCollectionSweeper(CollectorSweeper power) {
-        switch (power) {
-            case INTAKE:
-                setCollectionSweeper(0.5f);
-                break;
-            case OUTTAKE:
-                setCollectionSweeper(-0.5f);
-                break;
-            case OFF:
-                setCollectionSweeper(0f);
-                break;
-        }
-    }
+//    public void setCollectionSweeper(CollectorSweeper power) {
+//        switch (power) {
+//            case INTAKE:
+//                setCollectionSweeper(0.5f);
+//                break;
+//            case OUTTAKE:
+//                setCollectionSweeper(-0.5f);
+//                break;
+//            case OFF:
+//                setCollectionSweeper(0f);
+//                break;
+//        }
+//    }
 
     /**
      * Set the height of the collector arm.
@@ -435,7 +452,7 @@ public class Navigation {
     public void setCollectorHeight(CollectorHeight position) {
         switch (position) {
             case COLLECT:
-                setCollectorHeight(0.715f);
+                setCollectorHeight(0.6f);
                 break;
             case HOLD:
                 setCollectorHeight(0.5f);
@@ -552,10 +569,11 @@ public class Navigation {
         String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
         telemetry.addData("Drive = ", motorString);
         telemetry.addData("Lift = ", lifty.getCurrentPosition());
-        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
+        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " );
         telemetry.addData("Pos = ", pos);
         telemetry.addData("CubePos = ", cubePos);
         telemetry.addData("Velocity = ", velocity);
+        //   telemetry.addData("CubeXPosition",detector.getXPosition());
         telemetry.update();
     }
 
