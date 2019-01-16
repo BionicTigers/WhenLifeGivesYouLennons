@@ -459,7 +459,7 @@ public class FtcRobotControllerActivity extends Activity
     //
     // Control hubs are always running the access point model.  Everything else, for the time
     // being always runs the wifi direct model.
-    if (Device.isRevControlHub() == true) {
+    if (Device.isRevControlHub()) {
       networkType = NetworkType.RCWIRELESSAP;
     } else {
       networkType = NetworkType.fromString(preferencesHelper.readString(context.getString(R.string.pref_pairing_kind), NetworkType.globalDefaultAsString()));

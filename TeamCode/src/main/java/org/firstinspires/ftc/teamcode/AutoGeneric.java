@@ -49,18 +49,18 @@ public class AutoGeneric {
                 nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.pointTurnIMU(-100f);
-                nav.goDistanceHold(18f);
-                nav.goDistanceHold(-18f);
+                nav.pointTurnIMU(-95f);
+                nav.goDistanceHold(20f);
+                nav.goDistanceHold(-20f);
                 break;
             default: //left
                 nav.pointTurnIMU(0f);
-                nav.goDistanceHold(25f);
-                nav.goDistanceHold(-25f);
+                nav.goDistanceHold(20f);
+                nav.goDistanceHold(-20f);
                 break;
         }
         nav.pointTurnIMU(34f); //turn to face wall
-        nav.goDistanceHold(47f);
+        nav.goDistanceHold(48f);
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(-90f);
@@ -91,9 +91,10 @@ public class AutoGeneric {
         nav.setTeamMarker(0.8f);
         nav.hold(1);
         nav.pointTurnIMU(-79f);
-        nav.goDistance(67f,0.75f,0.75f);
+        nav.goDistance(70f,0.75f,0.75f);
         nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
         nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+        nav.holdForDrive();
 //        nav.hold(2);
     }
 }
