@@ -170,6 +170,7 @@ public class Navigation {
         vuforia.showDebug();
         vuforia.start();
 
+
         //-----velocity control-----//
         velocityMotor = frontLeft;
         prevTime = System.currentTimeMillis();

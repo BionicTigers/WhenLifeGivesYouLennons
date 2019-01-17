@@ -8,7 +8,7 @@ public class TrajectoryGen {
 
         float[][] tra = fineIllCreateAGeneralGenClass(8, 10, 14f, 80f);
         for (int i = 0; i < tra.length; i++) {
-            System.out.println(i / 1000f + ", " + tra[i][0] + ", " + tra[i][1]);
+           // System.out.println(i / 1000f + ", " + tra[i][0] + ", " + tra[i][1]);
         }
     }
 
@@ -112,6 +112,7 @@ public class TrajectoryGen {
             velocity = acceleration * (1f / 1000f) + velocity;
             tragectory[t1][1] = velocity;
             t1++;
+            System.out.println(-acceleration);
 
         }
         for (int i = 0; i < t2Time * 1000f; i++) {
@@ -119,6 +120,7 @@ public class TrajectoryGen {
             velocity = tragectory[t1][0] * 1 / 1000f + velocity;
             tragectory[t1][1] = velocity;
             t1++;
+            System.out.println(-acceleration);
         }
         for (int i = 0; i < t1Time * 1000f; i++) {
             acceleration = acceleration - jerk * (1 / 1000f);
@@ -126,6 +128,7 @@ public class TrajectoryGen {
             velocity = acceleration * (1f / 1000f) + velocity;
             tragectory[t1][1] = velocity;
             t1++;
+            System.out.println(-acceleration);
 
         }
         for (int i = 0; i < t4Time * 1000f; i++) {
