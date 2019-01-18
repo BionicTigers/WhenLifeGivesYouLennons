@@ -204,20 +204,5 @@ public class TeleOpMoongoose extends OpMode {
             nav.droppyJr.setPosition(0.7525);
             nav.setCanMove(true);
         }
-
-        //Trim stuff for later //
-//        if(!dPadDown) {
-//            if(gamepad2.dpad_up) {
-//                trim -= 0.05;
-//                dPadDown = true;
-//            }
-//            else if(gamepad2.dpad_down) {
-//                trim += 0.05;
-//                dPadDown = true;
-//            }
-//        }
-//        else if(!gamepad2.dpad_up && !gamepad2.dpad_down) {
-//            dPadDown = false;
-//        }t
     }
 }

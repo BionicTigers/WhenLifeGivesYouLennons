@@ -54,23 +54,29 @@ public class AutoGeneric {
                 nav.goDistanceHold(-20f);
                 break;
             default: //left
-                nav.pointTurnIMU(0f);
-                nav.goDistanceHold(20f);
-                nav.goDistanceHold(-20f);
+                nav.pointTurnIMU(3.5f);
+                nav.goDistanceHold(27f);
+                nav.goDistanceHold(-27f);
                 break;
         }
-        nav.pointTurnIMU(34f); //turn to face wall
-        nav.goDistanceHold(48f);
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
-            nav.pointTurnIMU(-90f);
+            nav.pointTurnIMU(36f); //turn to face wall
+            nav.goDistanceHold(46f);
+            nav.pointTurnIMU(-90.5f);
             nav.goDistanceHold(-43f);
+            nav.pointTurnIMU(-89f);
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
-            nav.pointTurnIMU(90f);
+            nav.pointTurnIMU(36f); //turn to face wall
+            nav.goDistanceHold(45f);
+            nav.pointTurnIMU(91f);
             nav.goDistanceHold(-55f);
+            nav.pointTurnIMU(90f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
+            nav.pointTurnIMU(36f); //turn to face wall
+            nav.goDistanceHold(45f);
             nav.pointTurnIMU(-90f);
             nav.curveTurn(-40f, 10f, 0f, 2f);
             switch (nav.getCubePos()) {
@@ -78,23 +84,29 @@ public class AutoGeneric {
                     nav.pointTurnIMU(-135f);
                     break;
                 case RIGHT:
-                    nav.pointTurnIMU(-100f);
+                    nav.pointTurnIMU(-105f);
                     break;
                 default: //Left
                     nav.pointTurnIMU(-180f);
             }
             nav.goDistanceHold(30f);
-            nav.goDistanceHold(-35f);
+            nav.goDistanceHold(-34f);
             nav.pointTurnIMU(273f);
         }
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);
         nav.hold(1);
-        nav.pointTurnIMU(-79f);
-        nav.goDistance(70f,0.75f,0.75f);
-        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+        switch (startZone){
+            case DOUBLESAMPLING:
+                nav.goDistance(70f,0.6f,0.6f);
+                break;
+            default: //left
+                nav.goDistance(63f,0.6f,0.6f);
+                break;
+        }
         nav.holdForDrive();
-//        nav.hold(2);
+        //nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+
     }
 }
