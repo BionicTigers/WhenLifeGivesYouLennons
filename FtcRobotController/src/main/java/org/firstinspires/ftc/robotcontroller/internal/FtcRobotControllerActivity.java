@@ -61,6 +61,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeControllerImpl;
@@ -229,6 +230,7 @@ public class FtcRobotControllerActivity extends Activity
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    FtcDashboard.start();
     super.onCreate(savedInstanceState);
     RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
     RobotLog.vv(TAG, "onCreate()");
@@ -375,6 +377,7 @@ public class FtcRobotControllerActivity extends Activity
         return false;
       }
     });
+    super.onStart();
   }
 
   @Override
@@ -402,6 +405,7 @@ public class FtcRobotControllerActivity extends Activity
 
   @Override
   protected void onDestroy() {
+
     super.onDestroy();
     RobotLog.vv(TAG, "onDestroy()");
 
@@ -418,6 +422,7 @@ public class FtcRobotControllerActivity extends Activity
 
     preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
     RobotLog.cancelWriteLogcatToDisk();
+    FtcDashboard.stop();
   }
 
   protected void bindToService() {
@@ -618,6 +623,7 @@ public class FtcRobotControllerActivity extends Activity
         return service.getRobot().eventLoopManager;
       }
     });
+    FtcDashboard.attachWebServer(service.getWebServer());
   }
 
   private void updateUIAndRequestRobotSetup() {

@@ -1,18 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class TrajectoryGen {
-
-
-    public static void main(String args[]) {
-
-        float[][] tra = fineIllCreateAGeneralGenClass(8, 10, 14f, 80f);
-        for (int i = 0; i < tra.length; i++) {
-           // System.out.println(i / 1000f + ", " + tra[i][0] + ", " + tra[i][1]);
-        }
+public class Trajectory {
+    private float[][] traj;
+    public Trajectory(float maxVelocity, float distance, float maxAcceleration, float jerk){
+        traj=fineIllCreateAGeneralGenClass(maxVelocity,distance,maxAcceleration,jerk);
     }
 
-    public static float[][] fineIllCreateAGeneralGenClass(float maxVelocity, float distance, float maxAcceleration, float jerk) {
+    public float[][] getTraj() {
+        return traj;
+    }
+
+    public  float[][] fineIllCreateAGeneralGenClass(float maxVelocity, float distance, float maxAcceleration, float jerk) {
         float t1Time = maxAcceleration / jerk;
         float t2Time = (maxVelocity - (maxAcceleration * t1Time)) / maxAcceleration;
         float t1Displacement = (1 / 6f) * (float) Math.pow(t1Time, 3) * jerk;
@@ -28,7 +27,7 @@ public class TrajectoryGen {
         return tragectory;
     }
 
-    public static float[][] okButwhatIfItsShort(float maxVelocity, float distance, float maxAcceleration, float jerk) {
+    public  float[][] okButwhatIfItsShort(float maxVelocity, float distance, float maxAcceleration, float jerk) {
         float velocity = 0;
         float position = 0;
         float acceleration = 0;
@@ -89,7 +88,7 @@ public class TrajectoryGen {
         return tragectory;
     }
 
-    private static float[][] S_Curve(float maxVelocity, float distance, float maxAcceleration, float jerk) {
+    private  float[][] S_Curve(float maxVelocity, float distance, float maxAcceleration, float jerk) {
 
         float velocity = 0;
         float position = 0;
@@ -163,7 +162,7 @@ public class TrajectoryGen {
         return tragectory;
     }
 
-    private static float[][] Trapazoid(float maxVelocity, float distance, float maxAcceleration) {
+    private  float[][] Trapazoid(float maxVelocity, float distance, float maxAcceleration) {
         float rampTime = maxVelocity / maxAcceleration;
         float rampDistance = rampTime * maxAcceleration / 2;
         float sustainDistance = distance - rampDistance * 2;
@@ -201,7 +200,7 @@ public class TrajectoryGen {
         return tragectory;
     }
 
-    public static float[] Triangle(float distance, float MaxAcceleration) {
+    public  float[] Triangle(float distance, float MaxAcceleration) {
         int timeToCompleteMili = (int) (distance * 2f / MaxAcceleration * 1000);
 
         float velocity = 0;

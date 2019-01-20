@@ -1,23 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-import static java.lang.Thread.sleep;
-
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+@Autonomous(name = "lol")
 public class PIDF extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        while (true) {
-            DcMotor board1 = hardwareMap.dcMotor.get("clark");
-            board1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            board1.setPower(.5);
-            telemetry.addData("", board1.getPower());
-            telemetry.update();
-        }
 
+        DcMotorEx boardEx = (DcMotorEx) hardwareMap.dcMotor.get("clark");
+        Trajectory trajectory = new Trajectory(8f,10f,14f,80f);
+        float[][]traj = trajectory.getTraj();
+        waitForStart();
+        while (opModeIsActive()) {
+           boardEx.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            boardEx.setPower(1);
+           telemetry.addData("VEL", boardEx.getVelocity());
+           telemetry.update();
+
+        }
     }
+
 }
