@@ -9,8 +9,11 @@ public class AutoCrater extends LinearOpMode {
     public void runOpMode() {
         AutoGeneric autoGeneric = new AutoGeneric(AutoGeneric.StartPos.CRATER, this, telemetry);
 
-        waitForStart();
-
+        while(!isStarted()){
+            telemetry.addData("cool","waiting to start");
+            telemetry.update();
+        }
+        //waitForStart();
         autoGeneric.runOpMode();
     }
     public boolean isStopping() {

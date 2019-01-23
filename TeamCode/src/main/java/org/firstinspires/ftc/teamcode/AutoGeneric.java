@@ -18,7 +18,7 @@ public class AutoGeneric {
     private Navigation nav;
 
     /**
-     * The constructor method that contains everything to run in initialization.
+     * The constructor method that zcontains everything to run in initialization.
      *
      * @param startZone - StartPos enumerator. Tells which strategy to run. Options are dEPOT, CRATER, or dOUBLESAMPLING.
      * @param opMode    - The OpMode required to access motors. Often, 'this' will suffice.
@@ -49,12 +49,12 @@ public class AutoGeneric {
                 nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.pointTurnIMU(-95f);
+                nav.pointTurnIMU(-97f);
                 nav.goDistanceHold(20f);
                 nav.goDistanceHold(-20f);
                 break;
             default: //left
-                nav.pointTurnIMU(3.5f);
+                nav.pointTurnIMU(3.55f);
                 nav.goDistanceHold(27f);
                 nav.goDistanceHold(-27f);
                 break;
@@ -62,9 +62,9 @@ public class AutoGeneric {
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(46f);
+            nav.goDistanceHold(45.5f);
             nav.pointTurnIMU(-90.5f);
-            nav.goDistanceHold(-43f);
+            nav.goDistanceHold(-37f);
             nav.pointTurnIMU(-89f);
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
@@ -78,30 +78,30 @@ public class AutoGeneric {
             nav.pointTurnIMU(36f); //turn to face wall
             nav.goDistanceHold(45f);
             nav.pointTurnIMU(-90f);
-            nav.curveTurn(-40f, 10f, 0f, 2f);
+            nav.curveTurn(-40f, 10f, 0f, -4f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
                     nav.pointTurnIMU(-135f);
                     break;
                 case RIGHT:
-                    nav.pointTurnIMU(-105f);
+                    nav.pointTurnIMU(-103f);
                     break;
                 default: //Left
                     nav.pointTurnIMU(-180f);
             }
             nav.goDistanceHold(30f);
             nav.goDistanceHold(-34f);
-            nav.pointTurnIMU(273f);
+            nav.pointTurnIMU(277f);
         }
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);
         nav.hold(1);
         switch (startZone){
             case DOUBLESAMPLING:
-                nav.goDistance(70f,0.6f,0.6f);
+                nav.goDistance(69f,0.6f,0.6f);
                 break;
             default: //left
-                nav.goDistance(63f,0.6f,0.6f);
+                nav.goDistance(60f,0.6f,0.6f);
                 break;
         }
         nav.holdForDrive();

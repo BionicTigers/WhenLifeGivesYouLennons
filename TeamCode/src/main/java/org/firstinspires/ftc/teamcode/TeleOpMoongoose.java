@@ -24,11 +24,11 @@ public class TeleOpMoongoose extends OpMode {
         //////////////////////////////////////// GAMEPAD 1 /////////////////////////////////////////
         // TOGGLE BUTTONS //
         if (gamepad1.left_bumper && (runtime.seconds() > nav.calibToggle)) {
-            nav.calibToggle = runtime.seconds() + 0.5;
+            nav.calibToggle = runtime.seconds() + 0.25;
             ++nav.driveSpeed;
         }
         if (gamepad1.y && (runtime.seconds() > nav.driveToggle)) {
-            nav.driveToggle = runtime.seconds() + 0.5;
+            nav.driveToggle = runtime.seconds() + 0.25;
             if (nav.driveMode == 0) {
                 nav.driveMode = 1;
             } else if (nav.driveMode == 1) {
@@ -167,6 +167,7 @@ public class TeleOpMoongoose extends OpMode {
 
         telemetry.addData("ManualMode: ", nav.manualMode);
         telemetry.addData("LiftyJr: ", nav.liftyJr.getCurrentPosition());
+        telemetry.addData("Lifty: ", nav.lifty.getCurrentPosition());
 
 
         //Collector// - RightBumper= Intake | RightTrigger= Outtake //This is a VEX Motor, 0.5 is the maximum power

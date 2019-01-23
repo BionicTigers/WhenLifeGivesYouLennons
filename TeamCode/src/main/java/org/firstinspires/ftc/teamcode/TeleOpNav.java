@@ -126,7 +126,7 @@ public class TeleOpNav {
     public final void ITS_ENDGAME_NOW() { // This method raises the hanging lift to in between the handle
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lifty.setPower(1);
-        lifty.setTargetPosition(9850);
+        lifty.setTargetPosition(10464);
         liftylike = true;
     }
 
