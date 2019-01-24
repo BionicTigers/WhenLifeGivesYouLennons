@@ -16,7 +16,7 @@ public class AutoDoubleSampling extends LinearOpMode {
         }
         //waitForStart();
 
-        autoGeneric.runOpMode();
+        autoGeneric.runAutonomous();
     }
     public boolean isStopping() {
         return opModeIsActive();

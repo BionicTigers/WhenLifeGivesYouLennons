@@ -41,10 +41,7 @@ public class TeleOpNav {
     public double liftySpeed, liftyJrSpeed;
     public boolean canMoveLiftyJr, liftylike;
     public int limitable;
-    public double trim = 0;
-    public boolean dPadDown = false;
     public int manualMode;
-    private ElapsedTime runtime = new ElapsedTime();
     public int goinDown;
 
     //Objects//
