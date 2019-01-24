@@ -32,7 +32,7 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
         import java.math.RoundingMode;
 
 /**
- * A class for all movement methods for Rover Ruckus.
+ * A class for all movement methods for Rover Ruckus for autonomous (basically one of the autonomous bases
  */
 public class Navigation {
 

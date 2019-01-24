@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns.
  * Distances forward and backward is fully PID encoder methods based on inches.
  * Methods for this class is found in Navigation.
+ *
+ * This is our "second" iteration of autonomous and most current version of the autonomous.
+ * There is a plan to eventually retire methods of this autonomous and create a new auto using motion tracking and vuforia to track distances as seen in TrajectoryGen.
+ * This class is used during competition and practice and includes all of the three autonomous programs by calling them (autocrater, autodepot, autodoublesampling)
+ *
  */
 public class AutoGeneric {
     public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
@@ -49,7 +53,7 @@ public class AutoGeneric {
                 nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.pointTurnIMU(-97f);
+                nav.pointTurnIMU(-90f);
                 nav.goDistanceHold(20f);
                 nav.goDistanceHold(-20f);
                 break;
@@ -69,10 +73,10 @@ public class AutoGeneric {
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(91f);
-            nav.goDistanceHold(-55f);
+            nav.goDistanceHold(44.5f);
             nav.pointTurnIMU(90f);
+            nav.goDistanceHold(-49f);
+            nav.pointTurnIMU(89f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
             nav.pointTurnIMU(36f); //turn to face wall
@@ -101,7 +105,7 @@ public class AutoGeneric {
                 nav.goDistance(69f,0.6f,0.6f);
                 break;
             default: //left
-                nav.goDistance(60f,0.6f,0.6f);
+                nav.goDistance(58f,0.6f,0.6f);
                 break;
         }
         nav.holdForDrive();

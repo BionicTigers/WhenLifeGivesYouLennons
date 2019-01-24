@@ -22,7 +22,11 @@ import java.util.Locale;
 
 @TeleOp(name="Mercury Mechanum TeleOp", group="Outreach")
 
-
+/**
+ * This class is for our outreach robot that uses mecanum wheels.
+ * This outreach bot was a prototype drivetrain to our two iterations of our competition robot from last year
+ * This class allows the outreach bot to be omnidirectional
+ */
 public class TeleOpMercury extends OpMode {
 
     //DRIVETRAIN\\

@@ -13,6 +13,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * This is the base class from teleOpMoongoose
+ */
 public class TeleOpNav {
     public DcMotor frontLeft;
     public DcMotor frontRight;

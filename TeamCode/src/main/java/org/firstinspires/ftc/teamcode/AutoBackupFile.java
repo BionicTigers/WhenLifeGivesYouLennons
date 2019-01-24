@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * A class to run Autonomous given a strategy.
+ * A class to run Autonomous given a strategy with only encoders. This is our "first" iteration of autonomous and has been further developed
+ * into AutoGeneric. This class is not longer used during competition, by hypothically it could if the imu system stopped working on both of the
+ * Rev Expansion Hubs on the robot.
  */
 public class AutoBackupFile {
 
@@ -36,64 +38,48 @@ public class AutoBackupFile {
         nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
         nav.holdForLift();
-        nav.goDistance(3f,0.55f,0.55f);
-        nav.holdForLift();
+        nav.goDistanceHold(3f);
         nav.pointTurnRelative(-90f);
         nav.holdForDrive();
         nav.setLiftHeight(Navigation.LiftHeight.LOWER); //Lowering lift back to starting position
-        nav.goDistance(13f,0.55f,0.55f);
-        nav.holdForDrive();
+        nav.goDistanceHold(13f);
         switch (nav.getCubePos()) { //all of them for sampling
             case MIDDLE:
-                nav.goDistance(12f,0.55f,0.55f); //less forward (same total distance as before)
-                nav.holdForDrive();
-                nav.goDistance(-12f,0.55f,0.55f);  //same distance back
-                nav.holdForDrive();
+                nav.goDistanceHold(12f); //less forward (same total distance as before)
+                nav.goDistanceHold(-12f);  //same distance back
                 nav.pointTurnRelative(80f); //90 degrees to left
                 break;
             case RIGHT:
                 nav.pointTurnRelative(-60f); //turning 5 degrees more
                 nav.holdForDrive();
-                nav.goDistance(20f,0.55f,0.55f); //going same distance forward and back
-                nav.holdForDrive();
-                nav.goDistance(-20f,0.55f,0.55f);
-                nav.holdForDrive();
+                nav.goDistanceHold(20f); //going same distance forward and back
+                nav.goDistanceHold(-20f);
                 nav.pointTurnRelative(140f); //turning total 90
                 break;
             default:
                 nav.pointTurnRelative(55f);
                 nav.holdForDrive();
-                nav.goDistance(15f,0.55f,0.55f);
-                nav.holdForDrive();
-                nav.goDistance(-15f,0.55f,0.55f);
-                nav.holdForDrive();
+                nav.goDistanceHold(15f);
+                nav.goDistanceHold(-15f);
                 nav.pointTurnRelative(25f); //turning total of 90
-
                 break; }
-
+        nav.holdForDrive();
         //-----crater depot run-----//
         if (startZone == StartPos.CRATERAUTO) {
-            nav.holdForDrive();
-            nav.goDistance(44f,0.55f,0.55f);
-            nav.holdForDrive();
+            nav.goDistanceHold(44f);
             nav.pointTurnRelative(-125f);
             nav.holdForDrive();
-//            nav.goDistance(-38f);
 }
         // depot side //
         else if (startZone == StartPos.DEPOTAUTO) {
-            nav.holdForDrive();
-            nav.goDistance(45f,0.55f,0.55f);
-            nav.holdForDrive();
+            nav.goDistanceHold(45f);
             nav.pointTurnRelative(43f); //want a little bit more for gliding on the wall
             nav.holdForDrive();
-            nav.goDistance(-35f,0.55f,0.55f); }
+            nav.goDistanceHold(-35f); }
 
         //-----crater doublesampling------//
         else if (startZone == StartPos.DOUBLESAMPLINGAUTO) {
-            nav.holdForDrive();
-            nav.goDistance(44f,0.55f,0.55f);
-            nav.holdForDrive();
+            nav.goDistanceHold(44f);
             nav.pointTurnRelative(-128f);
             nav.holdForDrive();
             nav.curveTurn(-40f,10f,0f,15f);
@@ -101,39 +87,31 @@ public class AutoBackupFile {
                 case MIDDLE:
                     nav.pointTurnRelative(-90f);
                     nav.holdForDrive();
-                    nav.goDistance(30f,0.55f,0.55f);
-                    nav.holdForDrive();
-                    nav.goDistance(-30f,0.55f,0.55f);
-                    nav.holdForDrive();
+                    nav.goDistanceHold(30f);
+                    nav.goDistanceHold(-30f);
                     nav.pointTurnRelative(90f);
                     break;
                 case RIGHT:
                     nav.pointTurnRelative(-45f);
                     nav.holdForDrive();
-                    nav.goDistance(30f,0.55f,0.55f);
-                    nav.holdForDrive();
-                    nav.goDistance(-30f,0.55f,0.55f);
-                    nav.holdForDrive();
+                    nav.goDistanceHold(30f);
+                    nav.goDistanceHold(-30f);
                     nav.pointTurnRelative(45f);
                     break;
                 default: //Left
                     nav.pointTurnRelative(-135f);
                     nav.holdForDrive();
-                    nav.goDistance(30f,0.55f,0.55f);
-                    nav.holdForDrive();
-                    nav.goDistance(-30f,0.55f,0.55f);
-                    nav.holdForDrive();
+                    nav.goDistanceHold(30f);
+                    nav.goDistanceHold(-30f);
                     nav.pointTurnRelative(135f);
                     nav.holdForDrive(); }
 
                 nav.curveTurn(10f,-11f,0f,0f); }
 
         //-----marker deploy and driving to crater-----//
-        nav.holdForDrive();
         nav.setTeamMarker(0.8f);
         nav.hold(1);
-        nav.goDistance(60f,0.55f,0.55f);
-        nav.holdForDrive();
+        nav.goDistanceHold(60f);
         nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
         nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
         nav.hold(2);

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-
+/**
+ * TragectoryGen is a class that returns a motion profile of a one dimension movement that can be used for the velocity control loop
+ */
 public class TrajectoryGen {
 
 
@@ -208,7 +210,7 @@ public class TrajectoryGen {
             Tragectory[t] = velocity;
         }
         int j = 0;
-        for (int t = (int) (timeToCompleteMili) / 2; t < (timeToCompleteMili); t++) {
+        for (int t = timeToCompleteMili / 2; t < (timeToCompleteMili); t++) {
             velocity = velocity - MaxAcceleration / 1000;
             Tragectory[t] = velocity;
             j++;

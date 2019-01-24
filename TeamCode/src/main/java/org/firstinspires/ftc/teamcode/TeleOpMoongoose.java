@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ *
+ */
 @TeleOp(name = "Moongoose TeleOp", group = "Competition")
 public class TeleOpMoongoose extends OpMode {
 
@@ -16,17 +19,15 @@ public class TeleOpMoongoose extends OpMode {
     TeleOpNav nav = new TeleOpNav(); //base class for teleOp
 
     public void init() {
-        nav.init(hardwareMap);
-
-    }
+        nav.init(hardwareMap); }
 
     public void loop() {
         //////////////////////////////////////// GAMEPAD 1 /////////////////////////////////////////
         // TOGGLE BUTTONS //
         if (gamepad1.left_bumper && (runtime.seconds() > nav.calibToggle)) {
             nav.calibToggle = runtime.seconds() + 0.25;
-            ++nav.driveSpeed;
-        }
+            ++nav.driveSpeed; }
+
         if (gamepad1.y && (runtime.seconds() > nav.driveToggle)) {
             nav.driveToggle = runtime.seconds() + 0.25;
             if (nav.driveMode == 0) {
@@ -34,9 +35,7 @@ public class TeleOpMoongoose extends OpMode {
             } else if (nav.driveMode == 1) {
                 nav.driveMode = 2;
             } else if (nav.driveMode == 2) {
-                nav.driveMode = 0;
-            }
-        }
+                nav.driveMode = 0; } }
 
         // DIFFERENT DRIVE MODES //
         if (nav.driveMode == 0) {
@@ -49,15 +48,13 @@ public class TeleOpMoongoose extends OpMode {
             if (Math.abs(rightStick) > 0.5) {
                 leftPower = leftStick / 2 + rightStick / 2;
             } else {
-                leftPower = leftStick + rightStick / 2;
-            }
+                leftPower = leftStick + rightStick / 2; }
 
             //Right Side
             if (Math.abs(rightStick) > 0.5) {
                 rightPower = leftStick / 2 - rightStick / 2;
             } else {
-                rightPower = leftStick - rightStick / 2;
-            }
+                rightPower = leftStick - rightStick / 2; }
 
             if (nav.driveSpeed % 2 == 0) {
                 telemetry.addData("Mode: ", "ARCADE");
@@ -74,8 +71,7 @@ public class TeleOpMoongoose extends OpMode {
                 nav.backLeft.setPower(leftPower * nav.slowSpeed);
                 nav.backRight.setPower(rightPower * nav.slowSpeed);
                 nav.frontLeft.setPower(leftPower * nav.slowSpeed);
-                nav.frontRight.setPower(rightPower * nav.slowSpeed);
-            }
+                nav.frontRight.setPower(rightPower * nav.slowSpeed); }
         } else if (nav.driveMode == 1) {
             /// TANK DRIVE ///
             double leftStick = gamepad1.left_stick_y;
