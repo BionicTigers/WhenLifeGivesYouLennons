@@ -9,7 +9,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- *
+ * This is a class for TeleOp for competitions
+ * There are two different drivers/controllers:
+ * gamepad1 controls the drivetrain and its different types of driving, gamepad2 controls all of the top mechanisms (hopperlift, lift, collection)
+ * This class pulls from TeleOpNav for its automation methods
  */
 @TeleOp(name = "Moongoose TeleOp", group = "Competition")
 public class TeleOpMoongoose extends OpMode {

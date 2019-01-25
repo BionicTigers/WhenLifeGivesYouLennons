@@ -4,16 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns.
+ * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns and collects from the crater at the end of auto
  * Distances forward and backward is fully PID encoder methods based on inches.
  * Methods for this class is found in Navigation.
  *
- * This is our "second" iteration of autonomous and most current version of the autonomous.
- * There is a plan to eventually retire methods of this autonomous and create a new auto using motion tracking and vuforia to track distances as seen in TrajectoryGen.
- * This class is used during competition and practice and includes all of the three autonomous programs by calling them (autocrater, autodepot, autodoublesampling)
- *
+ * This class is currently in progress and is yet to be used in competition
  */
-public class AutoGeneric {
+public class AutoCollect {
     public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
 
     private StartPos startZone;
@@ -28,7 +25,7 @@ public class AutoGeneric {
      * @param opMode    - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      */
-    public AutoGeneric(AutoGeneric.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
+    public AutoCollect(AutoCollect.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
@@ -53,9 +50,9 @@ public class AutoGeneric {
                 nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.pointTurnIMU(-90f);
-                nav.goDistanceHold(17f);
-                nav.goDistanceHold(-17f);
+                nav.pointTurnIMU(-93.55f);
+                nav.goDistanceHold(27f);
+                nav.goDistanceHold(-27f);
                 break;
             default: //left
                 nav.pointTurnIMU(3.55f);
@@ -103,14 +100,20 @@ public class AutoGeneric {
         switch (startZone){
             case DOUBLESAMPLING:
                 nav.goDistance(69f,0.6f,0.6f);
+                nav.holdForDrive();
+                nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+
                 break;
             default: //left
                 nav.goDistance(58f,0.6f,0.6f);
+                nav.holdForDrive();
+                nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+                nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
+                nav.hold(2f);
                 break;
         }
-        nav.holdForDrive();
-        //nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+
+
 
     }
 }
