@@ -12,29 +12,19 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Autonomous(name = "lol")
 public class PIDF extends LinearOpMode {
     private DcMotorEx boardEx;
-    private ElapsedTime tim;
-
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
 
-        Trajectory trajectory = new Trajectory(2940f,10000f,4567.2f,80f);
+        Trajectory trajectory = new Trajectory(2940f,1000f,4567.2f,80f);
         float[][]traj = trajectory.getTraj();
         ElapsedTime elMili;
         waitForStart();
         elMili= new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         while (opModeIsActive()) {
-            boardEx =  (DcMotorEx) hardwareMap.dcMotor.get("clark");
-            boardEx.setPower(1);
-
-
-            FtcDashboard dashboard = FtcDashboard.getInstance();
-            Telemetry dashboardTelemetry = dashboard.getTelemetry();
-
-            dashboardTelemetry.addData("Vel", boardEx.getVelocity());
-            dashboardTelemetry.addData("Projected Vel",traj[(int)elMili.time()/1000][1]);
-            dashboardTelemetry.addData("time",elMili.time());
-            dashboardTelemetry.update();
+         while(elMili.time()<traj.length){
+             boardEx.setVelocity(traj[(int)elMili.time()][1]);
+         }
  }
     }
 //    public double findMaxAccel(){

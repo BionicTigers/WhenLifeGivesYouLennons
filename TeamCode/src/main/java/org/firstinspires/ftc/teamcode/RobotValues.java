@@ -4,5 +4,5 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class RobotValues {
-    public static int MAGIC_NUMBER = 32;
+    public static int FEED_FORWARD = 32;
 }
