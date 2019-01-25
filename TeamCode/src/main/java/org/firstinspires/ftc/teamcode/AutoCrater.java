@@ -13,4 +13,8 @@ public class AutoCrater extends LinearOpMode {
 
         autoGeneric.runOpMode();
     }
+    public boolean isStopping() {
+        return opModeIsActive();
+    }
+
 }

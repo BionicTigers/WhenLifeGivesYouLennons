@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Autonomous(name="Test Nav Methods")
 public class TestNavMethods extends LinearOpMode {
@@ -19,12 +15,12 @@ public class TestNavMethods extends LinearOpMode {
         while (opModeIsActive()) {
         nav.updatePos();
         telemetry.addData("Position", nav.getPos());
-        nav.turnToHeading(15f);
-        nav.turnToHeading(-15f);
-        nav.turnToHeading(25f);
-        nav.turnToHeading(-25f);
-        nav.turnToHeading(45f);
-        nav.turnToHeading(-45f);
+        nav.pointTurnIMU(15f);
+        nav.pointTurnIMU(-15f);
+        nav.pointTurnIMU(25f);
+        nav.pointTurnIMU(-25f);
+        nav.pointTurnIMU(45f);
+        nav.pointTurnIMU(-45f);
         }
 
     }

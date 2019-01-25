@@ -1,34 +1,50 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+        import android.content.Context;
+        import android.support.annotation.NonNull;
+        import android.support.annotation.Nullable;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+        import com.disnodeteam.dogecv.CameraViewDisplay;
+        import com.disnodeteam.dogecv.DogeCV;
+        import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+        import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
+        import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.DcMotorSimple;
+        import com.qualcomm.robotcore.hardware.Servo;
+        import com.qualcomm.robotcore.hardware.CRServo;
+        import com.qualcomm.hardware.bosch.BNO055IMU;
+        import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+        import org.firstinspires.ftc.robotcore.external.function.Consumer;
+        import org.firstinspires.ftc.robotcore.external.function.Continuation;
+        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
+        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+        import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+        import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+        import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.util.SerialNumber;
 
-import com.qualcomm.robotcore.util.ReadWriteFile;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+        import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+        import com.qualcomm.robotcore.util.ReadWriteFile;
+        import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
+
+        import java.io.File;
+        import java.math.BigDecimal;
+        import java.math.RoundingMode;
 
 /**
  * A class for all movement methods for Rover Ruckus.
@@ -36,10 +52,10 @@ import java.math.RoundingMode;
 public class Navigation {
 
     //-----tweak values-----//
-    private float maximumMotorPower = 0.6f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
+    //private float maximumMotorPower = 0.5f;             //when executing a goToLocation function, robot will never travel faster than this value (percentage 0=0%, 1=100%)
     private float encoderCountsPerRev = 537.6f;         //encoder ticks per one revolution
     private boolean useTelemetry;                       //whether to execute the telemetry method while holding
-    private float minVelocityCutoff = 0.05f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
+    private float minVelocityCutoff = 0.06f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
 
     //-----enums-----//
     public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
@@ -85,12 +101,11 @@ public class Navigation {
     //-----servos-----//
     private Servo droppy;  //collection lift a
     private Servo droppyJr; //collection lift b
-    private CRServo collecty;  //collection sweeper
+    //private CRServo collecty;  //collection sweeper
     private Servo teamMarker;
 
     /**
      * The constructor class for Navigation
-     *
      * @param hardwareGetter - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry      - Telemetry of the current OpMode, used to output data to the screen.
      * @param useTelemetry   - Whether or not to output information about stored variables and motors during hold periods.
@@ -129,7 +144,7 @@ public class Navigation {
 
         //-----servos-----//
         teamMarker = hardwareGetter.hardwareMap.servo.get("teamMarker");
-        collecty = hardwareGetter.hardwareMap.crservo.get("collecty");
+        //collecty = hardwareGetter.hardwareMap.crservo.get("collecty");
         droppy = hardwareGetter.hardwareMap.servo.get("droppy");
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
@@ -217,7 +232,6 @@ public class Navigation {
 
     /**
      * Updates the cube location enumerator using OpenCV. Access using [nav].cubePos.
-     *
      * @return boolean, true if updated, false if not updated.
      */
     public boolean updateCubePos() {
@@ -246,7 +260,6 @@ public class Navigation {
 
     /**
      * Returns the current stored cube position.
-     *
      * @return CubePosition enumerator. Locations self-explanatory.
      */
     public CubePosition getCubePos() {
@@ -269,7 +282,6 @@ public class Navigation {
 
     /**
      * Sets drive motor target encoder to given values.
-     *
      * @param left  encoder set for left motors.
      * @param right encoder set for right motors.
      */
@@ -282,7 +294,6 @@ public class Navigation {
 
     /**
      * Sets all drive motor run modes to given mode.
-     *
      * @param mode name DcMotor mode to given value.
      */
     public void driveMode(DcMotor.RunMode mode) {
@@ -302,18 +313,25 @@ public class Navigation {
 
     /**
      * Pseudo PID to drive the given distance.
-     *
      * @param distance Distance to drive forward in inches.
      */
-    public void goDistance(float distance) {
+    public void goDistance(float distance, float maximumMotorPower, float maxiumMotorPower) {
         //driveMethodComplex(-distance, slowdown, 0f, frontLeft, 1f, 1f, false, minimumMotorPower, maximumMotorPower);
         driveMethodSimple(-distance, distance, maximumMotorPower, maximumMotorPower);
         pos.translateLocal(distance);
     }
 
     /**
+     * Same as goDistance() e.g. PID drive in a straight line, but with a holdForDrive() at the end. I'm not sure. Just roll with it.
+     * @param distance Distance to drive forward in inches.
+     */
+    public void goDistanceHold(float distance){
+        goDistance(distance, 0.55f, 0.55f);
+        holdForDrive();
+    }
+
+    /**
      * Executes a point turn to face the given world rotation.
-     *
      * @param rot Target azimuth in degrees
      */
     public void pointTurn(float rot) {
@@ -321,23 +339,13 @@ public class Navigation {
         float rotb = -(360f - rota);
         float optimalRotation = (Math.abs(rota) < Math.abs(rotb) ? rota : rotb); //selects shorter rotation
         float distance = (float) (Math.toRadians(optimalRotation) * wheelDistance); //arc length of turn (radians * radius)
-//driveMethodComplex(distance, slowdown, precision, frontLeft, 1f, -1f, true, 0.05f, 0.25f);
         driveMethodSimple(distance, distance, 0.3f, 0.3f);
 
         pos.setRotation(rot);
     }
 
-    public void curveTurn(float distance1,float distanceL, float distanceR, float distance2){
-        goDistance(distance1);
-        holdForDrive();
-        swingTurn(distanceL, distanceR);
-        holdForDrive();
-        goDistance(distance2);
-        holdForDrive();
-    }
     /**
      * Executes a point turn to face the given Location.
-     *
      * @param loc Target Location object
      */
     public void pointTurn(Location loc) {
@@ -346,7 +354,6 @@ public class Navigation {
 
     /**
      * Executes a point turn relative to the current location. Positive is counterclockwise.
-     *
      * @param rot the amount to rotate the robot in degrees. Positive is counterclockwise.
      */
     public void pointTurnRelative(float rot) {
@@ -354,18 +361,35 @@ public class Navigation {
     }
 
     /**
-     * Executes swing turn based on the given distances for both sides of the robot.
-     * @param distanceL distance for left side of the robot to move (in inches)
-     * @param distanceR distance for right side of the robot to move (in inches)
+     * Executes a point turn to the given heading, first updating the position with the internal IMU value. Will holdForDrive() automatically.
+     * @param heading Target rotation in degrees.
      */
-    public void swingTurn(float distanceL, float distanceR) {
-        driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
+    public void pointTurnIMU(float heading) {
+        pos.setRotation((imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)).firstAngle);
+        pointTurn(heading);
+        holdForDrive();
     }
 
+    /**
+     * Rotate the robot smothly around a curve, with differing wheel rates for each side.
+     * @param distance1 Distance to travel straight before curve (inches)
+     * @param distanceL Distance for left side of robot to travel (inches)
+     * @param distanceR Distance for right side of robot to travel (inches)
+     * @param distance2 Distance to travel straight after the curve (inches)
+     */
+    public void curveTurn(float distance1,float distanceL, float distanceR, float distance2){
+        goDistance(distance1, 0.55f, 0.55f);
+        holdForDrive();
+        driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
+        holdForDrive();
+        goDistance(distance2, 0.55f, 0.55f);
+        holdForDrive();
+
+        //need to update internal pos values
+    }
 
     /**
      * Sets lift motor to given encoder position
-     *
      * @param position Encoder ticks for lift motor. ~0(bottom) to ~8200(top)
      */
     public void setLiftHeight(int position) {
@@ -374,7 +398,6 @@ public class Navigation {
 
     /**
      * Sets the lift height to a pre-programmed position.
-     *
      * @param position LiftHeight enumerator. Options are LOWER, HOOK, or SCORE.
      */
     public void setLiftHeight(LiftHeight position) {
@@ -387,38 +410,35 @@ public class Navigation {
                 break;
         }
     }
-//
+
     /**
      * Sets the collection sweeper to a given power value.
-     *
      * @param power float. Percentage power at which to run collector. 1.0f (intake) - -1.0f(outtake) inclusive.
      */
-    public void setCollectionSweeper(float power) {
-        collecty.setPower(power);
-    }
+//    public void setCollectionSweeper(float power) {
+//        collecty.setPower(power);
+//    }
 
     /**
      * Sets the collection sweeper power using pre-programmed values.
-     *
      * @param power CollectorSweeper emumerator. Options are INTAKE, OUTTAKE, or OFF.
      */
-    public void setCollectionSweeper(CollectorSweeper power) {
-        switch (power) {
-            case INTAKE:
-                setCollectionSweeper(0.5f);
-                break;
-            case OUTTAKE:
-                setCollectionSweeper(-0.5f);
-                break;
-            case OFF:
-                setCollectionSweeper(0f);
-                break;
-        }
-    }
+//    public void setCollectionSweeper(CollectorSweeper power) {
+//        switch (power) {
+//            case INTAKE:
+//                setCollectionSweeper(0.5f);
+//                break;
+//            case OUTTAKE:
+//                setCollectionSweeper(-0.5f);
+//                break;
+//            case OFF:
+//                setCollectionSweeper(0f);
+//                break;
+//        }
+//    }
 
     /**
      * Set the height of the collector arm.
-     *
      * @param position float. ~0.8f (bottom) to ~0.18f (top).
      */
     public void setCollectorHeight(float position) {
@@ -428,13 +448,12 @@ public class Navigation {
 
     /**
      * Sets the height of the collector arm.
-     *
      * @param position CollectorHeight enumerator. Options are COLLECT, HOLD, or DUMP.
      */
     public void setCollectorHeight(CollectorHeight position) {
         switch (position) {
             case COLLECT:
-                setCollectorHeight(0.715f);
+                setCollectorHeight(0.7f);
                 break;
             case HOLD:
                 setCollectorHeight(0.5f);
@@ -447,7 +466,6 @@ public class Navigation {
 
     /**
      * Sets the extension of the collector arm.
-     *
      * @param position int. 0(in) to 1600(out).
      */
     public void setCollectorExtension(int position) {
@@ -456,7 +474,6 @@ public class Navigation {
 
     /**
      * Sets the extension of the collectior arm.
-     *
      * @param position CollectorExtension enumerator. Options are PARK, DUMP, or OUT.
      */
     public void setCollectorExtension(CollectorExtension position) {
@@ -475,7 +492,6 @@ public class Navigation {
 
     /**
      * Sets the position of the teamMarker servo.
-     *
      * @param position float. 0.0f(locked) to 0.8f(dropping).
      */
     public void setTeamMarker(float position) {
@@ -483,7 +499,7 @@ public class Navigation {
     }
 
     /**
-     * Drive method that independantly controls the position and power of the left and right drive motors.
+     * Drive method that independently controls the position and power of the left and right drive motors.
      * @param distanceL float. Distance in inches for left motors to traverse.
      * @param distanceR float. Distance in inches for right motors to traverse.
      * @param LPower float. Power percentage for left motors (0.0-1.0).
@@ -510,10 +526,6 @@ public class Navigation {
         }
     }
 
-    public void distance(float dist){
-        goDistance(dist);
-        holdForDrive();
-    }
     /**
      * Holds program execution until lift motor is done moving.
      * Will output telemetry if class initialized with useTelemetry true.
@@ -528,7 +540,6 @@ public class Navigation {
 
     /**
      * Hold program for given number of seconds.
-     *
      * @param seconds float. Number of seconds to wait.
      */
     public void hold(float seconds) {
@@ -541,7 +552,6 @@ public class Navigation {
 
     /**
      * Updates the stored velocity of the robot to reflect reality.
-     *
      * @return float. New velocity in encoder ticks per millisecond.
      */
     private float updateVelocity() {
@@ -549,32 +559,6 @@ public class Navigation {
         prevEncoder = velocityMotor.getCurrentPosition();
         prevTime = System.currentTimeMillis();
         return velocity;
-    }
-    public float findMaxSpeed(){
-        return 0.0f;
-    }
-    //trapaazoid
-    private void tragectaryGeneration1D(){
-        //max cruising velocity
-
-
-
-
-    }
-    public void driveMethodComplex(float distance, float slowdown, float precision,  float lModifier, float rModifier, boolean doubleBack, float minPower, float maxPower) {
-        distance *= lModifier;
-        int initEncoder = frontLeft.getCurrentPosition();
-        int targetEncoder = (int)(distance / (wheelDiameter * Math.PI) * encoderCountsPerRev) + initEncoder;
-        int slowdownEncoder = (int)(slowdown / (wheelDiameter * Math.PI) * encoderCountsPerRev);
-        int premodifier = (targetEncoder > 0) ? 1 : -1;
-        driveMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while ((!doubleBack && (targetEncoder - frontLeft.getCurrentPosition())*premodifier > precision) || (doubleBack && Math.abs(targetEncoder - frontLeft.getCurrentPosition()) > precision)) {
-            float uncappedPower = (targetEncoder - frontRight.getCurrentPosition()) / (float)slowdownEncoder;
-            float power = (uncappedPower < 0 ? -1:1) * Math.min(maxPower, Math.max(minPower, Math.abs(uncappedPower)));
-            drivePower(power*lModifier, power*rModifier);
-            if(useTelemetry) telemetryMethod();
-        }
-        driveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     /**
@@ -586,16 +570,17 @@ public class Navigation {
         String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
         telemetry.addData("Drive = ", motorString);
         telemetry.addData("Lift = ", lifty.getCurrentPosition());
-        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " + collecty.getPower());
+        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " );
         telemetry.addData("Pos = ", pos);
         telemetry.addData("CubePos = ", cubePos);
         telemetry.addData("Velocity = ", velocity);
+        //   telemetry.addData("CubeXPosition",detector.getXPosition());
         telemetry.update();
     }
 
     /**
      * Calibrates the imu, probably best to do in init
-     * May take a hot second
+     * May take a hot second.
      */
     public void calibrateHeading() {
         BNO055IMU.Parameters noots = new BNO055IMU.Parameters();
@@ -612,13 +597,16 @@ public class Navigation {
         String filename = "BNO055IMUCalibration.json";
         File file = AppUtil.getInstance().getSettingsFile(filename);
         ReadWriteFile.writeFile(file, calibrationData.serialize());
+
+        pos.setRotation((imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)).firstAngle);
+
         telemetry.update();
         telemetry.log().add("IMU: CALIBRATED", filename);
         telemetry.update();
     }
 
     /**
-     * Checks heading based from calibHeading() and returns
+     * Compares given heading value with IMU heading value. If less than error, returns true.
      * @param heading the heading to check for, heading in is degrees
      * @param err the amount of error (in degrees) allowed to return true
      * @return boolean.
@@ -626,15 +614,6 @@ public class Navigation {
     public boolean checkHeading(float heading, float err) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return Math.abs(heading - angles.firstAngle) < err;
-    }
-
-    public void turnToHeading(float heading) {
-        telemetry.update();
-        telemetry.addData("Turning to: ", round(heading));
-        telemetry.update();
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        pointTurnRelative(heading - angles.firstAngle);
-        holdForDrive();
     }
 
     private static double round(double value) { //Allows telemetry to display nicely

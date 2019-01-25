@@ -36,64 +36,77 @@ public class AutoGeneric {
     //----Run this to run Autonomous----//
     public void runOpMode() {
         nav.updateCubePos();
-        // nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+        nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
         nav.holdForLift();
-        nav.distance(3f);
-        nav.turnToHeading(-45f);
+        nav.goDistanceHold(3f);
+        nav.pointTurnIMU(-45f);
         nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-        nav.distance(14f);
+        nav.goDistanceHold(14f);
         switch (nav.getCubePos()) {
             case MIDDLE:
-                nav.distance(14f);
-                nav.distance(-14f);
+                nav.goDistanceHold(14f);
+                nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.turnToHeading(-90f);
-                nav.distance(18f);
-                nav.distance(-18f);
+                nav.pointTurnIMU(-95f);
+                nav.goDistanceHold(20f);
+                nav.goDistanceHold(-20f);
                 break;
             default: //left
-                nav.turnToHeading(0f);
-                nav.distance(20f);
-                nav.distance(-20f);
+                nav.pointTurnIMU(3.5f);
+                nav.goDistanceHold(27f);
+                nav.goDistanceHold(-27f);
                 break;
         }
-        nav.turnToHeading(40f); //turn to face wall
-        nav.distance(46f);
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
-            nav.turnToHeading(-90f);
-            nav.distance(-38f);
+            nav.pointTurnIMU(36f); //turn to face wall
+            nav.goDistanceHold(46f);
+            nav.pointTurnIMU(-90.5f);
+            nav.goDistanceHold(-43f);
+            nav.pointTurnIMU(-89f);
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
-            nav.turnToHeading(90f);
-            nav.distance(-55f);
+            nav.pointTurnIMU(36f); //turn to face wall
+            nav.goDistanceHold(45f);
+            nav.pointTurnIMU(91f);
+            nav.goDistanceHold(-55f);
+            nav.pointTurnIMU(90f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
-            nav.turnToHeading(-90f);
-            nav.curveTurn(-35f, 10f, 0f, -7f);
+            nav.pointTurnIMU(36f); //turn to face wall
+            nav.goDistanceHold(45f);
+            nav.pointTurnIMU(-90f);
+            nav.curveTurn(-40f, 10f, 0f, 2f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
-                    nav.turnToHeading(-135f);
+                    nav.pointTurnIMU(-135f);
                     break;
                 case RIGHT:
-                    nav.turnToHeading(-100f);
+                    nav.pointTurnIMU(-105f);
                     break;
                 default: //Left
-                    nav.turnToHeading(-180f);
+                    nav.pointTurnIMU(-180f);
             }
-            nav.distance(30f);
-            nav.distance(-35f);
-            nav.turnToHeading(273f);
+            nav.goDistanceHold(30f);
+            nav.goDistanceHold(-34f);
+            nav.pointTurnIMU(273f);
         }
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);
         nav.hold(1);
-        nav.turnToHeading(-88f);
-        nav.distance(62f);
-//        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-//        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-//        nav.hold(2);
+        switch (startZone){
+            case DOUBLESAMPLING:
+                nav.goDistance(70f,0.6f,0.6f);
+                break;
+            default: //left
+                nav.goDistance(63f,0.6f,0.6f);
+                break;
+        }
+        nav.holdForDrive();
+        //nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+
     }
 }
