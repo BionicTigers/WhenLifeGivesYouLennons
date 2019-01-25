@@ -18,7 +18,7 @@ public class AutoDepot extends LinearOpMode {
 
         opModeIsActive();
 
-        autoGeneric.runOpMode();
+        autoGeneric.runAutonomous();
     }
 
     public boolean isStopping() {

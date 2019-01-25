@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * A class made to run the crater code pulled from AutoGeneric
@@ -17,7 +16,7 @@ public class AutoCrater extends LinearOpMode {
             telemetry.update();
         }
         //waitForStart();
-        autoGeneric.runOpMode();
+        autoGeneric.runAutonomous();
     }
     public boolean isStopping() {
         return opModeIsActive();

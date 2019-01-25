@@ -24,7 +24,7 @@ public class AutoGeneric {
     /**
      * The constructor method that zcontains everything to run in initialization.
      *
-     * @param startZone - StartPos enumerator. Tells which strategy to run. Options are dEPOT, CRATER, or dOUBLESAMPLING.
+     * @param startZone - StartPos enumerator. Tells which strategy to run. Options are DEPOT, CRATER, or DOUBLESAMPLING.
      * @param opMode    - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      */
@@ -37,8 +37,10 @@ public class AutoGeneric {
         nav.hold(0.1f);
     }
 
-    //----Run this to run Autonomous----//
-    public void runOpMode() {
+    /**
+     * Class which runs an autonomous given AutoGeneric has been instantiated.
+     */
+    public void runAutonomous() {
         nav.updateCubePos();
         nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
@@ -63,6 +65,7 @@ public class AutoGeneric {
                 nav.goDistanceHold(-27f);
                 break;
         }
+
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
@@ -97,6 +100,7 @@ public class AutoGeneric {
             nav.goDistanceHold(-34f);
             nav.pointTurnIMU(277f);
         }
+
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);
         nav.hold(1);
@@ -108,8 +112,8 @@ public class AutoGeneric {
                 nav.goDistance(58f,0.6f,0.6f);
                 break;
         }
+
         nav.holdForDrive();
-        //nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
         nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
 
     }

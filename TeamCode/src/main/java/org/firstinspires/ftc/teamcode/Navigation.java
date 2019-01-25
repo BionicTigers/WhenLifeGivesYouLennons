@@ -69,9 +69,7 @@ public class Navigation {
     private Location pos = new Location();
     BNO055IMU imu;
     public Orientation angles;
-    public Acceleration gravity;
     public int gameState = 0;
-    public float biggyState = 0;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -88,7 +86,6 @@ public class Navigation {
     //-----servos-----//
     private Servo droppy;  //collection lift a
     private Servo droppyJr; //collection lift b
-    //private CRServo collecty;  //collection sweeper
     private Servo teamMarker;
 
     /**
@@ -133,7 +130,6 @@ public class Navigation {
 
         //-----servos-----//
         teamMarker = hardwareGetter.hardwareMap.servo.get("teamMarker");
-        //collecty = hardwareGetter.hardwareMap.crservo.get("collecty");
         droppy = hardwareGetter.hardwareMap.servo.get("droppy");
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
@@ -304,7 +300,6 @@ public class Navigation {
      * @param distance Distance to drive forward in inches.
      */
     public void goDistance(float distance, float maximumMotorPower, float maxiumMotorPower) {
-        //driveMethodComplex(-distance, slowdown, 0f, frontLeft, 1f, 1f, false, minimumMotorPower, maximumMotorPower);
         driveMethodSimple(-distance, distance, maximumMotorPower, maximumMotorPower);
         pos.translateLocal(distance);
     }
@@ -392,7 +387,7 @@ public class Navigation {
         goDistance(distance2, 0.55f, 0.55f);
         holdForDrive();
 
-        //need to update internal pos values
+        pos.setRotation((imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)).firstAngle);
     }
 
     /**
