@@ -97,7 +97,7 @@ public class AutoGeneric {
                     nav.pointTurnIMU(-180f);
             }
             nav.goDistanceHold(30f);
-            nav.goDistanceHold(-34f);
+            nav.goDistanceHold(-35.25f);
             nav.pointTurnIMU(277f);
         }
 
