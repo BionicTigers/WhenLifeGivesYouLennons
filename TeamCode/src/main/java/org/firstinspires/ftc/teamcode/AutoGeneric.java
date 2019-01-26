@@ -65,7 +65,7 @@ public class AutoGeneric {
                 nav.goDistanceHold(-27f);
                 break;
         }
-
+//
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
