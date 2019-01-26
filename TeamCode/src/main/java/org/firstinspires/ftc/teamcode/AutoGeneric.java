@@ -55,9 +55,9 @@ public class AutoGeneric {
                 nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.pointTurnIMU(-90f);
-                nav.goDistanceHold(17f);
-                nav.goDistanceHold(-17f);
+                nav.pointTurnIMU(-93.5f);
+                nav.goDistanceHold(20.5f);
+                nav.goDistanceHold(-20.5f);
                 break;
             default: //left
                 nav.pointTurnIMU(3.55f);
@@ -76,10 +76,10 @@ public class AutoGeneric {
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(44.5f);
-            nav.pointTurnIMU(90f);
+            nav.goDistanceHold(45f);
+            nav.pointTurnIMU(90.5f);
             nav.goDistanceHold(-49f);
-            nav.pointTurnIMU(89f);
+            nav.pointTurnIMU(88.5f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
             nav.pointTurnIMU(36f); //turn to face wall
