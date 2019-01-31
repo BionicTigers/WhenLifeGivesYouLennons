@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+/**
+ * This is a testing class (specifically with drive methods from autonomous)
+ */
 @Autonomous(name="Test Nav Methods")
 public class TestNavMethods extends LinearOpMode {
     private Navigation nav;

@@ -2,20 +2,23 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.concurrent.TimeUnit;
-
+/**
+ * A class made to run the depot code pulled from AutoGeneric
+ */
 @Autonomous(name="Auto Depot", group="Auto")
 public class AutoDepot extends LinearOpMode {
     public void runOpMode() {
         AutoGeneric autoGeneric = new AutoGeneric(AutoGeneric.StartPos.DEPOT, this, telemetry);
-
-        waitForStart();
+        while(!isStarted()){
+            telemetry.addData("cool","waiting to start");
+            telemetry.update();
+        }
+       // waitForStart();
 
         opModeIsActive();
 
-        autoGeneric.runOpMode();
+        autoGeneric.runAutonomous();
     }
 
     public boolean isStopping() {

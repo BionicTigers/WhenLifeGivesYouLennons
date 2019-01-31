@@ -1,37 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
-        import android.content.Context;
-        import android.support.annotation.NonNull;
-        import android.support.annotation.Nullable;
-
-        import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.CameraViewDisplay;
         import com.disnodeteam.dogecv.DogeCV;
         import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-        import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
-        import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
+
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.hardware.DcMotorSimple;
         import com.qualcomm.robotcore.hardware.Servo;
-        import com.qualcomm.robotcore.hardware.CRServo;
         import com.qualcomm.hardware.bosch.BNO055IMU;
         import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 
-        import org.firstinspires.ftc.robotcore.external.function.Consumer;
-        import org.firstinspires.ftc.robotcore.external.function.Continuation;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
         import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-        import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
         import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
         import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
         import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-        import com.qualcomm.robotcore.util.ElapsedTime;
-        import com.qualcomm.robotcore.util.SerialNumber;
 
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
         import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
         import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
         import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 
@@ -47,7 +32,8 @@ package org.firstinspires.ftc.teamcode;
         import java.math.RoundingMode;
 
 /**
- * A class for all movement methods for Rover Ruckus.
+ * A class for all movement methods (using PID and IMU) for Rover Ruckus for autonomous as well as mechanisms methods for autonomous as well
+ * (Basically an autonomous base)
  */
 public class Navigation {
 
@@ -60,8 +46,9 @@ public class Navigation {
     //-----enums-----//
     public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
     private CubePosition cubePos = CubePosition.UNKNOWN;
-    public enum CollectorHeight {COLLECT, HOLD, DUMP}
+    public enum CollectorHeight {COLLECT, HOLD, LAND, DUMP}
     public enum LiftHeight {LOWER, HOOK}
+    public enum LiftyJrHeight {LOWER, DROP, WAIT}
     public enum CollectorExtension {PARK, DUMP, OUT}
     public enum CollectorSweeper {INTAKE,OUTTAKE, OFF}
 
@@ -83,9 +70,7 @@ public class Navigation {
     private Location pos = new Location();
     BNO055IMU imu;
     public Orientation angles;
-    public Acceleration gravity;
     public int gameState = 0;
-    public float biggyState = 0;
 
     //location of robot as [x,y,z,rot] (inches / degrees)
 
@@ -97,11 +82,11 @@ public class Navigation {
     private DcMotor extendy; //collector extension
     private DcMotor lifty;  //lift motor a
     private DcMotor liftyJr; //lift motor b
+    private DcMotor collecty;
 
     //-----servos-----//
     private Servo droppy;  //collection lift a
     private Servo droppyJr; //collection lift b
-    //private CRServo collecty;  //collection sweeper
     private Servo teamMarker;
 
     /**
@@ -142,9 +127,10 @@ public class Navigation {
         liftyJr.setPower(1);
         setLiftHeight(0);
 
+        collecty = hardwareGetter.hardwareMap.dcMotor.get("collecty");
+
         //-----servos-----//
         teamMarker = hardwareGetter.hardwareMap.servo.get("teamMarker");
-        //collecty = hardwareGetter.hardwareMap.crservo.get("collecty");
         droppy = hardwareGetter.hardwareMap.servo.get("droppy");
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
@@ -315,7 +301,6 @@ public class Navigation {
      * @param distance Distance to drive forward in inches.
      */
     public void goDistance(float distance, float maximumMotorPower, float maxiumMotorPower) {
-        //driveMethodComplex(-distance, slowdown, 0f, frontLeft, 1f, 1f, false, minimumMotorPower, maximumMotorPower);
         driveMethodSimple(-distance, distance, maximumMotorPower, maximumMotorPower);
         pos.translateLocal(distance);
     }
@@ -324,9 +309,28 @@ public class Navigation {
      * Same as goDistance() e.g. PID drive in a straight line, but with a holdForDrive() at the end. I'm not sure. Just roll with it.
      * @param distance Distance to drive forward in inches.
      */
+
     public void goDistanceHold(float distance){
         goDistance(distance, 0.55f, 0.55f);
         holdForDrive();
+    }
+
+    public void setLiftJrHeight(int position) {
+        liftyJr.setTargetPosition(position);
+    }
+
+    public void setLiftyJrHeight(LiftyJrHeight position) {
+        switch (position) {
+            case LOWER:
+                setLiftJrHeight(0);
+                break;
+            case DROP:
+                setLiftJrHeight(2050);
+                break;
+            case WAIT:
+                setLiftJrHeight(1500);
+
+        }
     }
 
     /**
@@ -384,7 +388,7 @@ public class Navigation {
         goDistance(distance2, 0.55f, 0.55f);
         holdForDrive();
 
-        //need to update internal pos values
+        pos.setRotation((imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)).firstAngle);
     }
 
     /**
@@ -402,7 +406,7 @@ public class Navigation {
     public void setLiftHeight(LiftHeight position) {
         switch (position) {
             case HOOK:
-                setLiftHeight(-9550);
+                setLiftHeight(-10464);
                 break;
             case LOWER:
                 setLiftHeight(0);
@@ -414,27 +418,27 @@ public class Navigation {
      * Sets the collection sweeper to a given power value.
      * @param power float. Percentage power at which to run collector. 1.0f (intake) - -1.0f(outtake) inclusive.
      */
-//    public void setCollectionSweeper(float power) {
-//        collecty.setPower(power);
-//    }
+    public void setCollectionSweeper(float power) {
+        collecty.setPower(power);
+    }
 
     /**
      * Sets the collection sweeper power using pre-programmed values.
      * @param power CollectorSweeper emumerator. Options are INTAKE, OUTTAKE, or OFF.
      */
-//    public void setCollectionSweeper(CollectorSweeper power) {
-//        switch (power) {
-//            case INTAKE:
-//                setCollectionSweeper(0.5f);
-//                break;
-//            case OUTTAKE:
-//                setCollectionSweeper(-0.5f);
-//                break;
-//            case OFF:
-//                setCollectionSweeper(0f);
-//                break;
-//        }
-//    }
+    public void setCollectionSweeper(CollectorSweeper power) {
+        switch (power) {
+            case INTAKE:
+                setCollectionSweeper(-1f);
+                break;
+            case OUTTAKE:
+                setCollectionSweeper(1f);
+                break;
+            case OFF:
+                setCollectionSweeper(0f);
+                break;
+        }
+    }
 
     /**
      * Set the height of the collector arm.
@@ -452,14 +456,16 @@ public class Navigation {
     public void setCollectorHeight(CollectorHeight position) {
         switch (position) {
             case COLLECT:
-                setCollectorHeight(0.7f);
+                setCollectorHeight(0.7525f);
                 break;
             case HOLD:
-                setCollectorHeight(0.5f);
+                setCollectorHeight(0.55f);
+                break;
+            case LAND:
+                setCollectorHeight(0.7f);
                 break;
             case DUMP:
-                setCollectorHeight(0.18f);
-                break;
+                setCollectorHeight(0.2f);
         }
     }
 
@@ -533,6 +539,14 @@ public class Navigation {
         hold(0.1f);
         gameState++;
         while (lifty.isBusy() && hardwareGetter.opModeIsActive()) {
+            if (useTelemetry) telemetryMethod();
+        }
+    }
+
+    public void holdForLiftJr() {
+        hold(0.1f);
+        gameState++;
+        while (liftyJr.isBusy() && hardwareGetter.opModeIsActive()) {
             if (useTelemetry) telemetryMethod();
         }
     }

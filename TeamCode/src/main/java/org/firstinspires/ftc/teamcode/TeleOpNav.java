@@ -13,13 +13,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * This is the base class from teleOpMoongoose
+ * This class contains the calling of motors, servos, sensors, variables for TeleOp and the automation methods for the hopper lift and the lift
+ */
 public class TeleOpNav {
+    //Drivetrain motors//
     public DcMotor frontLeft;
     public DcMotor frontRight;
     public DcMotor backLeft;
     public DcMotor backRight;
 
-    //Other Motors//
+    //Motors for mechanisms//
     public DcMotor extendy;            // lead screw horizontal extension
     public DcMotor lifty;              // lift for hanging
     public DcMotor liftyJr;            // lift for hopper and deposit into
@@ -32,31 +37,29 @@ public class TeleOpNav {
     public TouchSensor limitSwitch;    // touch sensor for liftyJr -- hopper lift, placed on bottom of lift
 
     //Variables//
-    public double normalSpeed, slowSpeed;
-    public double calibToggle, driveToggle, liftToggle, manualToggle;
-    public int driveSpeed, driveMode, liftMode;
+    public double calibToggle, driveToggle, liftToggle;
     public double liftySpeed, liftyJrSpeed;
+    public double normalSpeed, slowSpeed;
+
     public boolean canMoveLiftyJr, liftylike;
-    public int limitable;
-    public double trim = 0;
-    public boolean dPadDown = false;
+
+    public int driveSpeed, driveMode, liftMode;
     public int manualMode;
-    private ElapsedTime runtime = new ElapsedTime();
-    public int goinDown;
 
     //Objects//
     public ElapsedTime period = new ElapsedTime();
 
     public void init(HardwareMap hwMap) {
-        frontLeft = hwMap.dcMotor.get("frontLeft");
-        frontRight = hwMap.dcMotor.get("frontRight");
+        //Drivetrain Motors//
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
+        frontLeft = hwMap.dcMotor.get("frontLeft");
+        frontRight = hwMap.dcMotor.get("frontRight");
 
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        //Other Motors//
+        //Motors For Mechanisms//
         extendy = hwMap.dcMotor.get("extendy");
         lifty = hwMap.dcMotor.get("lifty");
         liftyJr = hwMap.dcMotor.get("liftyJr");
@@ -67,31 +70,34 @@ public class TeleOpNav {
         liftyJr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Servos//
-        teamMarker = hwMap.servo.get("teamMarker");
-        teamMarker.setPosition(0.2);
         collecty = hwMap.dcMotor.get("collecty");
         droppy = hwMap.servo.get("droppy");
         droppyJr = hwMap.servo.get("droppyJr");
+        teamMarker = hwMap.servo.get("teamMarker");
+
+
         droppyJr.setDirection(Servo.Direction.REVERSE);
+        teamMarker.setPosition(0.2);
 
         //Sensors//
         limitSwitch = hwMap.touchSensor.get("limitSwitch");
 
+        //Setting Variables//
         calibToggle = 0;
+        canMoveLiftyJr = true;
         driveToggle = 0;
-        liftToggle = 0;
         driveSpeed = 0;
         driveMode = 0;
+        liftToggle = 0;
         liftMode = 0;
-        limitable = 0;
-        canMoveLiftyJr = true;
         liftylike = false;
 
         //Speed Offsets//
         normalSpeed = .80;
-        slowSpeed = normalSpeed / 2;
         liftySpeed = 1;
         liftyJrSpeed = 1;
+        slowSpeed = normalSpeed / 2;
+
     }
 
     public void setCanMove(Boolean canMove) {
@@ -103,6 +109,11 @@ public class TeleOpNav {
     }
 
     /////// AUTOMATION FOR TELEOP ////////
+
+    public void goDown() {                  // This method brings the hopper lift back to the lowest position possible (usually on the limit switch)
+        liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftyJr.setTargetPosition(0);
+        liftyJr.setPower(1);}
 
     public void goUpBit() {                 // This method goes up using an encoder to where the hopper lift is under the bar only slighty in preparation for dropping
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -116,17 +127,10 @@ public class TeleOpNav {
         liftyJr.setPower(1);
     }
 
-    public void goDown() {                  // This method brings the hopper lift back to the lowest position possible (usually on the limit switch)
-        liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        goinDown = 1;
-        liftyJr.setTargetPosition(0);
-        liftyJr.setPower(1);
-    }
-
     public final void ITS_ENDGAME_NOW() { // This method raises the hanging lift to in between the handle
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lifty.setPower(1);
-        lifty.setTargetPosition(9850);
+        lifty.setTargetPosition(10464);
         liftylike = true;
     }
 

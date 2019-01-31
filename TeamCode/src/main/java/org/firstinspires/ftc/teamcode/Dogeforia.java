@@ -48,6 +48,7 @@ import static com.vuforia.Vuforia.setFrameFormat;
 
 /**
  * Created by Victo on 9/12/2018.
+ * This is class that we use and pull from inorder to read the correct mineral using vuforia during autonomous
  */
 
 public class Dogeforia extends VuforiaLocalizerImpl {

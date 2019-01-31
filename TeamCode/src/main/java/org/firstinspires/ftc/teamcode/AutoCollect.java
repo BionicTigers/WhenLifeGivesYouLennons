@@ -4,16 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns.
+ * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns and collects from the crater at the end of auto
  * Distances forward and backward is fully PID encoder methods based on inches.
  * Methods for this class is found in Navigation.
  *
- * This is our "second" iteration of autonomous and most current version of the autonomous.
- * There is a plan to eventually retire methods of this autonomous and create a new auto using motion tracking and vuforia to track distances as seen in TrajectoryGen.
- * This class is used during competition and practice and includes all of the three autonomous programs by calling them (autocrater, autodepot, autodoublesampling)
- *
+ * This class is currently in progress and is yet to be used in competition
  */
-public class AutoGeneric {
+public class AutoCollect {
     public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
 
     private StartPos startZone;
@@ -24,11 +21,11 @@ public class AutoGeneric {
     /**
      * The constructor method that zcontains everything to run in initialization.
      *
-     * @param startZone - StartPos enumerator. Tells which strategy to run. Options are DEPOT, CRATER, or DOUBLESAMPLING.
+     * @param startZone - StartPos enumerator. Tells which strategy to run. Options are dEPOT, CRATER, or dOUBLESAMPLING.
      * @param opMode    - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      */
-    public AutoGeneric(AutoGeneric.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
+    public AutoCollect(AutoCollect.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
@@ -37,10 +34,8 @@ public class AutoGeneric {
         nav.hold(0.1f);
     }
 
-    /**
-     * Class which runs an autonomous given AutoGeneric has been instantiated.
-     */
-    public void runAutonomous() {
+    //----Run this to run Autonomous----//
+    public void runOpMode() {
         nav.updateCubePos();
         nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
@@ -55,9 +50,9 @@ public class AutoGeneric {
                 nav.goDistanceHold(-14f);
                 break;
             case RIGHT:
-                nav.pointTurnIMU(-93.5f);
-                nav.goDistanceHold(20.5f);
-                nav.goDistanceHold(-20.5f);
+                nav.pointTurnIMU(-93.55f);
+                nav.goDistanceHold(27f);
+                nav.goDistanceHold(-27f);
                 break;
             default: //left
                 nav.pointTurnIMU(3.55f);
@@ -65,7 +60,6 @@ public class AutoGeneric {
                 nav.goDistanceHold(-27f);
                 break;
         }
-////
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
@@ -76,10 +70,10 @@ public class AutoGeneric {
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(90.5f);
+            nav.goDistanceHold(44.5f);
+            nav.pointTurnIMU(90f);
             nav.goDistanceHold(-49f);
-            nav.pointTurnIMU(88.5f);
+            nav.pointTurnIMU(89f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
             nav.pointTurnIMU(36f); //turn to face wall
@@ -97,24 +91,29 @@ public class AutoGeneric {
                     nav.pointTurnIMU(-180f);
             }
             nav.goDistanceHold(30f);
-            nav.goDistanceHold(-35.25f);
+            nav.goDistanceHold(-34f);
             nav.pointTurnIMU(277f);
         }
-
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);
         nav.hold(1);
         switch (startZone){
             case DOUBLESAMPLING:
                 nav.goDistance(69f,0.6f,0.6f);
+                nav.holdForDrive();
+                nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+
                 break;
             default: //left
                 nav.goDistance(58f,0.6f,0.6f);
+                nav.holdForDrive();
+                nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+                nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
+                nav.hold(2f);
                 break;
         }
 
-        nav.holdForDrive();
-        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+
 
     }
 }
