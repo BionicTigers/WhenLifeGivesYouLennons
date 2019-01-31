@@ -8,19 +8,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@TeleOp(name = "Moongoose TeleOp", group = "Competition")
-public class TeleOpMoongoose extends OpMode {
+@TeleOp(name = "Lucy TeleOp", group = "Competition")
+public class TeleOpLucy extends OpMode {
 
     //Objects//
     private ElapsedTime runtime = new ElapsedTime();
     TeleOpNav nav = new TeleOpNav(); //base class for teleOp
+    private ElapsedTime timeboi;
+    private boolean hasRun;
 
     public void init() {
         nav.init(hardwareMap);
-
+        timeboi = new ElapsedTime();
+        hasRun = false;;
     }
 
     public void loop() {
+        if(!hasRun){
+            timeboi = new ElapsedTime();
+        }
+        hasRun = true;
+        telemetry.addData("Time left:", 120-timeboi.time());
         //////////////////////////////////////// GAMEPAD 1 /////////////////////////////////////////
         // TOGGLE BUTTONS //
         if (gamepad1.left_bumper && (runtime.seconds() > nav.calibToggle)) {
@@ -204,5 +212,6 @@ public class TeleOpMoongoose extends OpMode {
             nav.droppyJr.setPosition(0.7525);
             nav.setCanMove(true);
         }
+        telemetry.update();
     }
 }
