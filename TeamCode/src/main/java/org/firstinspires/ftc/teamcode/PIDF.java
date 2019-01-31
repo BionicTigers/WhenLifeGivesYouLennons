@@ -14,18 +14,18 @@ public class PIDF extends LinearOpMode {
     private DcMotorEx boardEx;
     @Override
     public void runOpMode() {
-
-
-        Trajectory trajectory = new Trajectory(2940f,1000f,4567.2f,80f);
-        float[][]traj = trajectory.getTraj();
+        Trajectory trajectory = new Trajectory(2940f, 1000f, 4567.2f, 80f);
+        float[][] traj = trajectory.getTraj();
         ElapsedTime elMili;
+        boardEx = (DcMotorEx) hardwareMap.get("clark");
+        telemetry.addData("mili seconds ", traj.length);
         waitForStart();
-        elMili= new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        while (opModeIsActive()) {
-         while(elMili.time()<traj.length){
-             boardEx.setVelocity(traj[(int)elMili.time()][1]);
-         }
- }
+        elMili = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        while (opModeIsActive())
+            while (elMili.time() < traj.length) {
+                boardEx.setVelocity(traj[(int) elMili.time()][0]);
+            }
+    }
     }
 //    public double findMaxAccel(){
 //        tim = new ElapsedTime();
@@ -49,4 +49,4 @@ public class PIDF extends LinearOpMode {
 //        return maxAccel;
 //    }
 
-}
+
