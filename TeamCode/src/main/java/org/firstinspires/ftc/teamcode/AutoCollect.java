@@ -45,21 +45,20 @@ public class AutoCollect {
         nav.setLiftHeight(Navigation.LiftHeight.LOWER);
         nav.goDistanceHold(14f);
         switch (nav.getCubePos()) {
-            case MIDDLE:
-                nav.goDistanceHold(14f);
-                nav.goDistanceHold(-14f);
-                break;
             case RIGHT:
                 nav.pointTurnIMU(-93.55f);
-                nav.goDistanceHold(27f);
-                nav.goDistanceHold(-27f);
                 break;
-            default: //left
+            case LEFT: //left
                 nav.pointTurnIMU(3.55f);
-                nav.goDistanceHold(27f);
-                nav.goDistanceHold(-27f);
                 break;
         }
+
+        nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+        nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
+        nav.hold(2f);
+        nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+        nav.setCollectionSweeper(Navigation.CollectorSweeper.OFF);
+
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall

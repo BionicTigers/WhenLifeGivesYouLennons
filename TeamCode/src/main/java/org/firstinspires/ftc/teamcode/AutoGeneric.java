@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-/**
+/*
  * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns.
  * Distances forward and backward is fully PID encoder methods based on inches.
  * Methods for this class is found in Navigation.
