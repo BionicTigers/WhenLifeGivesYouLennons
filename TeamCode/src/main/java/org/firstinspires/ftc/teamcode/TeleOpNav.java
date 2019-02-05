@@ -108,7 +108,7 @@ public class TeleOpNav {
         liftyJr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-/////// AUTOMATION FOR TELEOP ////////
+/////// AUTOMATION FOR TELEOP //////////
 
 //HOPPER LIFT//
 
