@@ -1,188 +1,121 @@
 package org.firstinspires.ftc.teamcode;
 
-
 public class Trajectory {
-    private float[][] traj;
-    public Trajectory(float maxVelocity, float distance, float maxAcceleration, float jerk){
-        traj=genTrajectory(maxVelocity,distance,maxAcceleration,jerk);
+    private static float rampdistance;
+    private float[][] trajectory;
+
+        Trajectory(float maxVelocity, float distance, float maxAcceleration, float jerk){
+            trajectory = fineIllCreateAGeneralGenClass(maxVelocity,distance,maxAcceleration,jerk);
+
+        }
+        public float[][] getTrajectory(){
+            return trajectory;
     }
 
-    public float[][] getTraj() {
-        return traj;
-    }
 
-    public  float[][] genTrajectory(float maxVelocity, float distance, float maxAcceleration, float jerk) {
-        float t1Time = maxAcceleration / jerk;
-        float t2Time = (maxVelocity - (maxAcceleration * t1Time)) / maxAcceleration;
-        float t1Displacement = (1 / 6f) * (float) Math.pow(t1Time, 3) * jerk;
-        float t2Displacement = (1 / 2f) * (float) Math.pow(t2Time, 2) * maxAcceleration;
-        float t3Displacement = t1Displacement;
-        float rampDisplacement = (t1Displacement + t2Displacement + t3Displacement);
-        float[][] trajectory;
-        if (rampDisplacement > distance) {
-            trajectory = Triangle(distance, maxAcceleration);
+
+
+    public static float[][] fineIllCreateAGeneralGenClass(float maxVelocity, float distance, float maxAcceleration, float jerk) {
+
+        double timeToPeakVelocity = Math.sqrt(distance/maxAcceleration);
+        float[][] tragectory;
+        if (timeToPeakVelocity*maxAcceleration<maxVelocity) {
+            tragectory = okButwhatIfItsShort(maxVelocity, distance, maxAcceleration, jerk);
         } else {
-            trajectory = S_Curve(maxVelocity, distance, maxAcceleration, jerk);
+            tragectory = S_Curve(maxVelocity, distance, maxAcceleration, jerk);
         }
-        return trajectory;
+        return tragectory;
     }
-    //BROKEN AF
-    public  float[][] okButwhatIfItsShort(float maxVelocity, float distance, float maxAcceleration, float jerk) {
+
+    public static float[][] okButwhatIfItsShort(float maxVelocity, float distance, float maxAcceleration, float jerk) {
+        float velocity = 0;
+        float position = 0;
+        float acceleration = 0;
+        float t1Time = maxAcceleration / jerk;
+
+        float[] accel;
+        if(Math.sqrt((Math.sqrt(distance/maxAcceleration))/jerk)*jerk>maxAcceleration){
+            accel = Trapazoid(maxAcceleration,maxVelocity,jerk);
+        }else {accel = Triangle(maxVelocity,jerk);}
+        float[][] tragectory = new float[(int) (accel.length*2)][3];
+
+        int t1 = 0;
+        for (int i = 0; i<accel.length; i++)
+        {
+            acceleration = accel[i];
+            tragectory[t1][0] = acceleration;
+            velocity = velocity + acceleration * (1f / 1000f);
+            position += velocity / 1000;
+            tragectory[t1][1] = velocity;
+            tragectory[t1][2]=position;
+            t1++;
+        }
+        for (int i = 0; i < accel.length; i++) {
+            acceleration = accel[i];
+            tragectory[t1][0] = acceleration;
+            velocity = velocity - acceleration * (1f / 1000f);
+            position += velocity / 1000;
+            tragectory[t1][1] = velocity;
+            tragectory[t1][2]= position;
+            t1++;
+
+        }
+        return tragectory;
+    }
+
+    private static float[][] S_Curve(float maxVelocity, float distance, float maxAcceleration, float jerk) {
 
         float velocity = 0;
         float position = 0;
         float acceleration = 0;
+        float[] accel;
+        if(Math.sqrt(maxVelocity/jerk)*jerk>maxAcceleration){
+            accel = Trapazoid(maxAcceleration,maxVelocity,jerk);
+        }else {accel = Triangle(maxVelocity,jerk);}
 
-        float t1Time = Math.abs(maxAcceleration / jerk);
-        float t2Time = Math.abs(maxVelocity - (maxAcceleration * t1Time)) / maxAcceleration;
-        float t1Displacement = (1 / 6f) * (float) Math.pow(t1Time, 3) * jerk;
-        float t2Displacement = (1 / 2f) * (float) Math.pow(t2Time, 2) * maxAcceleration;
+        float t4Displacement = distance - (rampdistance* 2);
+        float t4Time = t4Displacement/maxVelocity;
+        float[][] tragectory = new float[(int) (accel.length*2+t4Time*1000f+5)][2];
 
-        float t3Displacement = t1Displacement;
-        float rampTime = (t1Time + t2Time + t1Time);
-        float rampDisplacement = (t1Displacement + t2Displacement + t3Displacement);
-        float[][] trajectory = new float[(int) (rampTime * 1000f * 2f) + 5][3];
         int t1 = 0;
 
-        for (int i = 0; i < t1Time * 1000f; i++) {
-            acceleration = jerk * t1 / 1000f;
-            trajectory[t1][0] = acceleration;
-            velocity = acceleration * (1f / 1000f) + velocity;
-            trajectory[t1][1] = velocity;
-            t1++;
-            System.out.println("in 1");
-
-        }
-        System.out.println(rampTime);
-        for (int x = 0; x < t2Time * 1000f; x++) {
-            trajectory[t1][0] = maxAcceleration;
-            velocity = trajectory[t1][0] * 1 / 1000f + velocity;
-            trajectory[t1][1] = velocity;
-            t1++;
-            System.out.println("in 2");
-            //System.out.println();
-
-        }
-
-        for (int i = 0; i < t1Time * 1000f; i++) {
-            acceleration = acceleration - jerk * (1 / 1000f);
-            trajectory[t1][0] = acceleration;
-            velocity = acceleration * (1f / 1000f) + velocity;
-            trajectory[t1][1] = velocity;
-            t1++;
-            System.out.println("in 3");
-        }
-
-        for (int i = 0; i < t1Time * 1000f; i++) {
-            //System.out.println(t1);
-            acceleration = jerk * i / 1000f;
-            trajectory[t1][0] = acceleration;
-            velocity = velocity - acceleration * (1f / 1000f);
-            trajectory[t1][1] = velocity;
-            t1++;
-            System.out.println("in 4");
-
-        }
-        for (int i = 0; i < t2Time * 1000f; i++) {
-            trajectory[t1][0] = maxAcceleration;
-            velocity = velocity - maxAcceleration / 1000f;
-            trajectory[t1][1] = velocity;
-            t1++;
-            System.out.println("in 5");
-        }
-        for (int i = 0; i < t1Time * 1000f - 1; i++) {
-            acceleration = acceleration - jerk * (1 / 1000f);
-            trajectory[t1][0] = acceleration;
-            velocity = velocity - acceleration * (1f / 1000f);
-            trajectory[t1][1] = velocity;
-            t1++;
-            System.out.println("in 6");
-
-        }
-        return trajectory;
-    }
-
-    private  float[][] S_Curve(float maxVelocity, float distance, float maxAcceleration, float jerk) {
-        System.out.println("in sCurve");
-        float velocity = 0;
-        float position = 0;
-        float acceleration = 0;
-        float t1Time = Math.abs(maxAcceleration / jerk);
-        float t2Time = Math.abs((maxVelocity - (maxAcceleration * t1Time)) / maxAcceleration);
-        float t1Displacement = (1 / 6f) * (float) Math.pow(t1Time, 3) * jerk;
-        float t2Displacement = (1 / 2f) * (float) Math.pow(t2Time, 2) * maxAcceleration;
-        float t3Displacement = t1Displacement;
-        float rampTime = (t1Time + t2Time + t1Time);
-        float rampDisplacement = (t1Displacement + t2Displacement + t3Displacement);
-        float t4Displacement = distance - (rampDisplacement * 2);
-        float t4Time = Math.abs(maxVelocity / t4Displacement);
-        float[][] trajectory = new float[(int) (rampTime * 1000 + rampTime * 1000f + t4Time * 1000f) + 5][3];
-        System.out.println(rampTime + " " + t4Time);
-        int t1 = 0;
-        for (int i = 0; i < t1Time * 1000f; i++) {
-            acceleration = jerk * t1 / 1000f;
-            trajectory[t1][0] = acceleration;
-            velocity = acceleration * (1f / 1000f) + velocity;
-            trajectory[t1][1] = velocity;
-            t1++;
-           
-
-        }
-        for (int i = 0; i < t2Time * 1000f; i++) {
-            trajectory[t1][0] = maxAcceleration;
-            velocity = trajectory[t1][0] * 1 / 1000f + velocity;
-            trajectory[t1][1] = velocity;
-            t1++;
-        }
-        for (int i = 0; i < t1Time * 1000f; i++) {
-            acceleration = acceleration - jerk * (1 / 1000f);
-            trajectory[t1][0] = acceleration;
-            velocity = acceleration * (1f / 1000f) + velocity;
-            trajectory[t1][1] = velocity;
-            t1++;
-
-
+        for (int i = 0; i<accel.length; i++)
+        {
+            acceleration = accel[i];
+            tragectory[t1][0] = acceleration;
+            velocity = velocity + acceleration * (1f / 1000f);
+            tragectory[t1][1] = velocity;
+            position += velocity / 1000;
+        t1++;
         }
         for (int i = 0; i < t4Time * 1000f; i++) {
-            trajectory[t1][0] = 0.0f;
-            trajectory[t1][1] = maxVelocity;
+            tragectory[t1][0] = 0.0f;
+            tragectory[t1][1] = maxVelocity;
+            position += velocity / 1000;
             t1++;
         }
-        for (int i = 0; i < t1Time * 1000f; i++) {
-            acceleration = jerk * i / 1000f;
-            trajectory[t1][0] = acceleration;
+        for (int i = 0; i < accel.length; i++) {
+            acceleration = accel[i];
+            tragectory[t1][0] = acceleration;
             velocity = velocity - acceleration * (1f / 1000f);
-            trajectory[t1][1] = velocity;
-            t1++;
-
-        }
-        for (int i = 0; i < t2Time * 1000f; i++) {
-            trajectory[t1][0] = maxAcceleration;
-            velocity = velocity - maxAcceleration / 1000f;
-            trajectory[t1][1] = velocity;
-            t1++;
-        }
-        for (int i = 0; i < t1Time * 1000f - 1; i++) {
-            acceleration = acceleration - jerk * (1 / 1000f);
-            trajectory[t1][0] = acceleration;
-            velocity = velocity - acceleration * (1f / 1000f);
-            trajectory[t1][1] = velocity;
+            tragectory[t1][1] = velocity;
+            position += velocity / 1000;
             t1++;
 
         }
 
-        System.out.println(((rampTime * 1000 + rampTime * 1000f + t4Time * 1000f) + 7)-t1);
-        return trajectory;
+
+        return tragectory;
     }
 
-    private  float[][] Trapazoid(float maxVelocity, float distance, float maxAcceleration) {
+    private static float[] Trapazoid(float maxVelocity, float distance, float maxAcceleration) {
         float rampTime = maxVelocity / maxAcceleration;
         float rampDistance = rampTime * maxAcceleration / 2;
         float sustainDistance = distance - rampDistance * 2;
 
         float sustainTime = sustainDistance / maxVelocity;
         int timeToCompleteMili = (int) ((rampTime * 2 + sustainTime) * 1000) + 1;
-        float[][] trajectory = new float[timeToCompleteMili][2];
+        float[] tragectory = new float[timeToCompleteMili];
         int t = 0;
         float velocity = 0;
         float position = 0;
@@ -190,44 +123,48 @@ public class Trajectory {
         for (int i = 0; i < rampTime * 1000; i++) {
             velocity = (i * maxAcceleration) / 1000;
             position += velocity / 1000;
-            trajectory[t][0] = velocity;
-            trajectory[t][1] = position;
+            tragectory[t] = velocity;
+            //tragectory[t][1] = position;
             t++;
         }
         for (int i = 0; i < sustainTime * 1000; i++) {
             velocity = 6;
             position += velocity / 1000;
-            trajectory[t][0] = velocity;
-            trajectory[t][1] = position;
+            tragectory[t] = velocity;
+           // tragectory[t][1] = position;
             t++;
 
         }
         for (int i = 0; i < rampTime * 1000; i++) {
             velocity = velocity - (maxAcceleration / 1000);
             position += velocity / 1000;
-            trajectory[t][0] = velocity;
-            trajectory[t][1] = position;
+            tragectory[t] = velocity;
+            //tragectory[t] = position;
             t++;
         }
+        rampdistance=position;
 
-        return trajectory;
+        return tragectory;
     }
 
-    public  float[][] Triangle(float distance, float MaxAcceleration) {
+    public static float[] Triangle(float distance, float MaxAcceleration) {
         int timeToCompleteMili = (int) (distance * 2f / MaxAcceleration * 1000);
-
+        float position = 0;
         float velocity = 0;
-        float[][] trajectory = new float[timeToCompleteMili][2];
+        float[] Tragectory = new float[timeToCompleteMili];
         for (int t = 0; t < (timeToCompleteMili) / 2; t++) {
             velocity = t * MaxAcceleration / 1000;
-            trajectory[t][0] = velocity;
+            Tragectory[t] = velocity;
+            position += velocity / 1000;
         }
         int j = 0;
         for (int t = (int) (timeToCompleteMili) / 2; t < (timeToCompleteMili); t++) {
             velocity = velocity - MaxAcceleration / 1000;
-            trajectory[t][0]= velocity;
+            Tragectory[t] = velocity;
             j++;
+            position += velocity / 1000;
         }
-        return trajectory;
+        rampdistance=position;
+        return Tragectory;
     }
 }
