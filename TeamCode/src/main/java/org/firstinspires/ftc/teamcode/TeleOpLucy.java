@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 @TeleOp(name = "Lucy TeleOp", group = "Competition")
 public class TeleOpLucy extends OpMode {
     /**
-     * This is a class for TeleOp for competitions
+     * This is a class backup TeleOp
      * There are two different drivers/controllers:
      * gamepad1 controls the drivetrain and its different types of driving, gamepad2 controls all of the top mechanisms (hopperlift, lift, collection)
      * This class pulls from TeleOpNav for its automation methods

@@ -134,6 +134,11 @@ public class TeleOpMercury extends OpMode {
             motorBackRight.setPower(v3);
             motorBackLeft.setPower(v4);
         }
+
+        telemetry.addData("frontLeft: ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("frontRight ", motorFrontRight.getCurrentPosition());
+        telemetry.addData("backLeft: ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("backRight ", motorBackRight.getCurrentPosition());
     }
     private String composeTelemetry() {
         // At the beginning of each telemetry update, grab a bunch of data

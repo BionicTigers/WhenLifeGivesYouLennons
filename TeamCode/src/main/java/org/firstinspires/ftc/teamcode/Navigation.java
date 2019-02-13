@@ -48,7 +48,7 @@ public class Navigation {
     private CubePosition cubePos = CubePosition.UNKNOWN;
     public enum CollectorHeight {COLLECT, HOLD, LAND, DUMP}
     public enum LiftHeight {LOWER, HOOK}
-    public enum LiftyJrHeight {LOWER, DROP, WAIT}
+    public enum LiftyJrHeight {LOWER, DROP, WAIT, BALANCE}
     public enum CollectorExtension {PARK, DUMP, OUT}
     public enum CollectorSweeper {INTAKE,OUTTAKE, OFF}
 
@@ -329,6 +329,9 @@ public class Navigation {
                 break;
             case WAIT:
                 setLiftJrHeight(1500);
+            case BALANCE:
+                setLiftJrHeight(630);
+                break;
 
         }
     }
@@ -439,6 +442,8 @@ public class Navigation {
                 break;
         }
     }
+
+
 
     /**
      * Set the height of the collector arm.

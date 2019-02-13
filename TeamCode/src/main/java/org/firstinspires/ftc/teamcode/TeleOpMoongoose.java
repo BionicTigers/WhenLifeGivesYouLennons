@@ -11,7 +11,8 @@ import java.math.RoundingMode;
 /**
  * This is a class for TeleOp for competitions
  * There are two different drivers/controllers:
- * gamepad1 controls the drivetrain and its different types of driving, gamepad2 controls all of the top mechanisms (hopperlift, lift, collection)
+ * gamepad1 controls the drivetrain and its different types of driving
+ * gamepad2 controls all of the top mechanisms (hopperlift, lift, collection)
  * This class pulls from TeleOpNav for its automation methods
  */
 @TeleOp(name = "Moongoose TeleOp", group = "Competition")
@@ -157,15 +158,16 @@ public class TeleOpMoongoose extends OpMode {
             nav.goUpBit();
         } else if (gamepad2.dpad_up && nav.canMoveLiftyJr) {
             nav.goUpAll();
+        } else if (gamepad2.right_stick_button && nav.canMoveLiftyJr) {
+                nav.goupBalance();
         } else if (!nav.liftyJr.isBusy()){
             if(nav.limitSwitch.isPressed() && Math.abs(gamepad2.left_stick_y) > 0){
                 nav.liftyJr.setPower(0);
-            }else if(!nav.limitSwitch.isPressed()) {
+            }else {
                 nav.liftyJr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 nav.liftyJr.setPower(gamepad2.left_stick_y);
             }
         }
-
         telemetry.addData("LiftyJr: ", nav.liftyJr.getCurrentPosition());
 
 //HANGING LIFT// - automatic (dpad right), manual rightstick y
@@ -189,23 +191,24 @@ public class TeleOpMoongoose extends OpMode {
         telemetry.addData("Collector: ", nav.collecty.getPower());
 
 //HORIZONTAL EXTENSION// - LeftBumper= Deploy | LeftTrigger= Retract
-        //if(gamepad2.left_stick_button){
-//            nav.retract();
-//        }
 
-//        if(nav.extendySwitch.isPressed()){
-//            nav.extendy.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        } else if (!nav.extendy.isBusy()) {
-//        nav.liftyJr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        if (gamepad2.left_bumper) {
-            nav.extendy.setPower(-1);
-        } else if (gamepad2.left_trigger > 0.5) {
-            nav.extendy.setPower(1);
-        } else {
-            nav.extendy.setPower(0);
+        if(gamepad2.left_stick_button){
+            nav.retract();
         }
- //   }
+        if(nav.extendy.getCurrentPosition() == 1100 && gamepad2.left_bumper){
+            nav.extendy.setPower(0);
+        } else if (nav.extendy.getCurrentPosition() == 15 && gamepad2.left_trigger > 0.5){
+            nav.extendy.setPower(0);
+        } else if (!nav.extendy.isBusy()) {
+            nav.extendy.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (gamepad2.left_bumper) {
+                nav.extendy.setPower(-1);
+        }   else if (gamepad2.left_trigger > 0.5) {
+                nav.extendy.setPower(1);
+        }   else {
+                nav.extendy.setPower(0);
+        }
+   }
         telemetry.addData("Extension: ", nav.extendy.getCurrentPosition());
 
 //COLLECTION SERVOS - Y= Top | B= Middle | A= Bottom || Droppy --> right, Droppy Jr --> left //

@@ -79,6 +79,7 @@ public class TeleOpNav {
 
 
         droppyJr.setDirection(Servo.Direction.REVERSE);
+        extendy.setDirection(DcMotor.Direction.REVERSE);
         teamMarker.setPosition(0.2);
 
         //Sensors//
@@ -126,8 +127,13 @@ public class TeleOpNav {
     // This method goes up using an encoder for the hopper lift to fully dump into the lander
     public void goUpAll() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftyJr.setTargetPosition(-2050);
+        liftyJr.setTargetPosition(-2065);
         liftyJr.setPower(1); }
+    public void goupBalance(){
+        liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftyJr.setTargetPosition(-630);
+        liftyJr.setPower(1);
+    }
 
 //HANGING LIFT//
     // This method raises the hanging lift to in between the handle
@@ -140,7 +146,8 @@ public class TeleOpNav {
     public void retract(){
         extendy.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         extendy.setPower(1);
-        extendy.setTargetPosition(0); }
+        extendy.setTargetPosition(15); }
+
 
     public double round(double value) { //Allows telemetry to display nicely
         BigDecimal bd = new BigDecimal(value);

@@ -65,7 +65,6 @@ public class AutoGeneric {
                 nav.goDistanceHold(-27f);
                 break;
         }
-////
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
@@ -115,6 +114,9 @@ public class AutoGeneric {
 
         nav.holdForDrive();
         nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+        nav.setLiftyJrHeight(Navigation.LiftyJrHeight.BALANCE);
+        nav.holdForLiftJr();
+        nav.setLiftyJrHeight(Navigation.LiftyJrHeight.LOWER);
 
     }
 }
