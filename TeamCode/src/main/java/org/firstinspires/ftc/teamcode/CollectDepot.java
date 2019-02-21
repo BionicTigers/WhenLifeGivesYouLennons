@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * A class made to run the depot code pulled from AutoGeneric
  */
-@Autonomous(name = "Auto Depot", group = "Auto")
-public class AutoDepot extends LinearOpMode {
+@Disabled
+@Autonomous(name = "Collect  depot", group = "Auto")
+public class CollectDepot extends LinearOpMode {
     public void runOpMode() {
-        AutoGeneric autoGeneric = new AutoGeneric(AutoGeneric.StartPos.DEPOT, this, telemetry);
+        AutoCollect autoCollect = new AutoCollect(AutoCollect.StartPos.DEPOT, this, telemetry);
         while (!isStarted()) {
             telemetry.addData("cool", "waiting to start");
             telemetry.update();
@@ -18,7 +20,7 @@ public class AutoDepot extends LinearOpMode {
 
         opModeIsActive();
 
-        autoGeneric.runAutonomous();
+        autoCollect.runAutonomous();
     }
 
     public boolean isStopping() {

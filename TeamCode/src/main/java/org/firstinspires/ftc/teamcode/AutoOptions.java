@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * This class is used during competition and practice and includes all of the three autonomous programs by calling them (autocrater, autodepot, autodoublesampling)
  *
  */
-public class AutoGeneric {
+public class AutoOptions {
     public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
 
     private StartPos startZone;
@@ -29,7 +29,7 @@ public class AutoGeneric {
      * @param opMode    - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry - Telemetry of the current OpMode, used to output data to the screen.
      */
-    public AutoGeneric(AutoGeneric.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
+    public AutoOptions(AutoOptions.StartPos startZone, com.qualcomm.robotcore.eventloop.opmode.LinearOpMode opMode, org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
@@ -69,49 +69,17 @@ public class AutoGeneric {
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(-90f);
-            nav.goDistanceHold(-48f);
-            nav.pointTurnIMU(-89f);
+            nav.goDistanceHold(-45f);
+            nav.pointTurnIMU(0f);
+            nav.curveTurn(-48f, 0f, 11f, -6f);
+            nav.hold(7f);
+            nav.goDistanceHold(10f);
+            nav.pointTurnIMU(180f);
+            nav.goDistanceHold(-60f);
             // depot side //
-        } else if (startZone == StartPos.DEPOT) {
-            nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(90f);
-            nav.goDistanceHold(-49f);
-            nav.pointTurnIMU(89f);
-            //-----crater doublesampling------//
-        } else if (startZone == StartPos.DOUBLESAMPLING) {
-            nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(-90f);
-            nav.curveTurn(-40f, 11f, 0f, -4f);
-            switch (nav.getCubePos()) {
-                case MIDDLE:
-                    nav.pointTurnIMU(-135f);
-                    break;
-                case RIGHT:
-                    nav.pointTurnIMU(-103f);
-                    break;
-                default: //Left
-                    nav.pointTurnIMU(-180f);
-            }
-            nav.goDistanceHold(30f);
-            nav.goDistanceHold(-35.25f);
-            nav.pointTurnIMU(277f);
         }
 
         //-----marker deploy and driving to crater-----//
-        nav.setTeamMarker(1f);
-        nav.hold(1.5f);
-        switch (startZone) {
-            case DOUBLESAMPLING:
-                nav.goDistance(69f, 0.6f, 0.6f);
-                break;
-            default: //depot and crater
-                nav.goDistance(65f, 0.6f, 0.6f);
-                break;
-        }
         nav.holdForDrive();
         nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
         nav.hold(1f);

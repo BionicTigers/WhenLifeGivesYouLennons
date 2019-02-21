@@ -4,24 +4,23 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * A class made to run the depot code pulled from AutoGeneric
+ * A class made to run the crater code pulled from AutoGeneric
  */
-@Autonomous(name = "Auto Depot", group = "Auto")
-public class AutoDepot extends LinearOpMode {
+@Autonomous(name = "Auto Defensive", group = "Auto")
+public class AutoDefensive extends LinearOpMode {
     public void runOpMode() {
-        AutoGeneric autoGeneric = new AutoGeneric(AutoGeneric.StartPos.DEPOT, this, telemetry);
+        AutoOptions autoOptions = new AutoOptions(AutoOptions.StartPos.CRATER, this, telemetry);
+
         while (!isStarted()) {
             telemetry.addData("cool", "waiting to start");
             telemetry.update();
         }
-        // waitForStart();
-
-        opModeIsActive();
-
-        autoGeneric.runAutonomous();
+        //waitForStart();
+        autoOptions.runAutonomous();
     }
 
     public boolean isStopping() {
         return opModeIsActive();
     }
+
 }

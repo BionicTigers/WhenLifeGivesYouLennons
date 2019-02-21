@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +11,7 @@ import java.math.RoundingMode;
 
 
 @TeleOp(name="Mercury Ackerman TeleOp", group="Outreach")
-
+@Disabled
 /**
  * This class is for our outreach robot that uses mecanum wheels.
  * This outreach bot was a prototype drivetrain to our two iterations of our competition robot from last year, however with a different kind of drive methods

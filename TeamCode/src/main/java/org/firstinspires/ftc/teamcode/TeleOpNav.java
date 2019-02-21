@@ -35,21 +35,22 @@ public class TeleOpNav {
     public Servo droppy;               // intake position servo (right)
     public Servo droppyJr;             // intake position servo (left)
     public TouchSensor limitSwitch;    // touch sensor for liftyJr -- hopper lift, placed on bottom of lift
- //   public TouchSensor extendySwitch;  // touch sensor for extendy -- horizontal extension, placed on back of robot
+    //   public TouchSensor extendySwitch;  // touch sensor for extendy -- horizontal extension, placed on back of robot
 
     //Variables//
-    public double calibToggle, driveToggle, liftToggle;
+    public double calibToggle, driveToggle, speedyToggle;
     public double liftySpeed, liftyJrSpeed;
-    public double normalSpeed, slowSpeed;
+    public double normalSpeed, slowSpeed, speedySpeed;
 
     public boolean canMoveLiftyJr, liftylike;
 
-    public int driveSpeed, driveMode, liftMode;
+    public int driveSpeed, driveMode, liftMode, backwoodsSpeed;
     public int manualMode;
 
     //Objects//
     public ElapsedTime period = new ElapsedTime();
-//
+
+    //
     public void init(HardwareMap hwMap) {
         //Drivetrain Motors//
         backLeft = hwMap.dcMotor.get("backLeft");
@@ -84,7 +85,7 @@ public class TeleOpNav {
 
         //Sensors//
         limitSwitch = hwMap.touchSensor.get("limitSwitch");
-   //     extendySwitch = hwMap.touchSensor.get("extendySwitch");
+        //     extendySwitch = hwMap.touchSensor.get("extendySwitch");
 
         //Setting Variables//
         calibToggle = 0;
@@ -92,12 +93,15 @@ public class TeleOpNav {
         driveToggle = 0;
         driveSpeed = 0;
         driveMode = 0;
+        speedyToggle = 0;
+        backwoodsSpeed = 0;
 
         //Speed Offsets//
-        normalSpeed = .80;
+        normalSpeed = .65;
         liftySpeed = 1;
         liftyJrSpeed = 1;
         slowSpeed = normalSpeed / 2;
+        speedySpeed = 0.80;
 
     }
 
@@ -114,44 +118,53 @@ public class TeleOpNav {
 //HOPPER LIFT//
 
     // This method brings the hopper lift back to the lowest position possible (usually on the limit switch)
-    public void goDown(){
-        if (!limitSwitch.isPressed()){
+    public void goDown() {
+        if (!limitSwitch.isPressed()) {
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftyJr.setTargetPosition(-2);
-            liftyJr.setPower(1); } }
+            liftyJr.setTargetPosition(-100);
+            liftyJr.setPower(1);
+        }
+    }
+
     // This method goes up using an encoder to where the hopper lift is under the bar only slighty in preparation for dropping
     public void goUpBit() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftyJr.setPower(1);
-        liftyJr.setTargetPosition(-1500); }
+        liftyJr.setTargetPosition(-1500);
+    }
+
     // This method goes up using an encoder for the hopper lift to fully dump into the lander
     public void goUpAll() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftyJr.setTargetPosition(-2065);
-        liftyJr.setPower(1); }
-    public void goupBalance(){
+        liftyJr.setPower(1);
+    }
+
+    public void goupBalance() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftyJr.setTargetPosition(-630);
         liftyJr.setPower(1);
     }
 
-//HANGING LIFT//
+    //HANGING LIFT//
     // This method raises the hanging lift to in between the handle
     public final void ITS_ENDGAME_NOW() {
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lifty.setPower(1);
-        lifty.setTargetPosition(10464); }
+        lifty.setTargetPosition(10464);
+    }
 
-//HORIZONTAL EXTENSION//
-    public void retract(){
+    //HORIZONTAL EXTENSION//
+    public void retract() {
         extendy.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         extendy.setPower(1);
-        extendy.setTargetPosition(15); }
-
+        extendy.setTargetPosition(-20);
+    }
 
     public double round(double value) { //Allows telemetry to display nicely
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(3, RoundingMode.HALF_UP);
-        return bd.doubleValue(); }
+        return bd.doubleValue();
+    }
 
 }

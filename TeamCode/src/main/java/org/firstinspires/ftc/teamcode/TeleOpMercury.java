@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,6 +28,7 @@ import java.util.Locale;
  * This outreach bot was a prototype drivetrain to our two iterations of our competition robot from last year
  * This class allows the outreach bot to be omnidirectional
  */
+@Disabled
 public class TeleOpMercury extends OpMode {
 
     //DRIVETRAIN\\

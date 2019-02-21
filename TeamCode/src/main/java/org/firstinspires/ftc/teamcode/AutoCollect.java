@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * A class to run Autonomous given a strategy using the imu for current position and then using encoders to measure different for the turns and collects from the crater at the end of auto
  * Distances forward and backward is fully PID encoder methods based on inches.
  * Methods for this class is found in Navigation.
- *
+ * <p>
  * This class is currently in progress and is yet to be used in competition
  */
 public class AutoCollect {
@@ -35,7 +36,7 @@ public class AutoCollect {
     }
 
     //----Run this to run Autonomous----//
-    public void runOpMode() {
+    public void runAutonomous() {
         nav.updateCubePos();
         nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
@@ -59,6 +60,7 @@ public class AutoCollect {
         nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
         nav.setCollectionSweeper(Navigation.CollectorSweeper.OFF);
 
+
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
@@ -68,6 +70,14 @@ public class AutoCollect {
             nav.pointTurnIMU(-89f);
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
+            nav.setCollectorHeight(Navigation.CollectorHeight.HOLD);
+            nav.goDistanceHold(-10f);
+            nav.hold(0.5f);
+            nav.setLiftyJrHeight(Navigation.LiftyJrHeight.DROP);
+            nav.holdForLiftJr();
+            nav.goDistanceHold(10f);
+            nav.setLiftyJrHeight(Navigation.LiftyJrHeight.LOWER);
+
             nav.pointTurnIMU(36f); //turn to face wall
             nav.goDistanceHold(44.5f);
             nav.pointTurnIMU(90f);
@@ -75,6 +85,7 @@ public class AutoCollect {
             nav.pointTurnIMU(89f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
+
             nav.pointTurnIMU(36f); //turn to face wall
             nav.goDistanceHold(45f);
             nav.pointTurnIMU(-90f);
@@ -89,29 +100,33 @@ public class AutoCollect {
                 default: //Left
                     nav.pointTurnIMU(-180f);
             }
-            nav.goDistanceHold(30f);
-            nav.goDistanceHold(-34f);
+            nav.goDistanceHold(5f);
+
+            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+            nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
+            nav.hold(2f);
+            nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+            nav.setCollectionSweeper(Navigation.CollectorSweeper.OFF);
+            nav.goDistanceHold(9f);
             nav.pointTurnIMU(277f);
         }
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);
         nav.hold(1);
-        switch (startZone){
+        switch (startZone) {
             case DOUBLESAMPLING:
-                nav.goDistance(69f,0.6f,0.6f);
+                nav.goDistance(69f, 0.6f, 0.6f);
                 nav.holdForDrive();
                 nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-
                 break;
             default: //left
-                nav.goDistance(58f,0.6f,0.6f);
+                nav.goDistance(58f, 0.6f, 0.6f);
                 nav.holdForDrive();
                 nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
                 nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
                 nav.hold(2f);
                 break;
         }
-
 
 
     }

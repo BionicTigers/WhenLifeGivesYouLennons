@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
@@ -28,7 +29,7 @@ public class AutoBackupFile {
         this.startZone = startZone;
         this.opMode = opMode;
         this.telemetry = telemetry;
-        nav = new Navigation(opMode, telemetry,true);
+        nav = new Navigation(opMode, telemetry, true);
         nav.hold(0.1f);
     }
 
@@ -62,27 +63,29 @@ public class AutoBackupFile {
                 nav.goDistanceHold(15f);
                 nav.goDistanceHold(-15f);
                 nav.pointTurnRelative(25f); //turning total of 90
-                break; }
+                break;
+        }
         nav.holdForDrive();
         //-----crater depot run-----//
         if (startZone == StartPos.CRATERAUTO) {
             nav.goDistanceHold(44f);
             nav.pointTurnRelative(-125f);
             nav.holdForDrive();
-}
+        }
         // depot side //
         else if (startZone == StartPos.DEPOTAUTO) {
             nav.goDistanceHold(45f);
             nav.pointTurnRelative(43f); //want a little bit more for gliding on the wall
             nav.holdForDrive();
-            nav.goDistanceHold(-35f); }
+            nav.goDistanceHold(-35f);
+        }
 
         //-----crater doublesampling------//
         else if (startZone == StartPos.DOUBLESAMPLINGAUTO) {
             nav.goDistanceHold(44f);
             nav.pointTurnRelative(-128f);
             nav.holdForDrive();
-            nav.curveTurn(-40f,10f,0f,15f);
+            nav.curveTurn(-40f, 10f, 0f, 15f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
                     nav.pointTurnRelative(-90f);
@@ -104,9 +107,11 @@ public class AutoBackupFile {
                     nav.goDistanceHold(30f);
                     nav.goDistanceHold(-30f);
                     nav.pointTurnRelative(135f);
-                    nav.holdForDrive(); }
+                    nav.holdForDrive();
+            }
 
-                nav.curveTurn(10f,-11f,0f,0f); }
+            nav.curveTurn(10f, -11f, 0f, 0f);
+        }
 
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(0.8f);

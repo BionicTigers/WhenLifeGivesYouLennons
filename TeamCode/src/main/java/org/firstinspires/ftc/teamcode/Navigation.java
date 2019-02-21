@@ -1,35 +1,36 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
-        import com.disnodeteam.dogecv.DogeCV;
-        import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.DcMotorSimple;
-        import com.qualcomm.robotcore.hardware.Servo;
-        import com.qualcomm.hardware.bosch.BNO055IMU;
-        import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-        import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
-        import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-
-
-        import com.qualcomm.robotcore.util.ReadWriteFile;
-        import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 
-        import java.io.File;
-        import java.math.BigDecimal;
-        import java.math.RoundingMode;
+import com.qualcomm.robotcore.util.ReadWriteFile;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * A class for all movement methods (using PID and IMU) for Rover Ruckus for autonomous as well as mechanisms methods for autonomous as well
@@ -44,13 +45,15 @@ public class Navigation {
     private float minVelocityCutoff = 0.06f;            //velocity with which to continue program execution during a hold (encoder ticks per millisecond)
 
     //-----enums-----//
-    public enum CubePosition {UNKNOWN, LEFT, MIDDLE, RIGHT}
+    public enum CubePosition {
+        UNKNOWN, LEFT, MIDDLE, RIGHT
+    }
     private CubePosition cubePos = CubePosition.UNKNOWN;
     public enum CollectorHeight {COLLECT, HOLD, LAND, DUMP}
     public enum LiftHeight {LOWER, HOOK}
     public enum LiftyJrHeight {LOWER, DROP, WAIT, BALANCE}
     public enum CollectorExtension {PARK, DUMP, OUT}
-    public enum CollectorSweeper {INTAKE,OUTTAKE, OFF}
+    public enum CollectorSweeper {INTAKE, OUTTAKE, OFF}
 
     //-----misc internal values-----//
     private com.qualcomm.robotcore.eventloop.opmode.LinearOpMode hardwareGetter;
@@ -91,6 +94,7 @@ public class Navigation {
 
     /**
      * The constructor class for Navigation
+     *
      * @param hardwareGetter - The OpMode required to access motors. Often, 'this' will suffice.
      * @param telemetry      - Telemetry of the current OpMode, used to output data to the screen.
      * @param useTelemetry   - Whether or not to output information about stored variables and motors during hold periods.
@@ -134,7 +138,6 @@ public class Navigation {
         droppy = hardwareGetter.hardwareMap.servo.get("droppy");
         droppyJr = hardwareGetter.hardwareMap.servo.get("droppyJr");
         droppyJr.setDirection(Servo.Direction.REVERSE);
-
 
 
         //----Vuforia Params---///
@@ -192,6 +195,7 @@ public class Navigation {
 
     /**
      * Updates the Robot's position using Vuforia. Value is in inches from center of map (see ccoordinate_diagram.png). Access using [nav].pos.
+     *
      * @return boolean, true if updated, false otherwise
      */
     public boolean updatePos() {
@@ -213,10 +217,13 @@ public class Navigation {
     /**
      * @return Location of the robot as Location object.
      */
-    public Location getPos(){return pos;}
+    public Location getPos() {
+        return pos;
+    }
 
     /**
      * Updates the cube location enumerator using OpenCV. Access using [nav].cubePos.
+     *
      * @return boolean, true if updated, false if not updated.
      */
     public boolean updateCubePos() {
@@ -245,6 +252,7 @@ public class Navigation {
 
     /**
      * Returns the current stored cube position.
+     *
      * @return CubePosition enumerator. Locations self-explanatory.
      */
     public CubePosition getCubePos() {
@@ -267,6 +275,7 @@ public class Navigation {
 
     /**
      * Sets drive motor target encoder to given values.
+     *
      * @param left  encoder set for left motors.
      * @param right encoder set for right motors.
      */
@@ -279,6 +288,7 @@ public class Navigation {
 
     /**
      * Sets all drive motor run modes to given mode.
+     *
      * @param mode name DcMotor mode to given value.
      */
     public void driveMode(DcMotor.RunMode mode) {
@@ -298,6 +308,7 @@ public class Navigation {
 
     /**
      * Pseudo PID to drive the given distance.
+     *
      * @param distance Distance to drive forward in inches.
      */
     public void goDistance(float distance, float maximumMotorPower, float maxiumMotorPower) {
@@ -307,10 +318,11 @@ public class Navigation {
 
     /**
      * Same as goDistance() e.g. PID drive in a straight line, but with a holdForDrive() at the end. I'm not sure. Just roll with it.
+     *
      * @param distance Distance to drive forward in inches.
      */
 
-    public void goDistanceHold(float distance){
+    public void goDistanceHold(float distance) {
         goDistance(distance, 0.55f, 0.55f);
         holdForDrive();
     }
@@ -338,6 +350,7 @@ public class Navigation {
 
     /**
      * Executes a point turn to face the given world rotation.
+     *
      * @param rot Target azimuth in degrees
      */
     public void pointTurn(float rot) {
@@ -352,6 +365,7 @@ public class Navigation {
 
     /**
      * Executes a point turn to face the given Location.
+     *
      * @param loc Target Location object
      */
     public void pointTurn(Location loc) {
@@ -360,6 +374,7 @@ public class Navigation {
 
     /**
      * Executes a point turn relative to the current location. Positive is counterclockwise.
+     *
      * @param rot the amount to rotate the robot in degrees. Positive is counterclockwise.
      */
     public void pointTurnRelative(float rot) {
@@ -368,6 +383,7 @@ public class Navigation {
 
     /**
      * Executes a point turn to the given heading, first updating the position with the internal IMU value. Will holdForDrive() automatically.
+     *
      * @param heading Target rotation in degrees.
      */
     public void pointTurnIMU(float heading) {
@@ -378,12 +394,13 @@ public class Navigation {
 
     /**
      * Rotate the robot smothly around a curve, with differing wheel rates for each side.
+     *
      * @param distance1 Distance to travel straight before curve (inches)
      * @param distanceL Distance for left side of robot to travel (inches)
      * @param distanceR Distance for right side of robot to travel (inches)
      * @param distance2 Distance to travel straight after the curve (inches)
      */
-    public void curveTurn(float distance1,float distanceL, float distanceR, float distance2){
+    public void curveTurn(float distance1, float distanceL, float distanceR, float distance2) {
         goDistance(distance1, 0.55f, 0.55f);
         holdForDrive();
         driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
@@ -396,6 +413,7 @@ public class Navigation {
 
     /**
      * Sets lift motor to given encoder position
+     *
      * @param position Encoder ticks for lift motor. ~0(bottom) to ~8200(top)
      */
     public void setLiftHeight(int position) {
@@ -404,6 +422,7 @@ public class Navigation {
 
     /**
      * Sets the lift height to a pre-programmed position.
+     *
      * @param position LiftHeight enumerator. Options are LOWER, HOOK, or SCORE.
      */
     public void setLiftHeight(LiftHeight position) {
@@ -419,6 +438,7 @@ public class Navigation {
 
     /**
      * Sets the collection sweeper to a given power value.
+     *
      * @param power float. Percentage power at which to run collector. 1.0f (intake) - -1.0f(outtake) inclusive.
      */
     public void setCollectionSweeper(float power) {
@@ -427,6 +447,7 @@ public class Navigation {
 
     /**
      * Sets the collection sweeper power using pre-programmed values.
+     *
      * @param power CollectorSweeper emumerator. Options are INTAKE, OUTTAKE, or OFF.
      */
     public void setCollectionSweeper(CollectorSweeper power) {
@@ -444,9 +465,9 @@ public class Navigation {
     }
 
 
-
     /**
      * Set the height of the collector arm.
+     *
      * @param position float. ~0.8f (bottom) to ~0.18f (top).
      */
     public void setCollectorHeight(float position) {
@@ -456,6 +477,7 @@ public class Navigation {
 
     /**
      * Sets the height of the collector arm.
+     *
      * @param position CollectorHeight enumerator. Options are COLLECT, HOLD, or DUMP.
      */
     public void setCollectorHeight(CollectorHeight position) {
@@ -476,6 +498,7 @@ public class Navigation {
 
     /**
      * Sets the extension of the collector arm.
+     *
      * @param position int. 0(in) to 1600(out).
      */
     public void setCollectorExtension(int position) {
@@ -484,6 +507,7 @@ public class Navigation {
 
     /**
      * Sets the extension of the collectior arm.
+     *
      * @param position CollectorExtension enumerator. Options are PARK, DUMP, or OUT.
      */
     public void setCollectorExtension(CollectorExtension position) {
@@ -502,6 +526,7 @@ public class Navigation {
 
     /**
      * Sets the position of the teamMarker servo.
+     *
      * @param position float. 0.0f(locked) to 0.8f(dropping).
      */
     public void setTeamMarker(float position) {
@@ -510,17 +535,18 @@ public class Navigation {
 
     /**
      * Drive method that independently controls the position and power of the left and right drive motors.
+     *
      * @param distanceL float. Distance in inches for left motors to traverse.
      * @param distanceR float. Distance in inches for right motors to traverse.
-     * @param LPower float. Power percentage for left motors (0.0-1.0).
-     * @param RPower float. Power percentage for right motors (0.0-1.0).
+     * @param LPower    float. Power percentage for left motors (0.0-1.0).
+     * @param RPower    float. Power percentage for right motors (0.0-1.0).
      */
     private void driveMethodSimple(float distanceL, float distanceR, float LPower, float RPower) {
         driveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int l = (int)(distanceL / (wheelDiameter * Math.PI) * encoderCountsPerRev);
-        int r = (int)(distanceR / (wheelDiameter * Math.PI) * encoderCountsPerRev);
-        drivePosition(-l,-r);
-        drivePower(LPower,RPower);
+        int l = (int) (distanceL / (wheelDiameter * Math.PI) * encoderCountsPerRev);
+        int r = (int) (distanceR / (wheelDiameter * Math.PI) * encoderCountsPerRev);
+        drivePosition(-l, -r);
+        drivePower(LPower, RPower);
         driveMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
@@ -558,6 +584,7 @@ public class Navigation {
 
     /**
      * Hold program for given number of seconds.
+     *
      * @param seconds float. Number of seconds to wait.
      */
     public void hold(float seconds) {
@@ -570,6 +597,7 @@ public class Navigation {
 
     /**
      * Updates the stored velocity of the robot to reflect reality.
+     *
      * @return float. New velocity in encoder ticks per millisecond.
      */
     private float updateVelocity() {
@@ -582,13 +610,13 @@ public class Navigation {
     /**
      * A simple method to output the status of all motors and other variables to telemetry.
      */
-    public void telemetryMethod () {
+    public void telemetryMethod() {
         updateVelocity();
         telemetry.addData("Game State = ", gameState);
         String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
         telemetry.addData("Drive = ", motorString);
         telemetry.addData("Lift = ", lifty.getCurrentPosition());
-        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " " );
+        telemetry.addData("Collector L/E/C = ", lifty.getCurrentPosition() + " " + extendy.getCurrentPosition() + " ");
         telemetry.addData("Pos = ", pos);
         telemetry.addData("CubePos = ", cubePos);
         telemetry.addData("Velocity = ", velocity);
@@ -625,8 +653,9 @@ public class Navigation {
 
     /**
      * Compares given heading value with IMU heading value. If less than error, returns true.
+     *
      * @param heading the heading to check for, heading in is degrees
-     * @param err the amount of error (in degrees) allowed to return true
+     * @param err     the amount of error (in degrees) allowed to return true
      * @return boolean.
      */
     public boolean checkHeading(float heading, float err) {
