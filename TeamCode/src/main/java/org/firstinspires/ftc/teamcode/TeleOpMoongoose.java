@@ -188,7 +188,7 @@ public class TeleOpMoongoose extends OpMode {
         //telemetry.addData("ExtLimit: ", nav.extendySwitch.isPressed());
 
 //HOPPER LIFT// - automatic (dpad up,left, and down), manual - leftstick y
-        if (gamepad2.dpad_down || gamepad1.dpad_down && nav.canMoveLiftyJr && !nav.limitSwitch.isPressed()) { //
+        if (gamepad2.dpad_down || gamepad1.right_trigger >0.5 && nav.canMoveLiftyJr && !nav.limitSwitch.isPressed()) { //
             nav.goDown();
         } else if (gamepad2.dpad_left && nav.canMoveLiftyJr) {
             nav.goUpBit();
@@ -207,7 +207,7 @@ public class TeleOpMoongoose extends OpMode {
         telemetry.addData("LiftyJr: ", nav.liftyJr.getCurrentPosition());
 
 //HANGING LIFT// - automatic (dpad right), manual rightstick y
-        if (gamepad2.dpad_right) {
+        if (gamepad2.dpad_right || gamepad1.dpad_right) {
             nav.ITS_ENDGAME_NOW();
         } else if (!nav.lifty.isBusy()) {
             nav.lifty.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -249,8 +249,8 @@ public class TeleOpMoongoose extends OpMode {
 
 //COLLECTION SERVOS - Y= Top | B= Middle | A= Bottom || Droppy --> right, Droppy Jr --> left //
         if (gamepad2.y) { // top
-            nav.droppy.setPosition(0.215);
-            nav.droppyJr.setPosition(0.215);
+            nav.droppy.setPosition(0.185);
+            nav.droppyJr.setPosition(0.185);
             nav.setCanMove(false);
         } else if (gamepad2.b) { // middle
             nav.droppy.setPosition(0.55);
