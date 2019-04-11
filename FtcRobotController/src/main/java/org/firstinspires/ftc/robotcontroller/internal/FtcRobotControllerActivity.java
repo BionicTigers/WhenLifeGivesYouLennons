@@ -341,6 +341,7 @@ public class FtcRobotControllerActivity extends Activity
     if (preferencesHelper.readBoolean(getString(R.string.pref_wifi_automute), false)) {
       initWifiMute(true);
     }
+    FtcDashboard.start();
   }
 
   protected UpdateUI createUpdateUI() {
@@ -662,6 +663,7 @@ public class FtcRobotControllerActivity extends Activity
     controllerService.setupRobot(eventLoop, idleLoop, runOnComplete);
 
     passReceivedUsbAttachmentsToEventLoop();
+    FtcDashboard.attachEventLoop(eventLoop);
   }
 
   protected OpModeRegister createOpModeRegister() {

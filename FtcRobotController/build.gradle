@@ -22,4 +22,5 @@ repositories {
 apply from: 'build.release.gradle'
 
 dependencies {
+    implementation 'com.acmerobotics.dashboard:dashboard:0.2.3'
 }
