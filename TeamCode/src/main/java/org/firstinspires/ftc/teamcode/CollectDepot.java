@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * A class made to run the depot code pulled from AutoGeneric
  */
-@Disabled
 @Autonomous(name = "Collect  depot", group = "Auto")
 public class CollectDepot extends LinearOpMode {
     public void runOpMode() {

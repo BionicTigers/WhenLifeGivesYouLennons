@@ -4,6 +4,7 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -52,7 +53,7 @@ public class Navigation {
     public enum CollectorHeight {COLLECT, HOLD, LAND, DUMP}
     public enum LiftHeight {LOWER, HOOK}
     public enum LiftyJrHeight {LOWER, DROP, WAIT, BALANCE}
-    public enum CollectorExtension {PARK, DUMP, OUT}
+    public enum CollectorExtension {PARK, DUMP, OUT,LEFT}
     public enum CollectorSweeper {INTAKE, OUTTAKE, OFF}
 
     //-----misc internal values-----//
@@ -83,7 +84,7 @@ public class Navigation {
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor extendy; //collector extension
-    private DcMotor lifty;  //lift motor a
+    private DcMotor lifty ;  //lift motor a
     private DcMotor liftyJr; //lift motor b
     private DcMotor collecty;
 
@@ -91,6 +92,8 @@ public class Navigation {
     private Servo droppy;  //collection lift a
     private Servo droppyJr; //collection lift b
     private Servo teamMarker;
+    private AnalogInput potentiometer;
+
 
     /**
      * The constructor class for Navigation
@@ -103,6 +106,8 @@ public class Navigation {
         this.hardwareGetter = hardwareGetter;
         this.telemetry = telemetry;
         this.useTelemetry = useTelemetry;
+        potentiometer = hardwareGetter.hardwareMap.analogInput.get("<WhateverNameYouGaveIt>");
+
 
         //-----motors-----//
         frontLeft = hardwareGetter.hardwareMap.dcMotor.get("frontLeft");
@@ -122,14 +127,13 @@ public class Navigation {
         lifty.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lifty.setDirection(DcMotor.Direction.REVERSE);
-        lifty.setPower(1);
+        lifty.setPower(1f);
 
         liftyJr = hardwareGetter.hardwareMap.dcMotor.get("liftyJr");
-        liftyJr.setDirection(DcMotor.Direction.REVERSE);
+        liftyJr.setPower(1f);
         liftyJr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftyJr.setPower(1);
-        setLiftHeight(0);
+        //setLiftHeight(0);
 
         collecty = hardwareGetter.hardwareMap.dcMotor.get("collecty");
 
@@ -337,16 +341,18 @@ public class Navigation {
                 setLiftJrHeight(0);
                 break;
             case DROP:
-                setLiftJrHeight(2050);
+                setLiftJrHeight(-2050);
                 break;
             case WAIT:
-                setLiftJrHeight(1500);
+                setLiftJrHeight(-1500);
             case BALANCE:
-                setLiftJrHeight(630);
+                setLiftJrHeight(-630);
                 break;
 
         }
     }
+
+
 
     /**
      * Executes a point turn to face the given world rotation.
@@ -362,7 +368,12 @@ public class Navigation {
 
         pos.setRotation(rot);
     }
-
+//    if(potentiometer.getVoltage() < desiredPosition){
+//        liftyJr.setPower(0.5);
+//    }
+//    else if(potentiometer.getVoltage() > desiredPosition){
+//        liftyJr.setPower(-0.5);
+//    }
     /**
      * Executes a point turn to face the given Location.
      *
@@ -428,7 +439,7 @@ public class Navigation {
     public void setLiftHeight(LiftHeight position) {
         switch (position) {
             case HOOK:
-                setLiftHeight(-10464);
+                setLiftHeight(-10300);
                 break;
             case LOWER:
                 setLiftHeight(0);
@@ -483,13 +494,13 @@ public class Navigation {
     public void setCollectorHeight(CollectorHeight position) {
         switch (position) {
             case COLLECT:
-                setCollectorHeight(0.7525f);
+                setCollectorHeight(0.50f);
                 break;
             case HOLD:
                 setCollectorHeight(0.55f);
                 break;
             case LAND:
-                setCollectorHeight(0.7f);
+                setCollectorHeight(0.74f);
                 break;
             case DUMP:
                 setCollectorHeight(0.2f);
@@ -516,10 +527,13 @@ public class Navigation {
                 setCollectorExtension(0);
                 break;
             case DUMP:
+                setCollectorExtension(400);
+                break;
+            case LEFT:
                 setCollectorExtension(500);
                 break;
             case OUT:
-                setCollectorExtension(1600);
+                setCollectorExtension(1850);
                 break;
         }
     }
@@ -582,6 +596,15 @@ public class Navigation {
         }
     }
 
+
+    public void holdForExtendy() {
+        hold(0.1f);
+        gameState++;
+        while (extendy.isBusy() && hardwareGetter.opModeIsActive()) {
+            if (useTelemetry) telemetryMethod();
+        }
+    }
+
     /**
      * Hold program for given number of seconds.
      *
@@ -620,6 +643,8 @@ public class Navigation {
         telemetry.addData("Pos = ", pos);
         telemetry.addData("CubePos = ", cubePos);
         telemetry.addData("Velocity = ", velocity);
+        telemetry.addData("LiftyJr: ", liftyJr.getCurrentPosition());
+        telemetry.addData("Extendy: ", extendy.getCurrentPosition());
         //   telemetry.addData("CubeXPosition",detector.getXPosition());
         telemetry.update();
     }

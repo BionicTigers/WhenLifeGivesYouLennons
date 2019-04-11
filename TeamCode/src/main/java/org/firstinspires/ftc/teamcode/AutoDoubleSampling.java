@@ -4,19 +4,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * A class made to run the doublesampling code pulled from AutoGeneric
+ * A class made to run the doublesampling code pulled from AutoCollect
  */
 @Autonomous(name = "Auto Double Sampling", group = "Auto")
 public class AutoDoubleSampling extends LinearOpMode {
     public void runOpMode() {
-        AutoGeneric autoGeneric = new AutoGeneric(AutoGeneric.StartPos.DOUBLESAMPLING, this, telemetry);
+        AutoCollect autoCollect = new AutoCollect(AutoCollect.StartPos.DOUBLESAMPLING, this, telemetry);
         while (!isStarted()) {
             telemetry.addData("cool", "waiting to start");
             telemetry.update();
         }
         //waitForStart();
 
-        autoGeneric.runAutonomous();
+        autoCollect.runAutonomous();
     }
 
     public boolean isStopping() {

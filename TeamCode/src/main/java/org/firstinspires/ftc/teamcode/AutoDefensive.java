@@ -13,6 +13,7 @@ public class AutoDefensive extends LinearOpMode {
 
         while (!isStarted()) {
             telemetry.addData("cool", "waiting to start");
+
             telemetry.update();
         }
         //waitForStart();

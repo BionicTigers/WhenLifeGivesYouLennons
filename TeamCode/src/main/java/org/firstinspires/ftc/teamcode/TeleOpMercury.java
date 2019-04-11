@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -28,7 +29,6 @@ import java.util.Locale;
  * This outreach bot was a prototype drivetrain to our two iterations of our competition robot from last year
  * This class allows the outreach bot to be omnidirectional
  */
-@Disabled
 public class TeleOpMercury extends OpMode {
 
     //DRIVETRAIN\\
@@ -36,11 +36,12 @@ public class TeleOpMercury extends OpMode {
     public DcMotor motorFrontLeft;
     public DcMotor motorBackLeft;
     public DcMotor motorBackRight;
+    public DcMotor flywheel;
     public int calibToggle;
     BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
-
+    public Servo barrier;
 
     public void init() {
 
@@ -49,6 +50,9 @@ public class TeleOpMercury extends OpMode {
         motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+
+      //  flywheel = hardwareMap.dcMotor.get("flywheel");
+       // barrier = hardwareMap.servo.get("barrier");
 
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -141,7 +145,24 @@ public class TeleOpMercury extends OpMode {
         telemetry.addData("frontRight ", motorFrontRight.getCurrentPosition());
         telemetry.addData("backLeft: ", motorBackLeft.getCurrentPosition());
         telemetry.addData("backRight ", motorBackRight.getCurrentPosition());
+
+
+//        if (gamepad2.dpad_up) {
+//            flywheel.setPower(1);
+//        } else if (gamepad2.dpad_down) {
+//            flywheel.setPower(-1);
+//        } else{
+//            flywheel.setPower(0);
+//        }
+
+//        if (gamepad2.y) {
+//            barrier.setPosition(0.7);
+//        }
+//        if (gamepad2.b) {
+//            barrier.setPosition(0.2);
+//        }
     }
+
     private String composeTelemetry() {
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.

@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * A class made to run the depot code pulled from AutoGeneric
+ * A class made to run the depot code pulled from AutoCollect
  */
 @Autonomous(name = "Auto Depot", group = "Auto")
 public class AutoDepot extends LinearOpMode {
     public void runOpMode() {
-        AutoGeneric autoGeneric = new AutoGeneric(AutoGeneric.StartPos.DEPOT, this, telemetry);
+        AutoCollect autoCollect = new AutoCollect(AutoCollect.StartPos.DEPOT, this, telemetry);
         while (!isStarted()) {
             telemetry.addData("cool", "waiting to start");
             telemetry.update();
@@ -18,7 +18,7 @@ public class AutoDepot extends LinearOpMode {
 
         opModeIsActive();
 
-        autoGeneric.runAutonomous();
+        autoCollect.runAutonomous();
     }
 
     public boolean isStopping() {

@@ -97,7 +97,7 @@ public class TeleOpNav {
         backwoodsSpeed = 0;
 
         //Speed Offsets//
-        normalSpeed = .65;
+        normalSpeed = .725;
         liftySpeed = 1;
         liftyJrSpeed = 1;
         slowSpeed = normalSpeed / 2;
@@ -121,7 +121,7 @@ public class TeleOpNav {
     public void goDown() {
         if (!limitSwitch.isPressed()) {
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftyJr.setTargetPosition(-100);
+            liftyJr.setTargetPosition(-175);
             liftyJr.setPower(1);
         }
     }
@@ -136,7 +136,7 @@ public class TeleOpNav {
     // This method goes up using an encoder for the hopper lift to fully dump into the lander
     public void goUpAll() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftyJr.setTargetPosition(-2065);
+        liftyJr.setTargetPosition(-2075);
         liftyJr.setPower(1);
     }
 
@@ -151,7 +151,7 @@ public class TeleOpNav {
     public final void ITS_ENDGAME_NOW() {
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lifty.setPower(1);
-        lifty.setTargetPosition(10464);
+        lifty.setTargetPosition(10200); //10464
     }
 
     //HORIZONTAL EXTENSION//

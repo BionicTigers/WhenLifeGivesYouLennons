@@ -16,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class AutoGeneric {
     public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
-
     private StartPos startZone;
     private OpMode opMode;
     private Telemetry telemetry;
@@ -49,21 +48,21 @@ public class AutoGeneric {
         nav.goDistanceHold(3f);
         nav.pointTurnIMU(-45f);
         nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-        nav.goDistanceHold(14f);
+        nav.goDistanceHold(13f);
         switch (nav.getCubePos()) {
             case MIDDLE:
-                nav.goDistanceHold(14f);
-                nav.goDistanceHold(-14f);
+                nav.goDistanceHold(15f);
+                nav.goDistanceHold(-14.5f);
                 break;
             case RIGHT:
                 nav.pointTurnIMU(-93.5f);
-                nav.goDistanceHold(20.5f);
-                nav.goDistanceHold(-20.5f);
+                nav.goDistanceHold(21.5f);
+                nav.goDistanceHold(-21f);
                 break;
             default: //left
                 nav.pointTurnIMU(3.25f);
-                nav.goDistanceHold(26f);
-                nav.goDistanceHold(-26f);
+                nav.goDistanceHold(27f);
+                nav.goDistanceHold(-26.5f);
                 break;
         }
         //-----crater depot run-----//
@@ -71,49 +70,61 @@ public class AutoGeneric {
             nav.pointTurnIMU(36f); //turn to face wall
             nav.goDistanceHold(45f);
             nav.pointTurnIMU(-90f);
-            nav.goDistanceHold(-48f);
-            nav.pointTurnIMU(-89f);
+            nav.goDistanceHold(-42f);
+            nav.pointTurnIMU(-90f);
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
+            nav.goDistanceHold(44.75f);
+            nav.hold(2f);
             nav.pointTurnIMU(90f);
             nav.goDistanceHold(-49f);
-            nav.pointTurnIMU(89f);
+            nav.pointTurnIMU(87f);
             //-----crater doublesampling------//
         } else if (startZone == StartPos.DOUBLESAMPLING) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(-90f);
-            nav.curveTurn(-40f, 11f, 0f, -4f);
+            nav.goDistanceHold(47.75f);
+            nav.pointTurnIMU(-91f);
+
+            nav.goDistanceHold(-40f);
+            nav.pointTurnIMU(-36f);
+            nav.goDistanceHold(-7f);
+            //nav.curveTurn(-39f, 10f, 0f, -3.5f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
                     nav.pointTurnIMU(-135f);
                     break;
                 case RIGHT:
-                    nav.pointTurnIMU(-103f);
+                    nav.pointTurnIMU(-90f);
                     break;
                 default: //Left
-                    nav.pointTurnIMU(-180f);
+                    nav.pointTurnIMU(-175f);
             }
             nav.goDistanceHold(30f);
-            nav.goDistanceHold(-35.25f);
-            nav.pointTurnIMU(277f);
+            nav.goDistanceHold(-30f);
+            nav.pointTurnIMU(-36f);
+            //nav.goDistanceHold(9.5f);
+            nav.pointTurnIMU(275f);
         }
-
         //-----marker deploy and driving to crater-----//
         nav.setTeamMarker(1f);
-        nav.hold(1.5f);
+        nav.hold(1f);
         switch (startZone) {
             case DOUBLESAMPLING:
-                nav.goDistance(69f, 0.6f, 0.6f);
+                nav.goDistance(67f, 0.65f, 0.65f);
                 break;
-            default: //depot and crater
-                nav.goDistance(65f, 0.6f, 0.6f);
+            case CRATER: //depot and crater
+                nav.goDistance(59.5f, 0.6f, 0.6f);
+                nav.holdForDrive();
+                break;
+            case DEPOT: //depot and crater
+                nav.goDistance(59f, 0.6f, 0.6f);
+                nav.holdForDrive();
                 break;
         }
-        nav.holdForDrive();
+
         nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+        nav.holdForDrive();
         nav.hold(1f);
 
     }

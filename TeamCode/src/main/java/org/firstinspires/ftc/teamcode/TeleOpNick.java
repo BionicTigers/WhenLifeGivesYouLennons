@@ -15,8 +15,8 @@ import java.math.RoundingMode;
  * gamepad2 controls all of the top mechanisms (hopperlift, lift, collection)
  * This class pulls from TeleOpNav for its automation methods
  */
-@TeleOp(name = "Moongoose TeleOp", group = "Competition")
-public class TeleOpMoongoose extends OpMode {
+@TeleOp(name = "Nickolas TeleOp", group = "Competition")
+public class TeleOpNick extends OpMode {
 
     //Objects//
     private ElapsedTime runtime = new ElapsedTime();
@@ -24,37 +24,38 @@ public class TeleOpMoongoose extends OpMode {
 
     public void init() {
         nav.init(hardwareMap);
+        nav.driveMode = 0;
     }
 
     public void loop() {
 //////////////////////////////////////// GAMEPAD 1 /////////////////////////////////////////
 // TOGGLE BUTTONS //
-        if (gamepad1.left_trigger >0.5 && (runtime.seconds() > nav.calibToggle)) {
-            nav.calibToggle = runtime.seconds() + 0.25;
-            ++nav.driveSpeed;
-        }
+//        if (gamepad1.left_trigger >0.5 && (runtime.seconds() > nav.calibToggle)) {
+//            nav.calibToggle = runtime.seconds() + 0.25;
+//            ++nav.driveSpeed;
+//        }
 
 //        if (gamepad1.dpad_up && (runtime.seconds() > nav.speedyToggle)) {
 //            nav.speedyToggle = runtime.seconds() + 0.25;
 //            ++nav.backwoodsSpeed;
 //        }
 
-        if (gamepad1.y && (runtime.seconds() > nav.driveToggle)) {
-            nav.driveToggle = runtime.seconds() + 0.25;
-            if (nav.driveMode == 0) {
-                nav.driveMode = 1;
-            } else if (nav.driveMode == 1) {
-                nav.driveMode = 2;
-            } else if (nav.driveMode == 2) {
-                nav.driveMode = 0;
-            }
-        }
+//        if (gamepad1.y && (runtime.seconds() > nav.driveToggle)) {
+//            nav.driveToggle = runtime.seconds() + 0.25;
+//            if (nav.driveMode == 0) {
+//                nav.driveMode = 1;
+//            } else if (nav.driveMode == 1) {
+//                nav.driveMode = 2;
+//            } else if (nav.driveMode == 2) {
+//                nav.driveMode = 0;
+//            }
+//        }
 
 // DIFFERENT DRIVE MODES //
         if (nav.driveMode == 0) {
             // ARCADE DRIVE //
-            double leftStick = gamepad1.left_stick_y;
-            double rightStick = -gamepad1.right_stick_x;
+            double leftStick = gamepad2.left_stick_y;
+            double rightStick = -gamepad2.right_stick_x;
             double leftPower, rightPower;
 
             //Left Side
@@ -98,14 +99,14 @@ public class TeleOpMoongoose extends OpMode {
             }
         } else if (nav.driveMode == 1) { /// TANK DRIVE ///
 
-            double leftStick = gamepad1.left_stick_y;
-            double rightStick = -gamepad1.right_stick_x;
+            double leftStick = gamepad2.left_stick_y;
+            double rightStick = -gamepad2.right_stick_x;
 
             //Left Side
-            double leftPower = gamepad1.left_stick_y;
+            double leftPower = gamepad2.left_stick_y;
 
             //Right Side
-            double rightPower = gamepad1.right_stick_y;
+            double rightPower = gamepad2.right_stick_y;
 
             if (nav.driveSpeed % 2 == 0) {
                 telemetry.addData("Mode: ", "TANK");
