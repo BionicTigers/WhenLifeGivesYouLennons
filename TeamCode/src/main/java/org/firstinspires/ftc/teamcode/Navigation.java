@@ -92,7 +92,8 @@ public class Navigation {
     private Servo droppy;  //collection lift a
     private Servo droppyJr; //collection lift b
     private Servo teamMarker;
-    private AnalogInput potentiometer;
+    public AnalogInput potentiometer;
+
 
 
     /**
@@ -106,7 +107,8 @@ public class Navigation {
         this.hardwareGetter = hardwareGetter;
         this.telemetry = telemetry;
         this.useTelemetry = useTelemetry;
-        potentiometer = hardwareGetter.hardwareMap.analogInput.get("<WhateverNameYouGaveIt>");
+
+
 
 
         //-----motors-----//
@@ -194,7 +196,6 @@ public class Navigation {
         imu = hardwareGetter.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(noots);
 
-        calibrateHeading();
     }
 
     /**
@@ -302,6 +303,7 @@ public class Navigation {
         backLeft.setMode(mode);
     }
 
+
     /**
      * Stops all drive motors and resets encoders.
      */
@@ -341,18 +343,16 @@ public class Navigation {
                 setLiftJrHeight(0);
                 break;
             case DROP:
-                setLiftJrHeight(-2050);
+                setLiftJrHeight(-2600);
                 break;
             case WAIT:
-                setLiftJrHeight(-1500);
+                setLiftJrHeight(-2000);
             case BALANCE:
                 setLiftJrHeight(-630);
                 break;
 
         }
     }
-
-
 
     /**
      * Executes a point turn to face the given world rotation.
@@ -372,8 +372,7 @@ public class Navigation {
 //        liftyJr.setPower(0.5);
 //    }
 //    else if(potentiometer.getVoltage() > desiredPosition){
-//        liftyJr.setPower(-0.5);
-//    }
+//        liftyJr.setPower(-0.5); }
     /**
      * Executes a point turn to face the given Location.
      *
@@ -401,25 +400,6 @@ public class Navigation {
         pos.setRotation((imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)).firstAngle);
         pointTurn(heading);
         holdForDrive();
-    }
-
-    /**
-     * Rotate the robot smothly around a curve, with differing wheel rates for each side.
-     *
-     * @param distance1 Distance to travel straight before curve (inches)
-     * @param distanceL Distance for left side of robot to travel (inches)
-     * @param distanceR Distance for right side of robot to travel (inches)
-     * @param distance2 Distance to travel straight after the curve (inches)
-     */
-    public void curveTurn(float distance1, float distanceL, float distanceR, float distance2) {
-        goDistance(distance1, 0.55f, 0.55f);
-        holdForDrive();
-        driveMethodSimple(distanceL, distanceR, 0.3f, 0.3f);
-        holdForDrive();
-        goDistance(distance2, 0.55f, 0.55f);
-        holdForDrive();
-
-        pos.setRotation((imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)).firstAngle);
     }
 
     /**
@@ -464,10 +444,10 @@ public class Navigation {
     public void setCollectionSweeper(CollectorSweeper power) {
         switch (power) {
             case INTAKE:
-                setCollectionSweeper(-1f);
+                setCollectionSweeper(1f);
                 break;
             case OUTTAKE:
-                setCollectionSweeper(1f);
+                setCollectionSweeper(-1f);
                 break;
             case OFF:
                 setCollectionSweeper(0f);
@@ -527,7 +507,7 @@ public class Navigation {
                 setCollectorExtension(0);
                 break;
             case DUMP:
-                setCollectorExtension(400);
+                setCollectorExtension(250);
                 break;
             case LEFT:
                 setCollectorExtension(500);
@@ -646,6 +626,9 @@ public class Navigation {
         telemetry.addData("LiftyJr: ", liftyJr.getCurrentPosition());
         telemetry.addData("Extendy: ", extendy.getCurrentPosition());
         //   telemetry.addData("CubeXPosition",detector.getXPosition());
+
+
+
         telemetry.update();
     }
 

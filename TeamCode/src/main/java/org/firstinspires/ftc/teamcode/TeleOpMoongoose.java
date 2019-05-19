@@ -196,13 +196,6 @@ public class TeleOpMoongoose extends OpMode {
             nav.goUpAll();
         } else if (gamepad2.right_stick_button && nav.canMoveLiftyJr) {
             nav.goupBalance();
-//        } else if (!nav.liftyJr.isBusy()){
-//            if(nav.limitSwitch.isPressed() && Math.abs(gamepad2.left_stick_y) > 0){
-//                nav.liftyJr.setPower(0);
-//            }else {
-//                nav.liftyJr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                nav.liftyJr.setPower(gamepad2.left_stick_y);
-//            }
         }
         telemetry.addData("LiftyJr: ", nav.liftyJr.getCurrentPosition());
 

@@ -121,7 +121,7 @@ public class TeleOpNav {
     public void goDown() {
         if (!limitSwitch.isPressed()) {
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftyJr.setTargetPosition(-175);
+            liftyJr.setTargetPosition(-125);
             liftyJr.setPower(1);
         }
     }
@@ -129,20 +129,20 @@ public class TeleOpNav {
     // This method goes up using an encoder to where the hopper lift is under the bar only slighty in preparation for dropping
     public void goUpBit() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftyJr.setTargetPosition(-1000);
         liftyJr.setPower(1);
-        liftyJr.setTargetPosition(-1500);
     }
 
     // This method goes up using an encoder for the hopper lift to fully dump into the lander
     public void goUpAll() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftyJr.setTargetPosition(-2075);
+        liftyJr.setTargetPosition(-2600);
         liftyJr.setPower(1);
     }
 
     public void goupBalance() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftyJr.setTargetPosition(-630);
+        liftyJr.setTargetPosition(-150);
         liftyJr.setPower(1);
     }
 

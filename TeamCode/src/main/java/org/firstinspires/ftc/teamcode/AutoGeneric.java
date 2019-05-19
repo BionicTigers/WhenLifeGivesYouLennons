@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -20,6 +21,8 @@ public class AutoGeneric {
     private OpMode opMode;
     private Telemetry telemetry;
     private Navigation nav;
+    private  AnalogInput potentiometer;
+    private float waiting;
 
     /**
      * The constructor method that zcontains everything to run in initialization.
@@ -35,7 +38,29 @@ public class AutoGeneric {
         nav = new Navigation(opMode, telemetry, true);
         nav.calibrateHeading();
         nav.hold(0.1f);
-    }
+
+        double voltreading = (float) potentiometer.getVoltage();
+            //convert voltage to distance (cm)
+        double percentTurned = voltreading/5 * 100;
+
+        if (percentTurned > 0 &&  percentTurned <= 10){
+            waiting = 2f;
+        }else if(percentTurned > 10 &&  percentTurned <= 20){
+            waiting = 5f;
+        }else if(percentTurned > 20 &&  percentTurned <= 30){
+            waiting = 7f;
+        }else if(percentTurned > 30 &&  percentTurned <= 40){
+            waiting = 10f;
+        }else{
+            waiting = 0f;
+        }
+            telemetry.addData("raw val", "voltage:  " + Double.toString(voltreading));
+            // this is our calculated value
+            telemetry.addData("PercentRot", "percent: " + Double.toString(percentTurned));
+            telemetry.update();
+
+        }
+
 
     /**
      * Class which runs an autonomous given AutoGeneric has been instantiated.
@@ -47,6 +72,7 @@ public class AutoGeneric {
         nav.holdForLift();
         nav.goDistanceHold(3f);
         nav.pointTurnIMU(-45f);
+        nav.hold(waiting);
         nav.setLiftHeight(Navigation.LiftHeight.LOWER);
         nav.goDistanceHold(13f);
         switch (nav.getCubePos()) {

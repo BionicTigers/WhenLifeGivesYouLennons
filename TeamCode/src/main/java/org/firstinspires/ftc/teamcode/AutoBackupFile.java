@@ -85,7 +85,7 @@ public class AutoBackupFile {
             nav.goDistanceHold(44f);
             nav.pointTurnRelative(-128f);
             nav.holdForDrive();
-            nav.curveTurn(-40f, 10f, 0f, 15f);
+       //     nav.curveTurn(-40f, 10f, 0f, 15f);
             switch (nav.getCubePos()) {
                 case MIDDLE:
                     nav.pointTurnRelative(-90f);
@@ -110,7 +110,7 @@ public class AutoBackupFile {
                     nav.holdForDrive();
             }
 
-            nav.curveTurn(10f, -11f, 0f, 0f);
+            //nav.curveTurn(10f, -11f, 0f, 0f);
         }
 
         //-----marker deploy and driving to crater-----//

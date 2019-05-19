@@ -42,6 +42,7 @@ public class TeleOpMercury extends OpMode {
     public Orientation angles;
     public Acceleration gravity;
     public Servo barrier;
+    public DcMotor collext;
 
     public void init() {
 
@@ -51,8 +52,10 @@ public class TeleOpMercury extends OpMode {
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
 
-      //  flywheel = hardwareMap.dcMotor.get("flywheel");
-       // barrier = hardwareMap.servo.get("barrier");
+        collext = hardwareMap.dcMotor.get("collext");
+
+        flywheel = hardwareMap.dcMotor.get("flywheel");
+        // barrier = hardwareMap.servo.get("barrier");
 
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -147,20 +150,30 @@ public class TeleOpMercury extends OpMode {
         telemetry.addData("backRight ", motorBackRight.getCurrentPosition());
 
 
-//        if (gamepad2.dpad_up) {
-//            flywheel.setPower(1);
-//        } else if (gamepad2.dpad_down) {
-//            flywheel.setPower(-1);
-//        } else{
-//            flywheel.setPower(0);
-//        }
+        if (gamepad1.dpad_up) {
+            flywheel.setPower(1);
+        } else if (gamepad1.dpad_down) {
+                flywheel.setPower(-1);
+        } else {
+            flywheel.setPower(0);
+        }
 
-//        if (gamepad2.y) {
-//            barrier.setPosition(0.7);
-//        }
-//        if (gamepad2.b) {
-//            barrier.setPosition(0.2);
-//        }
+        if (gamepad1.y) {
+            barrier.setPosition(0.7);
+        }
+        if (gamepad1.b) {
+            barrier.setPosition(0.2);
+        }
+
+
+        if (gamepad1.right_bumper) {
+            collext.setPower(1);
+        } else if (gamepad1.right_trigger > 0.5) {
+            collext.setPower(-1);
+        } else {
+            collext.setPower(0);
+        }
+
     }
 
     private String composeTelemetry() {
