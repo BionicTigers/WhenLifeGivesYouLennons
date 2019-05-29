@@ -8,13 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-/**
- * This is a class for TeleOp for competitions
- * There are two different drivers/controllers:
- * gamepad1 controls the drivetrain and its different types of driving
- * gamepad2 controls all of the top mechanisms (hopperlift, lift, collection)
- * This class pulls from TeleOpNav for its automation methods
- */
 @TeleOp(name = "Moongoose TeleOp", group = "Competition")
 public class TeleOpMoongoose extends OpMode {
 
@@ -24,23 +17,18 @@ public class TeleOpMoongoose extends OpMode {
 
     public void init() {
         nav.init(hardwareMap);
+
     }
 
     public void loop() {
-//////////////////////////////////////// GAMEPAD 1 /////////////////////////////////////////
-// TOGGLE BUTTONS //
-        if (gamepad1.left_trigger >0.5 && (runtime.seconds() > nav.calibToggle)) {
-            nav.calibToggle = runtime.seconds() + 0.25;
+        //////////////////////////////////////// GAMEPAD 1 /////////////////////////////////////////
+        // TOGGLE BUTTONS //
+        if (gamepad1.left_bumper && (runtime.seconds() > nav.calibToggle)) {
+            nav.calibToggle = runtime.seconds() + 0.5;
             ++nav.driveSpeed;
         }
-
-//        if (gamepad1.dpad_up && (runtime.seconds() > nav.speedyToggle)) {
-//            nav.speedyToggle = runtime.seconds() + 0.25;
-//            ++nav.backwoodsSpeed;
-//        }
-
         if (gamepad1.y && (runtime.seconds() > nav.driveToggle)) {
-            nav.driveToggle = runtime.seconds() + 0.25;
+            nav.driveToggle = runtime.seconds() + 0.5;
             if (nav.driveMode == 0) {
                 nav.driveMode = 1;
             } else if (nav.driveMode == 1) {
@@ -50,7 +38,7 @@ public class TeleOpMoongoose extends OpMode {
             }
         }
 
-// DIFFERENT DRIVE MODES //
+        // DIFFERENT DRIVE MODES //
         if (nav.driveMode == 0) {
             // ARCADE DRIVE //
             double leftStick = gamepad1.left_stick_y;
@@ -75,29 +63,21 @@ public class TeleOpMoongoose extends OpMode {
                 telemetry.addData("Mode: ", "ARCADE");
                 telemetry.addData("Speed: ", "NORMAL");
 
-                nav.backLeft.setPower(leftPower *    nav.normalSpeed);
-                nav.backRight.setPower(rightPower *  nav.normalSpeed);
-                nav.frontLeft.setPower(leftPower *   nav.normalSpeed);
+                nav.backLeft.setPower(leftPower * nav.normalSpeed);
+                nav.backRight.setPower(rightPower * nav.normalSpeed);
+                nav.frontLeft.setPower(leftPower * nav.normalSpeed);
                 nav.frontRight.setPower(rightPower * nav.normalSpeed);
-            } else if (nav.backwoodsSpeed % 2 != 0) {
-                telemetry.addData("Mode: ", "ARCADE");
-                telemetry.addData("Speed: ", "SPEEDY");
-
-                nav.backLeft.setPower(leftPower *    nav.speedySpeed);
-                nav.backRight.setPower(rightPower *  nav.speedySpeed);
-                nav.frontLeft.setPower(leftPower *   nav.speedySpeed);
-                nav.frontRight.setPower(rightPower * nav.speedySpeed);
             } else {
                 telemetry.addData("Mode: ", "ARCADE");
                 telemetry.addData("Speed: ", "SLOW");
 
-                nav.backLeft.setPower(leftPower *    nav.slowSpeed);
-                nav.backRight.setPower(rightPower *  nav.slowSpeed);
-                nav.frontLeft.setPower(leftPower *   nav.slowSpeed);
+                nav.backLeft.setPower(leftPower * nav.slowSpeed);
+                nav.backRight.setPower(rightPower * nav.slowSpeed);
+                nav.frontLeft.setPower(leftPower * nav.slowSpeed);
                 nav.frontRight.setPower(rightPower * nav.slowSpeed);
             }
-        } else if (nav.driveMode == 1) { /// TANK DRIVE ///
-
+        } else if (nav.driveMode == 1) {
+            /// TANK DRIVE ///
             double leftStick = gamepad1.left_stick_y;
             double rightStick = -gamepad1.right_stick_x;
 
@@ -111,28 +91,21 @@ public class TeleOpMoongoose extends OpMode {
                 telemetry.addData("Mode: ", "TANK");
                 telemetry.addData("Speed: ", "NORMAL");
 
-                nav.backLeft.setPower(leftPower *    nav.normalSpeed);
-                nav.backRight.setPower(rightPower *  nav.normalSpeed);
-                nav.frontLeft.setPower(leftPower *   nav.normalSpeed);
+                nav.backLeft.setPower(leftPower * nav.normalSpeed);
+                nav.backRight.setPower(rightPower * nav.normalSpeed);
+                nav.frontLeft.setPower(leftPower * nav.normalSpeed);
                 nav.frontRight.setPower(rightPower * nav.normalSpeed);
-            } else if (nav.backwoodsSpeed % 2 != 0) {
-                telemetry.addData("Mode: ", "TANK");
-                telemetry.addData("Speed: ", "SPEEDY");
-
-                nav.backLeft.setPower(leftPower *    nav.speedySpeed);
-                nav.backRight.setPower(rightPower *  nav.speedySpeed);
-                nav.frontLeft.setPower(leftPower *   nav.speedySpeed);
-                nav.frontRight.setPower(rightPower * nav.speedySpeed);
             } else {
                 telemetry.addData("Mode: ", "TANK");
                 telemetry.addData("Speed: ", "SLOW");
 
-                nav.backLeft.setPower(leftPower *    nav.slowSpeed);
-                nav.backRight.setPower(rightPower *  nav.slowSpeed);
-                nav.frontLeft.setPower(leftPower *   nav.slowSpeed);
+                nav.backLeft.setPower(leftPower * nav.slowSpeed);
+                nav.backRight.setPower(rightPower * nav.slowSpeed);
+                nav.frontLeft.setPower(leftPower * nav.slowSpeed);
                 nav.frontRight.setPower(rightPower * nav.slowSpeed);
             }
-        } else if (nav.driveMode == 2) { /// ACKERMAN DRIVE ///
+        } else if (nav.driveMode == 2) {
+            /// ACKERMAN DRIVE ///
             double leftStick = (-gamepad1.left_stick_x);
             double gasPedal = (gamepad1.left_trigger - gamepad1.right_trigger);
             double leftPower, rightPower;
@@ -155,68 +128,48 @@ public class TeleOpMoongoose extends OpMode {
                 telemetry.addData("Mode: ", "ACKERMAN");
                 telemetry.addData("Speed: ", "NORMAL");
 
-                nav.backLeft.setPower(leftPower *    nav.normalSpeed);
-                nav.backRight.setPower(rightPower *  nav.normalSpeed);
-                nav.frontLeft.setPower(leftPower *   nav.normalSpeed);
+                nav.backLeft.setPower(leftPower * nav.normalSpeed);
+                nav.backRight.setPower(rightPower * nav.normalSpeed);
+                nav.frontLeft.setPower(leftPower * nav.normalSpeed);
                 nav.frontRight.setPower(rightPower * nav.normalSpeed);
-            } else if (nav.backwoodsSpeed % 2 != 0) {
-                telemetry.addData("Mode: ", "ACKERMAN");
-                telemetry.addData("Speed: ", "SPEEDY");
-
-                nav.backLeft.setPower(leftPower *    nav.speedySpeed);
-                nav.backRight.setPower(rightPower *  nav.speedySpeed);
-                nav.frontLeft.setPower(leftPower *   nav.speedySpeed);
-                nav.frontRight.setPower(rightPower * nav.speedySpeed);
-            } else if (nav.driveSpeed % 2 != 0) {
+            } else {
                 telemetry.addData("Mode: ", "ACKERMAN");
                 telemetry.addData("Speed: ", "SLOW");
 
-                nav.backLeft.setPower(leftPower *    nav.slowSpeed);
-                nav.backRight.setPower(rightPower *  nav.slowSpeed);
-                nav.frontLeft.setPower(leftPower *   nav.slowSpeed);
+                nav.backLeft.setPower(leftPower * nav.slowSpeed);
+                nav.backRight.setPower(rightPower * nav.slowSpeed);
+                nav.frontLeft.setPower(leftPower * nav.slowSpeed);
                 nav.frontRight.setPower(rightPower * nav.slowSpeed);
             }
+        }
+        //////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
+        telemetry.addData("Limit: ", nav.limitSwitch.isPressed());
 
-            if (gamepad1.dpad_up) {
-                nav.liftyJr.setPower(1);
-            } else if (!nav.limitSwitch.isPressed() && gamepad1.dpad_down) {
-                nav.liftyJr.setPower(-1);
+        if (gamepad2.dpad_down && nav.canMoveLiftyJr && !nav.limitSwitch.isPressed()) { //
+                nav.goDown();
+        } else if (gamepad2.dpad_left && nav.canMoveLiftyJr) {
+                nav.goUpBit();
+        } else if (gamepad2.dpad_up && nav.canMoveLiftyJr) {
+                nav.goUpAll();
+        } else {
+            if (Math.abs(gamepad2.left_stick_y) > .5 && !nav.limitSwitch.isPressed()){
+                nav.liftyJr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                nav.liftyJr.setPower(-gamepad2.left_stick_y);
             }
         }
-//////////////////////////////////////// GAMEPAD 2 /////////////////////////////////////////
-        telemetry.addData("HopLimit: ", nav.limitSwitch.isPressed());
-        //telemetry.addData("ExtLimit: ", nav.extendySwitch.isPressed());
 
-//HOPPER LIFT// - automatic (dpad up,left, and down), manual - leftstick y
-        if (gamepad2.dpad_down || gamepad1.right_trigger >0.5 && nav.canMoveLiftyJr && !nav.limitSwitch.isPressed()) { //
-            nav.goDown();
-        } else if (gamepad2.dpad_left && nav.canMoveLiftyJr) {
-            nav.goUpBit();
-        } else if (gamepad2.dpad_up && nav.canMoveLiftyJr) {
-            nav.goUpAll();
-        } else if (gamepad2.right_stick_button && nav.canMoveLiftyJr) {
-            nav.goupBalance();
-//        } else if (!nav.liftyJr.isBusy()){
-//            if(nav.limitSwitch.isPressed() && Math.abs(gamepad2.left_stick_y) > 0){
-//                nav.liftyJr.setPower(0);
-//            }else {
-//                nav.liftyJr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                nav.liftyJr.setPower(gamepad2.left_stick_y);
-//            }
-        }
-        telemetry.addData("LiftyJr: ", nav.liftyJr.getCurrentPosition());
-
-//HANGING LIFT// - automatic (dpad right), manual rightstick y
-        if (gamepad2.dpad_right||gamepad1.dpad_right) {
+        if (gamepad2.dpad_right ) {
             nav.ITS_ENDGAME_NOW();
-        } else if (!nav.lifty.isBusy()) {
+        } else if (!nav.lifty.isBusy()){
             nav.lifty.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             nav.lifty.setPower(-gamepad2.right_stick_y);
         }
 
-        telemetry.addData("Lifty: ", nav.lifty.getCurrentPosition());
+        telemetry.addData("ManualMode: ", nav.manualMode);
+        telemetry.addData("LiftyJr: ", nav.liftyJr.getCurrentPosition());
 
-//COLLECTOR// - RightBumper= Intake | RightTrigger= Outtake //This is a VEX Motor, 0.5 is the maximum power
+
+        //Collector// - RightBumper= Intake | RightTrigger= Outtake //This is a VEX Motor, 0.5 is the maximum power
         if (gamepad2.right_bumper) { //
             nav.collecty.setPower(1);
         } else if (gamepad2.right_trigger > 0.5) {
@@ -226,39 +179,29 @@ public class TeleOpMoongoose extends OpMode {
         }
         telemetry.addData("Collector: ", nav.collecty.getPower());
 
-//HORIZONTAL EXTENSION// - LeftBumper= Deploy | LeftTrigger= Retract
-
-        if (gamepad2.left_stick_button) {
-            nav.retract();
-        }
-        if(nav.extendy.getCurrentPosition() == 1495 && gamepad2.left_bumper){
+        //Collection Extension motor// - LeftBumper= Deploy | LeftTrigger= Retract
+        if (gamepad2.left_bumper) {
+            nav.extendy.setPower(-1);
+        } else if (gamepad2.left_trigger > 0.5) {
+            nav.extendy.setPower(1);
+        } else {
             nav.extendy.setPower(0);
-        } else if (nav.extendy.getCurrentPosition() == -45 && -gamepad2.left_stick_y < 0){
-            nav.extendy.setPower(0); }
-        else if (!nav.extendy.isBusy()) {
-            nav.extendy.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (gamepad2.left_bumper) {
-                nav.extendy.setPower(1);
-            } else if (gamepad2.left_trigger > 0.5){
-                nav.extendy.setPower(-1);
-            } else {
-                nav.extendy.setPower(0);
-            }
         }
         telemetry.addData("Extension: ", nav.extendy.getCurrentPosition());
 
-//COLLECTION SERVOS - Y= Top | B= Middle | A= Bottom || Droppy --> right, Droppy Jr --> left //
+        //Collector Dropper// - Y= Top | B= Middle | A= Bottom //
+        // COLLECTION SERVOS - Droppy --> right, Droppy Jr --> left //
         if (gamepad2.y) { // top
-            nav.droppy.setPosition(0.185);
-            nav.droppyJr.setPosition(0.185);
+            nav.droppy.setPosition(0.215);
+            nav.droppyJr.setPosition(0.215);
             nav.setCanMove(false);
         } else if (gamepad2.b) { // middle
-            nav.droppy.setPosition(0.55);
-            nav.droppyJr.setPosition(0.55);
+            nav.droppy.setPosition(0.4);
+            nav.droppyJr.setPosition(0.4);
             nav.setCanMove(true);
         } else if (gamepad2.a) { // bottom
-            nav.droppy.setPosition(0.7575);
-            nav.droppyJr.setPosition(0.7575);
+            nav.droppy.setPosition(0.7525);
+            nav.droppyJr.setPosition(0.7525);
             nav.setCanMove(true);
         }
     }
