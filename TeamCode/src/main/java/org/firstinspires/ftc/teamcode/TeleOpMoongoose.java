@@ -180,9 +180,9 @@ public class TeleOpMoongoose extends OpMode {
         telemetry.addData("Collector: ", nav.collecty.getPower());
 
         //Collection Extension motor// - LeftBumper= Deploy | LeftTrigger= Retract
-        if (gamepad2.left_bumper) {
+        if (gamepad2.left_bumper && nav.extendy.getCurrentPosition()>-2000) {
             nav.extendy.setPower(-1);
-        } else if (gamepad2.left_trigger > 0.5) {
+        } else if (gamepad2.left_trigger > 0.5 && nav.extendy.getCurrentPosition()<0) {
             nav.extendy.setPower(1);
         } else {
             nav.extendy.setPower(0);

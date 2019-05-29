@@ -236,6 +236,7 @@ public class TeleOpNick extends OpMode {
         } else {
             nav.extendy.setPower(0);
         }
+        telemetry.addData("Collector: ", nav.collecty.getPower());
 //COLLECTION SERVOS - Y= Top | B= Middle | A= Bottom || Droppy --> right, Droppy Jr --> left //
         if (gamepad2.y) { // top
             nav.droppy.setPosition(0.185);
