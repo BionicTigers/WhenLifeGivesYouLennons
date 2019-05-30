@@ -158,7 +158,7 @@ public class TeleOpNav {
     public void retract() {
         extendy.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         extendy.setPower(1);
-        extendy.setTargetPosition(-20);
+        extendy.setTargetPosition(0);
     }
 
     public double round(double value) { //Allows telemetry to display nicely
