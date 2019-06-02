@@ -50,10 +50,10 @@ public class Navigation {
         UNKNOWN, LEFT, MIDDLE, RIGHT
     }
     private CubePosition cubePos = CubePosition.UNKNOWN;
-    public enum CollectorHeight {COLLECT, HOLD, LAND, DUMP}
+    public enum CollectorHeight {COLLECT, HOLD, LAND, DUMP, MIDDLE}
     public enum LiftHeight {LOWER, HOOK}
     public enum LiftyJrHeight {LOWER, DROP, WAIT, BALANCE}
-    public enum CollectorExtension {PARK, DUMP, OUT,LEFT}
+    public enum CollectorExtension {PARK, DUMP, OUT, LEFT, COLLECT}
     public enum CollectorSweeper {INTAKE, OUTTAKE, OFF}
 
     //-----misc internal values-----//
@@ -329,7 +329,7 @@ public class Navigation {
      */
 
     public void goDistanceHold(float distance) {
-        goDistance(distance, 0.55f, 0.55f);
+        goDistance(distance, 0.7f, 0.7f);
         holdForDrive();
     }
 
@@ -343,7 +343,7 @@ public class Navigation {
                 setLiftJrHeight(0);
                 break;
             case DROP:
-                setLiftJrHeight(-2600);
+                setLiftJrHeight(-2750);
                 break;
             case WAIT:
                 setLiftJrHeight(-2000);
@@ -368,11 +368,13 @@ public class Navigation {
 
         pos.setRotation(rot);
     }
+
 //    if(potentiometer.getVoltage() < desiredPosition){
-//        liftyJr.setPower(0.5);
+//
 //    }
 //    else if(potentiometer.getVoltage() > desiredPosition){
-//        liftyJr.setPower(-0.5); }
+//         }
+
     /**
      * Executes a point turn to face the given Location.
      *
@@ -483,7 +485,9 @@ public class Navigation {
                 setCollectorHeight(0.74f);
                 break;
             case DUMP:
-                setCollectorHeight(0.2f);
+                setCollectorHeight(0.05f);
+            case MIDDLE:
+                setCollectorHeight(0.25f);
         }
     }
 
@@ -507,13 +511,16 @@ public class Navigation {
                 setCollectorExtension(0);
                 break;
             case DUMP:
-                setCollectorExtension(250);
+                setCollectorExtension(165);
                 break;
             case LEFT:
                 setCollectorExtension(500);
                 break;
             case OUT:
-                setCollectorExtension(1850);
+                setCollectorExtension(2175);
+                break;
+            case COLLECT:
+                setCollectorExtension(1400);
                 break;
         }
     }

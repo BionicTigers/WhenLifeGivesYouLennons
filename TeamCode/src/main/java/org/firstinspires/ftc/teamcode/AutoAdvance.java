@@ -39,121 +39,156 @@ public class AutoAdvance {
         nav.setLiftHeight(Navigation.LiftHeight.HOOK);
         nav.holdForLift();
         nav.goDistanceHold(3f);
-        nav.pointTurnIMU(-45f);
-        nav.goDistanceHold(10f);
-        nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
-        nav.holdForExtendy();
+        nav.pointTurnIMU(-47f);
+        nav.goDistanceHold(13f);
+        nav.setLiftHeight(Navigation.LiftHeight.LOWER);
+
 
         if (startZone == StartPos.DEPOT){
-            nav.setCollectionSweeper(Navigation.CollectorSweeper.OUTTAKE);
-            nav.hold(1);
-            nav.setCollectorExtension(Navigation.CollectorExtension.DUMP);
+            nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+            nav.holdForExtendy();
+
+            nav.setCollectorHeight(Navigation.CollectorHeight.HOLD);
+            nav.holdForExtendy();
+            nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
+            nav.hold(0.5f);
 
             switch (nav.getCubePos()) {
                 case RIGHT:
-                    nav.pointTurnIMU(-93.55f);
+                    nav.setCollectorExtension(Navigation.CollectorExtension.LEFT);
+                    nav.pointTurnIMU(-90f);
                     break;
                 case LEFT:
-                    nav.pointTurnIMU(0f);
+                    nav.setCollectorExtension(Navigation.CollectorExtension.LEFT);
+                    nav.pointTurnIMU(-7f);
+                    break;
+                default:
+                    nav.setCollectorExtension(Navigation.CollectorExtension.PARK);
                     break;
             }
+            nav.holdForExtendy();
 
             //Collect Sampling//
             nav.setCollectorHeight(Navigation.CollectorHeight.LAND);
-            nav.setCollectionSweeper(Navigation.CollectorSweeper.OUTTAKE);
             nav.hold(1f);
 
             //Retract to move to lander//
             nav.setCollectorExtension(Navigation.CollectorExtension.PARK);
             nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
-            nav.hold(0.5f);
+            nav.hold(1.5f);
             nav.setCollectionSweeper(Navigation.CollectorSweeper.OFF);
 
             //Move to lander, dump, move away//
+            nav.setCollectorHeight(Navigation.CollectorHeight.HOLD);
 
-            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
             nav.pointTurnIMU(-33f);
             nav.setLiftyJrHeight(Navigation.LiftyJrHeight.WAIT);
 
-            nav.goDistance(-18.5f,0.75f,0.75f);
+            nav.goDistance(-14f,0.85f,0.85f);
+            nav.holdForDrive();
 
-            nav.pointTurnIMU(-45f);
+            nav.pointTurnIMU(-5f);
+            nav.goDistance(-2f,0.85f,0.85f);
 
             nav.setLiftyJrHeight(Navigation.LiftyJrHeight.DROP);
-            nav.holdForLiftJr();
+            nav.hold(2f);
 
+            //PARK//
             nav.setLiftyJrHeight(Navigation.LiftyJrHeight.LOWER);
-            nav.goDistance(19f,0.75f,0.75f);
-
-            //Move to crater//
-            nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(44.75f);
-
-            nav.pointTurnIMU(90f);
-            nav.goDistanceHold(10f);
-
+            nav.setCollectorHeight(Navigation.CollectorHeight.MIDDLE);
+            nav.pointTurnIMU(7f);
+            nav.goDistanceHold(47f);
+            nav.pointTurnIMU(85f);
+            nav.goDistanceHold(20f);
+            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
 
             } else if (startZone == StartPos.CRATER){
 
+            nav.setCollectorExtension(Navigation.CollectorExtension.COLLECT);
+            nav.holdForExtendy();
+
             //Collect out of crater//
+            nav.setCollectorHeight(Navigation.CollectorHeight.LAND);
+
             nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
             nav.hold(3f);
 
+
+            nav.setCollectorHeight(Navigation.CollectorHeight.HOLD);
+
             nav.setCollectorExtension(Navigation.CollectorExtension.PARK);
+            nav.holdForExtendy();
             nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
+            nav.hold(2f);
             nav.setCollectionSweeper(Navigation.CollectorSweeper.OFF);
 
             //Move to Lander//
 
-            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
-            nav.pointTurnIMU(-95f);
+            nav.setCollectorHeight(Navigation.CollectorHeight.HOLD);
+
+            nav.pointTurnIMU(-60f);
             nav.setLiftyJrHeight(Navigation.LiftyJrHeight.WAIT);
 
-            nav.goDistance(-18.5f,0.75f,0.75f);
+            nav.goDistance(-14f,0.85f,0.85f);
+            nav.holdForDrive();
 
+            nav.pointTurnIMU(-80f);
+            nav.goDistance(-15f,0.85f,0.85f);
             nav.pointTurnIMU(-45f);
 
+            nav.goDistance(-5f,0.85f,0.85f);
+
             nav.setLiftyJrHeight(Navigation.LiftyJrHeight.DROP);
-            nav.holdForLiftJr();
+            nav.hold(2f);
 
             nav.setLiftyJrHeight(Navigation.LiftyJrHeight.LOWER);
 
+            nav.goDistanceHold(20f);
 
-            //Go back to middle
-            nav.pointTurnIMU(-95f);
-
-            nav.goDistance(15f,0.75f,0.75f);
-            nav.hold(1);
-
-
-            //sample//
             switch (nav.getCubePos()) {
                 case RIGHT:
-                    nav.pointTurnIMU(-93.55f);
+                    nav.setCollectorExtension(Navigation.CollectorExtension.LEFT);
+                    nav.pointTurnIMU(-90f);
                     break;
-                case MIDDLE: //left
-                    nav.pointTurnIMU(-45f);
+                case LEFT:
+                    nav.setCollectorExtension(Navigation.CollectorExtension.LEFT);
+                    nav.pointTurnIMU(-7f);
                     break;
                 default:
-                    nav.pointTurnIMU(0f);
+                    nav.setCollectorExtension(Navigation.CollectorExtension.DUMP);
+                    nav.pointTurnIMU(-54f);
                     break;
             }
 
+
             nav.setCollectorHeight(Navigation.CollectorHeight.LAND);
+            nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
             nav.hold(1f);
+
+            nav.pointTurnIMU(45);
+            nav.goDistanceHold(25f);
+            nav.pointTurnIMU(90f);
+
             nav.setCollectorHeight(Navigation.CollectorHeight.DUMP);
 
-//            nav.setCollectorExtension(Navigation.CollectorExtension.DUMP);
-//            nav.setCollectionSweeper(Navigation.CollectorSweeper.INTAKE);
-//            nav.hold(1f);
-//
-//            nav.setCollectorExtension(Navigation.CollectorExtension.PARK);
-//            nav.setCollectionSweeper(Navigation.CollectorSweeper.OFF);
+            nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+            nav.holdForExtendy();
 
-            nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(-90f);
-            nav.goDistanceHold(10f);
+            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
+
+
+
+            //PARK//
+//            nav.pointTurnIMU(36f); //turn to face wall
+//            nav.goDistanceHold(45f);
+//            nav.pointTurnIMU(-90f);
+//            nav.goDistanceHold(10f);
+
+            //extend to park//
+
+//            nav.pointTurnIMU(-45f);
+//            nav.setCollectorExtension(Navigation.CollectorExtension.OUT);
+//            nav.setCollectorHeight(Navigation.CollectorHeight.COLLECT);
 
         }
 
