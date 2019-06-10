@@ -17,7 +17,6 @@ public class TeleOpMoongoose extends OpMode {
 
     public void init() {
         nav.init(hardwareMap);
-
     }
 
     public void loop() {

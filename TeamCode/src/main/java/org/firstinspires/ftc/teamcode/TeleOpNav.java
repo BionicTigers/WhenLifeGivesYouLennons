@@ -97,11 +97,11 @@ public class TeleOpNav {
         backwoodsSpeed = 0;
 
         //Speed Offsets//
-        normalSpeed = .725;
+        normalSpeed = .8;
         liftySpeed = 1;
         liftyJrSpeed = 1;
         slowSpeed = normalSpeed / 2;
-        speedySpeed = 0.80;
+        //speedySpeed = 0.80;
 
     }
 
