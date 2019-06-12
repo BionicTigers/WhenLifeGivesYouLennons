@@ -73,7 +73,7 @@ public class TeleOpOutreach extends OpMode {
         //VARIABLES//
         calibToggle = 0; driveToggle = 0; controlsToggle = 0;
         calibMode = 0; driveMode = 0; controlsMode = 0;
-        buttonThreshold = 0.5;
+        buttonThreshold = 0.25;
     }
 
 
