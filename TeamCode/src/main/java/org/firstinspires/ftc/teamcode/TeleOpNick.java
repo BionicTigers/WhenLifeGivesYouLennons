@@ -227,27 +227,14 @@ public class TeleOpNick extends OpMode {
         }
         telemetry.addData("Collector: ", nav.collecty.getPower());
 
-//HORIZONTAL EXTENSION// - LeftBumper= Deploy | LeftTrigger= Retract
-
-        if (gamepad2.left_stick_button) {
-            nav.retract();
-        }
-        if(nav.extendy.getCurrentPosition() == 1495 && gamepad2.left_bumper){
+        if (gamepad2.left_bumper && nav.extendy.getCurrentPosition()<2000) {
+            nav.extendy.setPower(1);
+        } else if (gamepad2.left_trigger > 0.5 && nav.extendy.getCurrentPosition()>0) {
+            nav.extendy.setPower(-1);
+        } else {
             nav.extendy.setPower(0);
-        } else if (nav.extendy.getCurrentPosition() == -45 && -gamepad2.left_stick_y < 0){
-            nav.extendy.setPower(0); }
-        else if (!nav.extendy.isBusy()) {
-            nav.extendy.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (gamepad2.left_bumper) {
-                nav.extendy.setPower(1);
-            } else if (gamepad2.left_trigger > 0.5){
-                nav.extendy.setPower(-1);
-            } else {
-                nav.extendy.setPower(0);
-            }
         }
         telemetry.addData("Extension: ", nav.extendy.getCurrentPosition());
-
 //COLLECTION SERVOS - Y= Top | B= Middle | A= Bottom || Droppy --> right, Droppy Jr --> left //
         if (gamepad2.y) { // top
             nav.droppy.setPosition(0.185);
