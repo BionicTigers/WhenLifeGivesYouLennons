@@ -66,9 +66,13 @@ public class TeleOpNav {
         lifty = hwMap.dcMotor.get("lifty");
         liftyJr = hwMap.dcMotor.get("liftyJr");
 
-        lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lifty.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+     //   lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         liftyJr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         lifty.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         liftyJr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -97,7 +101,7 @@ public class TeleOpNav {
         backwoodsSpeed = 0;
 
         //Speed Offsets//
-        normalSpeed = .8;
+        normalSpeed = .75;
         liftySpeed = 1;
         liftyJrSpeed = 1;
         slowSpeed = normalSpeed / 2;
@@ -121,7 +125,7 @@ public class TeleOpNav {
     public void goDown() {
         if (!limitSwitch.isPressed()) {
             liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftyJr.setTargetPosition(-125);
+            liftyJr.setTargetPosition(0);
             liftyJr.setPower(1);
         }
     }
@@ -132,17 +136,16 @@ public class TeleOpNav {
         liftyJr.setTargetPosition(-1000);
         liftyJr.setPower(1);
     }
-
+//updateAttitude(EvanR,better);
     // This method goes up using an encoder for the hopper lift to fully dump into the lander
     public void goUpAll() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftyJr.setTargetPosition(-2600);
+        liftyJr.setTargetPosition(-2200);
         liftyJr.setPower(1);
     }
-
     public void goupBalance() {
         liftyJr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftyJr.setTargetPosition(-150);
+        liftyJr.setTargetPosition(-1700);
         liftyJr.setPower(1);
     }
 
@@ -151,7 +154,7 @@ public class TeleOpNav {
     public final void ITS_ENDGAME_NOW() {
         lifty.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lifty.setPower(1);
-        lifty.setTargetPosition(10200); //10464
+        lifty.setTargetPosition(10250); //10464
     }
 
     //HORIZONTAL EXTENSION//

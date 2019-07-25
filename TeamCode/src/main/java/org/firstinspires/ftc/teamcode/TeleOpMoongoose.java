@@ -153,11 +153,12 @@ public class TeleOpMoongoose extends OpMode {
         } else {
             if (Math.abs(gamepad2.left_stick_y) > .5 && !nav.limitSwitch.isPressed()){
                 nav.liftyJr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                nav.liftyJr.setPower(-gamepad2.left_stick_y);
+                nav.liftyJr.setPower(gamepad2.left_stick_y);
             }
         }
 
         if (gamepad2.dpad_right ) {
+            nav.lifty.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             nav.ITS_ENDGAME_NOW();
         } else if (!nav.lifty.isBusy()){
             nav.lifty.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

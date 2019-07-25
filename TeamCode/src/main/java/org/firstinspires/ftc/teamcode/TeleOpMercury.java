@@ -64,6 +64,7 @@ public class TeleOpMercury extends OpMode {
 
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -149,30 +150,6 @@ public class TeleOpMercury extends OpMode {
         telemetry.addData("backLeft: ", motorBackLeft.getCurrentPosition());
         telemetry.addData("backRight ", motorBackRight.getCurrentPosition());
 
-
-        if (gamepad1.dpad_up) {
-            flywheel.setPower(1);
-        } else if (gamepad1.dpad_down) {
-                flywheel.setPower(-1);
-        } else {
-            flywheel.setPower(0);
-        }
-
-        if (gamepad1.y) {
-            barrier.setPosition(0.7);
-        }
-        if (gamepad1.b) {
-            barrier.setPosition(0.2);
-        }
-
-
-        if (gamepad1.right_bumper) {
-            collext.setPower(1);
-        } else if (gamepad1.right_trigger > 0.5) {
-            collext.setPower(-1);
-        } else {
-            collext.setPower(0);
-        }
 
     }
 

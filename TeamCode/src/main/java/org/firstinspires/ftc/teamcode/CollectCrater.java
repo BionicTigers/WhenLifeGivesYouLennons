@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * A class made to run the depot code pulled from AutoGeneric
  */
-
+@Disabled
 @Autonomous(name = "Collect  Crater", group = "Auto")
 
 public class CollectCrater extends LinearOpMode {

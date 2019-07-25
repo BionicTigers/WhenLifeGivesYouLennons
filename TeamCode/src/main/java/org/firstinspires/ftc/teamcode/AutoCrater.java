@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "Auto Crater", group = "Auto")
 public class AutoCrater extends LinearOpMode {
     public void runOpMode() {
-        AutoCollect autoCollect = new AutoCollect(AutoCollect.StartPos.CRATER, this, telemetry);
+        AutoGeneric autoGeneric = new AutoGeneric(AutoGeneric.StartPos.CRATER, this, telemetry);
 
         while (!isStarted()) {
             telemetry.addData("cool", "waiting to start");
             telemetry.update();
         }
         //waitForStart();
-        autoCollect.runAutonomous();
+        autoGeneric.runAutonomous();
     }
 
     public boolean isStopping() {

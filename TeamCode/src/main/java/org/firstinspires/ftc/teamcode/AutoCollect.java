@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * This class is currently in progress and is yet to be used in competition
  * This autonomous scores in the lander
  */
+@Disabled
 public class AutoCollect {
     public enum StartPos {DEPOT, CRATER, DOUBLESAMPLING}
 

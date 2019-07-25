@@ -51,9 +51,9 @@ public class Navigation {
     }
     private CubePosition cubePos = CubePosition.UNKNOWN;
     public enum CollectorHeight {COLLECT, HOLD, LAND, DUMP, MIDDLE}
-    public enum LiftHeight {LOWER, HOOK}
+    public enum LiftHeight {LOWER, HOOK, NICK}
     public enum LiftyJrHeight {LOWER, DROP, WAIT, BALANCE}
-    public enum CollectorExtension {PARK, DUMP, OUT, LEFT, COLLECT}
+    public enum CollectorExtension {PARK, DUMP, OUT, LEFT, COLLECT, RIGHT, RIGHTY}
     public enum CollectorSweeper {INTAKE, OUTTAKE, OFF}
 
     //-----misc internal values-----//
@@ -421,11 +421,13 @@ public class Navigation {
     public void setLiftHeight(LiftHeight position) {
         switch (position) {
             case HOOK:
-                setLiftHeight(-10300);
+                setLiftHeight(-10000);
                 break;
             case LOWER:
                 setLiftHeight(0);
                 break;
+            case NICK:
+                setLiftHeight(-400);
         }
     }
 
@@ -485,7 +487,7 @@ public class Navigation {
                 setCollectorHeight(0.74f);
                 break;
             case DUMP:
-                setCollectorHeight(0.05f);
+                setCollectorHeight(0.2f);
             case MIDDLE:
                 setCollectorHeight(0.25f);
         }
@@ -514,10 +516,15 @@ public class Navigation {
                 setCollectorExtension(165);
                 break;
             case LEFT:
-                setCollectorExtension(500);
+                setCollectorExtension(450);
                 break;
+            case RIGHT:
+                setCollectorExtension(650);
+                break;
+            case RIGHTY:
+                setCollectorExtension(875);
             case OUT:
-                setCollectorExtension(2175);
+                setCollectorExtension(2000);
                 break;
             case COLLECT:
                 setCollectorExtension(1400);
@@ -622,6 +629,7 @@ public class Navigation {
      */
     public void telemetryMethod() {
         updateVelocity();
+        telemetry.addData("Party has started", "woot woot");
         telemetry.addData("Game State = ", gameState);
         String motorString = "FL = " + frontLeft.getCurrentPosition() + " BL = " + backLeft.getCurrentPosition() + " FR = " + frontRight.getCurrentPosition() + " BR = " + backRight.getCurrentPosition();
         telemetry.addData("Drive = ", motorString);

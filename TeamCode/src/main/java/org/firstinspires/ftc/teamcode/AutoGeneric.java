@@ -21,7 +21,6 @@ public class AutoGeneric {
     private OpMode opMode;
     private Telemetry telemetry;
     private Navigation nav;
-    private  AnalogInput potentiometer;
     private float waiting;
 
     /**
@@ -39,25 +38,25 @@ public class AutoGeneric {
         nav.calibrateHeading();
         nav.hold(0.1f);
 
-        double voltreading = (float) potentiometer.getVoltage();
+      //  double voltreading = (float) potentiometer.getVoltage();
             //convert voltage to distance (cm)
-        double percentTurned = voltreading/5 * 100;
+       // double percentTurned = voltreading/5 * 100;
 
-        if (percentTurned > 0 &&  percentTurned <= 10){
-            waiting = 2f;
-        }else if(percentTurned > 10 &&  percentTurned <= 20){
-            waiting = 5f;
-        }else if(percentTurned > 20 &&  percentTurned <= 30){
-            waiting = 7f;
-        }else if(percentTurned > 30 &&  percentTurned <= 40){
-            waiting = 10f;
-        }else{
-            waiting = 0f;
-        }
-            telemetry.addData("raw val", "voltage:  " + Double.toString(voltreading));
-            // this is our calculated value
-            telemetry.addData("PercentRot", "percent: " + Double.toString(percentTurned));
-            telemetry.update();
+//        if (percentTurned > 0 &&  percentTurned <= 10){
+//            waiting = 2f;
+//        }else if(percentTurned > 10 &&  percentTurned <= 20){
+//            waiting = 5f;
+//        }else if(percentTurned > 20 &&  percentTurned <= 30){
+//            waiting = 7f;
+//        }else if(percentTurned > 30 &&  percentTurned <= 40){
+//            waiting = 10f;
+//        }else{
+//            waiting = 0f;
+//        }
+//            telemetry.addData("raw val", "voltage:  " + Double.toString(voltreading));
+//            // this is our calculated value
+//            telemetry.addData("PercentRot", "percent: " + Double.toString(percentTurned));
+//            telemetry.update();
 
         }
 
@@ -74,7 +73,7 @@ public class AutoGeneric {
         nav.pointTurnIMU(-45f);
         nav.hold(waiting);
         nav.setLiftHeight(Navigation.LiftHeight.LOWER);
-        nav.goDistanceHold(13f);
+        nav.goDistanceHold(12.5f);
         switch (nav.getCubePos()) {
             case MIDDLE:
                 nav.goDistanceHold(15f);
@@ -83,20 +82,21 @@ public class AutoGeneric {
             case RIGHT:
                 nav.pointTurnIMU(-93.5f);
                 nav.goDistanceHold(21.5f);
-                nav.goDistanceHold(-21f);
+                nav.goDistanceHold(-21.5f);
                 break;
             default: //left
-                nav.pointTurnIMU(3.25f);
-                nav.goDistanceHold(27f);
-                nav.goDistanceHold(-26.5f);
+                nav.pointTurnIMU(3.5f);
+                nav.goDistanceHold(20f);
+                nav.goDistanceHold(-20f);
                 break;
         }
         //-----crater depot run-----//
         if (startZone == StartPos.CRATER) {
             nav.pointTurnIMU(36f); //turn to face wall
-            nav.goDistanceHold(45f);
-            nav.pointTurnIMU(-90f);
-            nav.goDistanceHold(-42f);
+            nav.goDistanceHold(44f);
+            nav.pointTurnIMU(-92f);
+            nav.hold(4.5f);
+            nav.goDistanceHold(-39f);
             nav.pointTurnIMU(-90f);
             // depot side //
         } else if (startZone == StartPos.DEPOT) {
@@ -140,7 +140,7 @@ public class AutoGeneric {
                 nav.goDistance(67f, 0.65f, 0.65f);
                 break;
             case CRATER: //depot and crater
-                nav.goDistance(59.5f, 0.6f, 0.6f);
+                nav.goDistance(55f, 0.6f, 0.6f);
                 nav.holdForDrive();
                 break;
             case DEPOT: //depot and crater
